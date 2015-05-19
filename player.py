@@ -1,21 +1,14 @@
-from item import *
-from constants import *
-from builtin_moves import *
-import pickle
-import math
-import random
+import character
 
-class Player:
+class Player(Character):
+
+    MAX_LEVEL = 15
+    POINTS_PER_LEVEL = 10
 
     def __init__(self, name):
         self.name = name
         self.effects = []
         self.moves = []
-        self.add_move(testing)
-        self.add_move(abilities["magic-bolt"])
-        self.add_move(abilities["dot-heal"])
-        self.add_move(abilities["blizzard"])
-        self.add_move(abilities["barrier"])
         self.fallen = False
         self.drop = None  # tmp variable for dropped items
         self.args = []
