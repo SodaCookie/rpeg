@@ -1,5 +1,4 @@
 import random
-from constants import *
 
 class Item:
 

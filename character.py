@@ -117,7 +117,6 @@ class Character(object):
             if eff.name == effect.name:
                 eff.duration = effect.duration
                 return
-        self.effect.
         self.effects.append(effect)
 
     def remove_effect(self, ename):

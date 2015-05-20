@@ -4,11 +4,11 @@ import dialog
 
 class Location(object):
   """Location object is the node for each part of a dungeon"""
-  def __init__(self, loc_type, level, locked=False, blocked=False):
+  def __init__(self, loc_type, level):
     self.loc_type = loc_type # can be event, entrance, exit, shop, alter, item
     self.level = level
-    self.locked = locked # to be implemented
-    self.blocked = blocked # to be implemented
+    self.locked = False # to be implemented
+    self.blocked = False # to be implemented
     self.dialog_cache = None
     self.neighbours = []
 
@@ -18,8 +18,23 @@ class Location(object):
       self.dialog_cache = dialog.Dialog("main", self.event)
     return self.dialog_cache
 
+  def set_block(self):
+    self.blocked = True
+
+  def set_lock(self):
+    self.locked = True
+
+  def set_type(self, loc_type):
+    self.loc_type = loc_type
+
   def set_neighbour(self, location):
     self.neighbours.append(location)
+
+  def get_neighbours(self):
+    return self.neighbours
+
+  def traverse(self, index):
+    return self.neighbours[index]
 
   def generate(self, etree):
     """Method is used to generate event based off the situation of the node"""
