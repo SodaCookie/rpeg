@@ -6,14 +6,22 @@ class Effect:
         Durations for each effect on a target are decreased by 1 after that
          character's turn"""
         self.name = name
+        self.max_duration = duration
         self.duration = duration
         self.active = True
+        self.owner = None
+
+    def set_owner(self, owner):
+        self.owner  = owner
 
     def remove(self):
         """When called any subsequent calls to this effect will be ignored as well as removed
         useful for 1 time effects"""
         self.duration = 0
         self.active = False
+
+    def on_refresh(self):
+        self.duration = self.max_duration
 
     def on_get_stat(self, value, stat_type):
         """Any time a character is asked for a stat this function will be called
@@ -40,6 +48,9 @@ class Effect:
 
     def on_end_turn(self, character):
         """That is the end of the characters turn (not the WHOLE turn), returns message"""
+        pass
+
+    def on_move(self, location):
         pass
 
     def __str__(self):
