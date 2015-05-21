@@ -2,13 +2,15 @@ from itertools import chain
 from random import choice
 import xml.etree.ElementTree as tree
 import dialog
+import re
 
 class Location(object):
   """Location object is the node for each part of a dungeon"""
 
   ROOM_TYPE = {1 : ["bridge", "hallway", "tunnel"],\
                2 : ["fork"],\
-               "default" : ["room"]}
+               "default" : ["tunnel"]}
+  INPUT_PATTERN = re.compile("\[(.*?)\]", re.IGNORECASE)
 
   def __init__(self, loc_type, level):
     self.loc_type = loc_type # can be event, entrance, exit, shop, alter, item
@@ -49,16 +51,35 @@ class Location(object):
     """Method is used to generate event and description based off the situation of the node"""
     possible_dialogs = list(chain(etree.findall("event[@type='%s'][@level='%s']"%(self.loc_type, self.level)), etree.findall("event[@type='%s'][@level='%s']"%(self.loc_type, "any"))))
     self.event = choice(possible_dialogs)
+
     # this method will use the number of incoming nodes, out going nodes, adjacent tags and tags to determine the description
     if Location.ROOM_TYPE.get(len(self.get_neighbours())) != None:
-      self.tags.append("type@%s"%choice(Location.ROOM_TYPE[len(self.get_neighbours())]))
+      room_type = choice(Location.ROOM_TYPE[len(self.get_neighbours())])
     else:
-      self.tags.append("type@%s"%choice(Location.ROOM_TYPE["default"]))
-    self.tags.extend(self.event.find("tag").text.split(' '))
+      room_type = choice(Location.ROOM_TYPE["default"])
+
+    tags = dict((tag.split('@') for tag in
+                 self.event.find("tag").text.split(', ')))
+
+    # find an appropriate template and fill the template
+    with open("data/description.xml", "r") as file:
+      desc = tree.parse(file)
+    template = desc.findall("templates/template[@type='%s']"%room_type)
+    text = choice(template).text # pick a template
+    for match in Location.INPUT_PATTERN.finditer(text):
+      # match group 0 is with brackets group 1 is without
+      if tags.get(match.group(1)) != None:
+        replacement = tags[match.group(1)]
+      else:
+        replacement = choice(desc.find(match.group(1)).text.split(', '))
+      text = text.replace(match.group(0), replacement) # fill in the gaps
+    self.description = text
+
 
 
 if __name__ == "__main__":
   #from lxml import etree as tree #optional version of the tree in case we need faster parsing
-  with open("data/test_data.xml", "r") as file:
+  with open("data/scenario.xml", "r") as file:
     etree = tree.parse(file)
   loc = Location("event", "test")
+  loc.generate(etree)
