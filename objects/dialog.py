@@ -1,5 +1,5 @@
 import random
-import action
+import objects.action as action
 
 class Dialog(object):
   """Dialog object is used to keep track of possible text"""

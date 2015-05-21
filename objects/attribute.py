@@ -1,12 +1,12 @@
-from effect import Effect
+import objects.effect as effect
 
-class Attribute(Effect):
+class Attribute(effect.Effect):
   """Attributes are permanent effects that are applied through items
   they are also stackable (additively) unlike buffs. Attributes will
   only be applied once per beginning of a battle"""
 
   def __init__(self, name):
-    super().__init__(name, Effect.PERMANENT)
+    super().__init__(name, effect.Effect.PERMANENT)
 
   def __str__(self):
       return "%s<attribute> - %s" % (self.name.replace("-", " ").title(),

@@ -1,4 +1,4 @@
-import item
+import objects.item as item
 import pickle
 import math
 import random

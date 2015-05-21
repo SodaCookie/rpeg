@@ -1,5 +1,5 @@
 import random
-import effects
+import objects.effect as effect
 
 class Move(object):
 

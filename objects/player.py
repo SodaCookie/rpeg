@@ -1,4 +1,4 @@
-import character
+import objects.character as character
 
 class Player(character.Character):
 

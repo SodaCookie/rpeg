@@ -1,7 +1,7 @@
 from itertools import chain
 from random import choice
 import xml.etree.ElementTree as tree
-import dialog
+import objects.dialog as dialog
 import re
 
 class Location(object):

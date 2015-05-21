@@ -1,8 +1,8 @@
-import monster
-import item
-import player
-import location
-import logging
+import objects.monster as monster
+import objects.item as item
+import objects.player as player
+import objects.location as location
+import objects.logging as logging
 from random import randint, sample
 from functools import reduce
 

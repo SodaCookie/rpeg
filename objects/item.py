@@ -1,6 +1,6 @@
 from random import randint, choice
 import xml.etree.ElementTree as tree
-import attribute
+import objects.attribute as attribute
 import re
 
 class Item:
@@ -184,8 +184,10 @@ class Item:
 
 
 if __name__ == "__main__":
+  import os
+  os.chdir("..")
   ITERATIONS = 10
   li = []
   for i in range(ITERATIONS):
     li.append(Item(100, "common"))
-    print(li[-1].name)
+    print(li[-1].name, li[-1].attributes)
