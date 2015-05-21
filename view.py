@@ -2,7 +2,15 @@ import pygame
 from pygame import display
 
 _screen = None
-_resolution = (800,600)
+
+_resolution = (800, 600)
+def set_resolution(new_resolution):
+    global _resolution
+    _resolution = new_resolution
+    screen = display.set_mode(_resolution)
+def get_resolution():
+    global _resolution
+    return _resolution
 
 def init_pygame():
     global _screen, _resolution
@@ -21,7 +29,7 @@ def quit():
 def render():
     global _screen
 
-    _screen.fill((255, 255, 255))
+    _screen.fill((0, 0, 0))
     for obj in Renderable.renderables:
         obj.draw(_screen)
         
@@ -41,4 +49,3 @@ class Renderable(object):
 
     def draw(self, surface):
         pass
-
