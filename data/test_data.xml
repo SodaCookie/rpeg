@@ -2,7 +2,7 @@
 <data>
 
     <event name="sword_event" type="event" level="any" >
-        <tag>sword, magic</tag>
+        <tag>object@sword, room@damp</tag>
         <dialog name="main">
             <body>This is some text testing.
                 testing spacing
