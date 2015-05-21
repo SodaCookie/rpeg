@@ -9,7 +9,7 @@ class Location(object):
 
   ROOM_TYPE = {1 : ["bridge", "hallway", "tunnel"],\
                2 : ["fork"],\
-               "default" : ["tunnel"]}
+               "default" : ["room"]}
   INPUT_PATTERN = re.compile("\[(.*?)\]", re.IGNORECASE)
 
   def __init__(self, loc_type, level):
@@ -58,8 +58,9 @@ class Location(object):
     else:
       room_type = choice(Location.ROOM_TYPE["default"])
 
-    tags = dict((tag.split('@') for tag in
-                 self.event.find("tag").text.split(', ')))
+    tag = self.event.find("tag")
+    if tag is not None:
+      tags = dict((t.split('@') for t in tag.text.split(', ')))
 
     # find an appropriate template and fill the template
     with open("data/description.xml", "r") as file:
@@ -83,3 +84,4 @@ if __name__ == "__main__":
     etree = tree.parse(file)
   loc = Location("event", "test")
   loc.generate(etree)
+  print(loc.description)

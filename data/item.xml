@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<data>
+
+  <tags>
+    <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/>
+    <tag type="ice" defense="0.2" resist="0.2" magic="0.2" exclude="fire, nature"/>
+    <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/><!---
+    <tag type="dark" attack="0.5" defense="0.5" exclude="light"/>
+    <tag type="light"resist="2" magic="2" exclude="dark"/>
+    <tag type="poison" magic="1.5" exclude="light, healing"/>
+    <tag type="healing" magic="1.5" exclude="poison, dark">
+    <tag type="power" attack="3" magic="3" health="-0.5" exclude="defense"/>
+    <tag type="defense" defense="2" resist="2" health="2" exclude="power"/>
+    <tag type="speed" speed="2"/>
+    <tag type="magic" magic="2"/>-->
+  </tags>
+
+  <names>
+    <name type="fire" rarity="common" word="red" speech="adjective"/>
+    <name type="ice" rarity="common" word="blue" speech="adjective"/>
+    <name type="nature" rarity="common" word="green" speech="adjective"/>
+    <name type="bad" rarity="common" word="worn" speech="adjective"/>
+  </names>
+
+  <attributes>
+    <attribute type="fire" rarity="common">raise 0.05 attack</attribute>
+    <attribute type="ice" rarity="common">raise 0.05 defense</attribute>
+    <attribute type="ice" rarity="common">raise 0.05 resist</attribute>
+    <attribute type="nature" rarity="common">raise 0.03 health</attribute>
+    <attribute type="bad">lower 0.03 health</attribute>
+  </attributes>
+
+  <types>
+    <type name="sword" slot="hand" attack="1" defense="-0.8" resist="-0.8" health="-0.9" magic="-0.5"/>
+  </types>
+
+</data>

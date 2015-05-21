@@ -1,238 +1,191 @@
-import random
+from random import randint, choice
+import xml.etree.ElementTree as tree
+import attribute
+import re
 
 class Item:
 
-    def __init__(self, power=0, difficulty=1, generate=True):
-        """Generate indicates whether or not you want to auto generate an item"""
-        self.name = "None" # Negative weight measn that the items has a chance to decreases stats
-        self.power = power
-        self.difficulty = difficulty
-        self.rarity = "normal"
-        self.paradigm = "" # The kind of item, Attack, Defense, Support, Magical
-        self.attack = 0
-        self.attack_weight = 1 # Used to help direct the chance of higher attack stats
-        self.defense = 0
-        self.defense_weight = 1 # Used to help direct the chance of higher defense stats
-        self.resist = 0
-        self.resist_weight = 1 # Used to help direct the chance of higher resist stats
-        self.speed = 0
-        self.speed_weight = 1 # Used to help direct the chance of higher speed stats
-        self.health = 0
-        self.health_weight = 1 # Used to help direct the chance of higher health stats
-        self.magic = 0
-        self.magic_weight = 1 # Used to help direct the chance of higher magic stats
-        self.slot = ""
-        self.ability_weight = 1 # Used to help direct the chance of higher ability values
-        self.ability = []
-        self.other = 0
-        self.base = 1 # used to amp total stats up and down (ie rusty vs shiny)
-        self.chosen_item = ""
-        self.chosen_prefix = []
-        self.chosen_presuffix = []
-        self.chosen_suffix = []
-        if generate:
-            self.generate()
+  POWER_BASE = 1.1 # how many more stat points a rarity gives
+  ATTACK_HEURISTIC = 1
+  DEFENSE_HEURISTIC = 1
+  RESIST_HEURISTIC = 1
+  HEALTH_HEURISTIC = 0.2
+  SPEED_HEURISTIC = 3
+  MAGIC_HEURISTIC = 1
+  INPUT_PATTERN = re.compile("\[(.*?)\]", re.IGNORECASE)
+  _XML = tree.parse("data/item.xml")
+  TAGS = _XML.findall("tags/tag") # all tags including bad tags
+  NAMES = _XML.find("names")
+  ATTRIB = _XML.find("attributes")
+  TYPES = _XML.find("types")
 
-    def generate(self):
-        # difficulty rolling for item rarity
-        rarity_roll = random.randint(0,1000)
-        if self.difficulty == 1:
-            if rarity_roll > 990:
-                self.rarity = "epic"
-            elif rarity_roll > 900:
-                self.rarity = "rare"
-            else:
-                self.rarity = "normal"
-        elif self.difficulty == 2:
-            if rarity_roll > 990:
-                self.rarity = "legendary"
-            elif rarity_roll > 900:
-                self.rarity = "epic"
-            elif rarity_roll > 500:
-                self.rarity = "rare"
-            else:
-                self.rarity = "normal"
-        elif self.difficulty == 3:
-            if rarity_roll > 900:
-                self.rarity = "legendary"
-            elif rarity_roll > 500:
-                self.rarity = "epic"
-            elif rarity_roll < 1:
-                self.rarity = "normal"
-            else:
-                self.rarity = "rare"
+  def __init__(self, power, rarity, generate=True):
+    """Generate indicates whether or not you want to auto generate an item"""
+    self.name = "None"
+    self.power = power
+    self.rarity = rarity
+    self.type = "" # item type (sword, shield, etc..)
+    self.slot = "" # where the item is equipped
+    self.attack = 0
+    self.defense = 0
+    self.health = 0
+    self.magic = 0
+    self.resist = 0
+    self.speed = 0
+    self.attributes = []
 
-        self.paradigm = random.choice(("attack", "defense", "support", "magical"))
-        # parsing the itemtype file
-        with open("itemtypes.txt", "r") as f:
-            data = f.read().split("\n")
-            itemtypes = []
-            for line in data:
-                stats = line.split(",")
-                item = stats[0]
-                paradigm = stats[1]
-                slot = stats[2]
-                base = float(stats[3])
-                attack = float(stats[4])
-                defense = float(stats[5])
-                resist = float(stats[6])
-                health = float(stats[7])
-                speed = float(stats[8])
-                magic = float(stats[9])
-                ability = float(stats[10])
-                moves = eval(stats[11]) # interprets a list
-                if paradigm == self.paradigm:
-                    itemtypes.append([item, paradigm, slot, base, attack, defense, resist, health, speed, magic, ability, moves])
-        # Choosing the item type of choice
-        self.chosen_item = random.choice(itemtypes)
-        self.slot = self.chosen_item[2]
-        # Naming the item
-        with open("itemprefix.txt", "r") as f:
-            data = f.read().split("\n")
-            itemprefixes = []
-            for line in data:
-                stats = line.split(",")
-                name = stats[0]
-                rarity = stats[1]
-                paradigm = stats[2]
-                weapon = stats[3]
-                base = float(stats[4])
-                attack = float(stats[5])
-                defense = float(stats[6])
-                resist = float(stats[7])
-                health = float(stats[8])
-                speed = float(stats[9])
-                magic = float(stats[10])
-                ability = float(stats[11])
-                moves = eval(stats[12])
-                if (weapon == self.chosen_item[0] or weapon == "any") and (paradigm == self.paradigm or paradigm == "any") and rarity == self.rarity:
-                    itemprefixes.append([name, rarity, paradigm, weapon, base, attack, defense, resist, health, speed, magic, ability, moves])
-        with open("itempresuffix.txt", "r") as f:
-            data = f.read().split("\n")
-            itempresuffixes = []
-            for line in data:
-                stats = line.split(",")
-                name = stats[0]
-                rarity = stats[1]
-                paradigm = stats[2]
-                weapon = stats[3]
-                base = float(stats[4])
-                attack = float(stats[5])
-                defense = float(stats[6])
-                resist = float(stats[7])
-                health = float(stats[8])
-                speed = float(stats[9])
-                magic = float(stats[10])
-                ability = float(stats[11])
-                moves = eval(stats[12])
-                if (weapon == self.chosen_item[0] or weapon == "any") and (paradigm == self.paradigm or paradigm == "any") and rarity == self.rarity:
-                    itempresuffixes.append([name, rarity, paradigm, weapon, base, attack, defense, resist, health, speed, magic, ability, moves])
-        with open("itemsuffix.txt", "r") as f:
-            data = f.read().split("\n")
-            itemsuffixes = []
-            for line in data:
-                stats = line.split(",")
-                name = stats[0]
-                rarity = stats[1]
-                paradigm = stats[2]
-                weapon = stats[3]
-                base = float(stats[4])
-                attack = float(stats[5])
-                defense = float(stats[6])
-                resist = float(stats[7])
-                health = float(stats[8])
-                speed = float(stats[9])
-                magic = float(stats[10])
-                ability = float(stats[11])
-                moves = eval(stats[12])
-                if (weapon == self.chosen_item[0] or weapon == "any") and (paradigm == self.paradigm or paradigm == "any") and rarity == self.rarity:
-                    itemsuffixes.append([name, rarity, paradigm, weapon, base, attack, defense, resist, health, speed, magic, ability, moves])
+    if generate: self.generate()
 
-        self.name = self.chosen_item[0]
-        if itemprefixes: self.chosen_prefix = random.choice(itemprefixes)
-        if itempresuffixes: self.chosen_presuffix = random.choice(itempresuffixes)
-        if itemsuffixes: self.chosen_suffix = random.choice(itemsuffixes)
-        self.base = self.chosen_item[3]
-        self.attack_weight = self.chosen_item[4]
-        self.defense_weight = self.chosen_item[5]
-        self.resist_weight = self.chosen_item[6]
-        self.health_weight = self.chosen_item[7]
-        self.speed_weight = self.chosen_item[8]
-        self.magic_weight = self.chosen_item[9]
-        self.ability_weight = self.chosen_item[10]
-        if self.chosen_prefix:
-            self.name = self.chosen_prefix[0] + " " + self.name
-            self.base *= self.chosen_prefix[4]
-            self.attack_weight += self.chosen_prefix[5]
-            self.defense_weight += self.chosen_prefix[6]
-            self.resist_weight += self.chosen_prefix[7]
-            self.health_weight += self.chosen_prefix[8]
-            self.speed_weight += self.chosen_prefix[9]
-            self.magic_weight += self.chosen_prefix[10]
-            self.ability_weight += self.chosen_prefix[11]
-        if self.chosen_presuffix:
-            self.name = self.name + " of " + self.chosen_presuffix[0] + " " + self.chosen_suffix[0]
-            self.base *= self.chosen_presuffix[4]
-            self.attack_weight += self.chosen_presuffix[5]
-            self.defense_weight += self.chosen_presuffix[6]
-            self.resist_weight += self.chosen_presuffix[7]
-            self.health_weight += self.chosen_presuffix[8]
-            self.speed_weight += self.chosen_presuffix[9]
-            self.magic_weight += self.chosen_presuffix[10]
-            self.ability_weight += self.chosen_presuffix[11]
-            # Suffix weights added
-            self.base *= self.chosen_suffix[4]
-            self.attack_weight += self.chosen_suffix[5]
-            self.defense_weight += self.chosen_suffix[6]
-            self.resist_weight += self.chosen_suffix[7]
-            self.health_weight += self.chosen_suffix[8]
-            self.speed_weight += self.chosen_suffix[9]
-            self.magic_weight += self.chosen_suffix[10]
-            self.ability_weight += self.chosen_suffix[11]
-        elif self.chosen_suffix:
-            self.name = self.name + " of " + self.chosen_suffix[0]
-            self.base *= self.chosen_prefix[4]
-            self.attack_weight += self.chosen_suffix[5]
-            self.defense_weight += self.chosen_suffix[6]
-            self.resist_weight += self.chosen_suffix[7]
-            self.health_weight += self.chosen_suffix[8]
-            self.speed_weight += self.chosen_suffix[9]
-            self.magic_weight += self.chosen_suffix[10]
-            self.ability_weight += self.chosen_suffix[11]
+  def generate(self):
 
-        if self.rarity == "legendary":
-            self.power = self.power*POWER_BASE**3
-        elif self.rarity == "epic":
-            self.power = self.power*POWER_BASE**2
-        elif self.rarity == "rare":
-            self.power = self.power*POWER_BASE
-        elif self.rarity == "normal":
-            pass
-        self.power = self.power*self.base
+    # generate tags based on rarity
+    if self.rarity == "legendary":
+      num_tags = 4
+    elif self.rarity == "epic":
+      num_tags = 3
+    elif self.rarity == "rare":
+      num_tags = 2
+    else:
+      num_tags = 1
 
-        r1, r2, r3, r4, r5, r6, r7 = [random.randint(0,100) for i in range(7)]
-        r1 = r1 * self.attack_weight
-        r2 = r2 * self.defense_weight
-        r3 = r3 * self.speed_weight
-        r4 = r4 * self.health_weight
-        r5 = r5 * self.magic_weight
-        r6 = r6 * self.ability_weight
-        r7 = r7 * self.resist_weight
-        s = r1 + r2 + r3 + r4 + r5 + r6 + r7 # Divide the power into 7 random parts
+    # generate a bad tag (negative attribute)
+    bad_tag = 0
+    if randint(0, 9) < 1: # 10% chance of a negative roll one add a
+                 # negative roll
+      if randint(0, 1): # after there is a 50/50 chance of more stats or
+                # another tag
+        num_tags += 1
+      else:
+        self.power = self.power*Item.POWER_BASE
+      bad_tag = 1
 
-        self.attack = round(self.power*r1/s/ATTACK_HEURISTIC)
-        self.defense = round(self.power*r2/s/DEFENSE_HEURISTIC)
-        self.resist = round(self.power*r7/s/RESIST_HEURISTIC)
-        self.health = round(self.power*r3/s/HEALTH_HEURISTIC)
-        self.speed = round(self.power*r4/s/SPEED_HEURISTIC)
-        self.magic = round(self.power*r5/s/MAGIC_HEURISTIC)
+    # roll for tags
+    tags = [choice(Item.TAGS) for i in range(num_tags)]
+    # fix exclusions (first come first serve) will be replaced with a tag
+    # before it. Based off the first tag
+    excludes = set(tags[0].attrib.get("exclude").split(', ')) or not set()
+    for i, tag in enumerate(tags):
+      if tag.attrib["type"] in excludes:
+        tags[i] = tags[i-1]
+      else: # add more exclusions if any
+        excludes.union(set(tag.attrib.get("exclude").split(', ') or not set()))
 
-    def getStats(self):
-        return 'Attack: %d\nDefense: %d\nHealth: %d\nSpeed: %d\nMagic: %d\nResist: %d'\
-     % (self.attack, self.defense, self.health, self.speed, self.magic, self.resist)
+    # roll for attributes
+    attribute_rolls = []
+    for tag in tags:
+      attribute_rolls.append(choice(Item.ATTRIB.findall(
+                             "attribute[@type='%s'][@rarity='%s']"
+                             %(tag.attrib["type"], self.rarity))))
+
+    # roll bad attribute
+    if bad_tag:
+      attribute_rolls.append(choice(Item.ATTRIB.findall(
+                             "attribute[@type='bad']")))
+    #print(list(t.attrib["type"] for t in tags)) # testing
+    for attrib in attribute_rolls:
+      args = attrib.text.split(' ') # name, arg1, arg2, arg3...
+      self.attributes.append(attribute.attributes[args[0]](*args[1:]))
+
+    # generate type
+    item_type = choice(Item.TYPES.findall("type"))
+    self.slot = item_type.attrib["slot"]
+    self.type = item_type.attrib["name"]
+
+    # affect weights with type
+    attack_weight = 1 # higher attack stats
+    defense_weight = 1 # higher defense stats
+    resist_weight = 1 # higher resist stats
+    speed_weight = 1 # higher speed stats
+    health_weight = 1 # higher health stats
+    magic_weight = 1 # higher magic stats
+
+    if item_type.attrib.get("attack"):
+      attack_weight += float(item_type.attrib["attack"])
+    if item_type.attrib.get("defense"):
+      defense_weight += float(item_type.attrib["defense"])
+    if item_type.attrib.get("resist"):
+      resist_weight += float(item_type.attrib["resist"])
+    if item_type.attrib.get("speed"):
+      speed_weight += float(item_type.attrib["speed"])
+    if item_type.attrib.get("health"):
+      health_weight += float(item_type.attrib["health"])
+    if item_type.attrib.get("magic"):
+      magic_weight += float(item_type.attrib["magic"])
+
+    # generate stats
+    for tag in tags:
+      if tag.attrib.get("attack"):
+        attack_weight += float(tag.attrib["attack"])
+      if tag.attrib.get("defense"):
+        defense_weight += float(tag.attrib["defense"])
+      if tag.attrib.get("resist"):
+        resist_weight += float(tag.attrib["resist"])
+      if tag.attrib.get("speed"):
+        speed_weight += float(tag.attrib["speed"])
+      if tag.attrib.get("health"):
+        health_weight += float(tag.attrib["health"])
+      if tag.attrib.get("magic"):
+        magic_weight += float(tag.attrib["magic"])
+
+    r1, r2, r3, r4, r5, r6 = [randint(0,100) for i in range(6)]
+    r1 = r1 * attack_weight
+    r2 = r2 * defense_weight
+    r3 = r3 * speed_weight
+    r4 = r4 * health_weight
+    r5 = r5 * magic_weight
+    r6 = r6 * resist_weight
+    s = r1 + r2 + r3 + r4 + r5 + r6 # Divide the power into 6 random parts
+
+    self.attack = round(self.power*r1/s/Item.ATTACK_HEURISTIC)
+    self.defense = round(self.power*r2/s/Item.DEFENSE_HEURISTIC)
+    self.health = round(self.power*r3/s/Item.HEALTH_HEURISTIC)
+    self.speed = round(self.power*r4/s/Item.SPEED_HEURISTIC)
+    self.magic = round(self.power*r5/s/Item.MAGIC_HEURISTIC)
+    self.resist = round(self.power*r6/s/Item.RESIST_HEURISTIC)
+
+    # generate name
+    if self.rarity == "legendary":
+      if bad_tag:
+        template = "[adverb] [adjective] [item] of [bad] [noun]"
+      else:
+        template = "[adverb] [adjective] [item] of [adjective] [noun]"
+    elif self.rarity == "epic":
+      if bad_tag:
+        template = "[bad] [item] of [adjective] [noun]"
+      else:
+        template = "[adjective] [item] of [adjective] [noun]"
+    elif self.rarity == "rare":
+      if bad_tag:
+        template = "[bad] [item] of [noun]"
+      else:
+        template = "[adjective] [item] of [noun]"
+    else:
+      if bad_tag:
+        template = "[bad] [item]"
+      else:
+        template = "[adjective] [item]"
+
+    counter = 0
+    for match in Item.INPUT_PATTERN.finditer(template):
+      if match.group(1) == "bad": # gotta find bad keyword
+        replacements = Item.NAMES.findall("name[@type='bad'][@rarity='%s']"
+                                          % self.rarity)
+      elif match.group(1) == "item":
+        template = template.replace(match.group(0), self.type)
+        continue
+      else:
+        replacements = Item.NAMES.findall(
+                         "name[@type='%s'][@rarity='%s'][@speech='%s']"
+                          % (tags[counter].attrib["type"],
+                          self.rarity, match.group(1)))
+        counter += 1
+      template = template.replace(match.group(0), choice(replacements).attrib["word"])
+    self.name = template.title()
+
 
 if __name__ == "__main__":
-    for i in range(100):
-        i = Item(100, 3)
-        print(i.name)
-        print(i.getStats())
+  ITERATIONS = 10
+  li = []
+  for i in range(ITERATIONS):
+    li.append(Item(100, "common"))
+    print(li[-1].name)

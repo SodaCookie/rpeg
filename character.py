@@ -115,8 +115,9 @@ class Character(object):
     def add_effect(self, effect):
         for eff in self.effects:
             if eff.name == effect.name:
-                eff.duration = effect.duration
+                eff.on_refresh(effect)
                 return
+        effet.set_owner(self)
         self.effects.append(effect)
 
     def remove_effect(self, ename):
