@@ -46,6 +46,9 @@ class Text(Renderable):
         self.text = default_text
         self.font = font.Font(text_info.fontname, text_info.fontsize)
 
+    def __del__(self):
+        super(Renderable)
+
     def draw(self, surface):
         f_surf = self.font.render(self.text, True, self.text_info.fontcolor)
         
@@ -93,14 +96,14 @@ class Text(Renderable):
             elif self.text_info.h_anchor > 0:
                 x_offset = 0
             else:
-                x_offset = -max_width / 2.0
+                x_offset = -max_width / 2
 
         if self.text_info.v_anchor < 0:
             y_offset = -self.text_info.fontsize * len(lines)
         elif self.text_info.v_anchor > 0:
             y_offset = 0
         else:
-            y_offset = -self.text_info.fontsize * len(lines) / 2.0
+            y_offset = -self.text_info.fontsize * len(lines) / 2
             
         if self.text_info.alignment < 0:
             align = 0
@@ -110,7 +113,7 @@ class Text(Renderable):
             if self.text_info.alignment > 0:
                 align = max_width - self.font.size(lines[i])[0]
             elif self.text_info.alignment == 0:
-                align = (max_width - self.font.size(lines[i])[0]) / 2.0
+                align = (max_width - self.font.size(lines[i])[0]) / 2
 
             surface.blit(self.font.render(lines[i], True, self.text_info.fontcolor), 
                             (x_offset + self.pos[0] + align, 

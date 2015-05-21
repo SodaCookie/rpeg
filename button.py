@@ -44,6 +44,10 @@ class Button(Text, MouseController):
         self.button_info = button_info
         self.toggle(enabled)
 
+    def __del__(self):
+        super(Text)
+        super(MouseController)
+
     def toggle(self, enabled):
         if enabled:
             self.state = Button.NEUTRAL
