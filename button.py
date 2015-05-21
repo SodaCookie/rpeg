@@ -24,9 +24,16 @@ class ButtonInfo:
 
 
 class Button(Text, MouseController):
-    def __init__(self, pos, text_info, button_info, enabled, default_text = ""):
+    def __init__(self, 
+                 pos, 
+                 on_pressed, 
+                 text_info, 
+                 button_info, 
+                 enabled, 
+                 default_text = ""):
         Text.__init__(self, pos, text_info, default_text)
         MouseController.__init__(self)
+        self.on_pressed = on_pressed
         self.button_info = button_info
         self.enabled = enabled
 

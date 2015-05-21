@@ -3,8 +3,8 @@ from pygame import time, event
 
 import view
 import controller
-from text import Text
-from button import Button
+from text import Text, TextInfo
+from button import Button, ButtonInfo
 
 import effects
 import monster
@@ -17,9 +17,11 @@ if __name__ == "__main__":
 
     view.init_pygame()
 
+    top_kek = Text((400,300), TextInfo(fontsize=50), "TOP KEK")
+
     running = True
     while running:
-        event.pump()
+        event.pump()    # le hideous break condition
         if event.peek(pygame.QUIT):
             running = False
 
