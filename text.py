@@ -7,17 +7,17 @@ Struct for condensing text parameters
 """
 class TextInfo:
     """
-    For anchors (and alignment) negative values represent left/bottom, 
+    For anchors (and alignment) negative values represent left/bottom,
     zero represents middle, and positive represents right/top.
     """
-    def __init__(self, 
-                 fontcolor=(0,0,0), 
-                 fontname="fonts/VT323-Regular.ttf", 
-                 fontsize=12, 
-                 h_anchor=1, 
-                 v_anchor=1, 
+    def __init__(self,
+                 fontcolor=(0,0,0),
+                 fontname="fonts/VT323-Regular.ttf",
+                 fontsize=12,
+                 h_anchor=1,
+                 v_anchor=1,
                  alignment=-1,
-                 width=0, 
+                 width=0,
                  height=0,
                  wrap=False,
                  sensitive=False):
@@ -37,9 +37,9 @@ class TextInfo:
 The text class is a widget that gives you tools to render text
 """
 class Text(Renderable):
-    def __init__(self, 
-                 pos, 
-                 text_info, 
+    def __init__(self,
+                 pos,
+                 text_info,
                  default_text=""):
         super().__init__(pos)
         self.text_info = text_info
@@ -51,7 +51,7 @@ class Text(Renderable):
 
     def draw(self, surface):
         f_surf = self.font.render(self.text, True, self.text_info.fontcolor)
-        
+
         lines = self.text.split('\n')
 
         # Star out sensitive information
@@ -72,7 +72,7 @@ class Text(Renderable):
                         break
                     i += 1
                 j += 1
-                
+
         # Decide on where to put each line of text. Anchors define the
         # x_offset, y_offset variables and alignment decides the align
         # variable.
@@ -104,7 +104,7 @@ class Text(Renderable):
             y_offset = 0
         else:
             y_offset = -self.text_info.fontsize * len(lines) / 2
-            
+
         if self.text_info.alignment < 0:
             align = 0
 
@@ -115,10 +115,10 @@ class Text(Renderable):
             elif self.text_info.alignment == 0:
                 align = (max_width - self.font.size(lines[i])[0]) / 2
 
-            surface.blit(self.font.render(lines[i], True, self.text_info.fontcolor), 
-                            (x_offset + self.pos[0] + align, 
+            surface.blit(self.font.render(lines[i], True, self.text_info.fontcolor),
+                            (x_offset + self.pos[0] + align,
                              y_offset + self.pos[1] + self.text_info.fontsize * i))
-        
+
 
 if __name__ == "__main__":
     pass

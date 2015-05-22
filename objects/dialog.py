@@ -4,11 +4,19 @@ import objects.action as action
 class Dialog(object):
   """Dialog object is used to keep track of possible text"""
 
+  CONDITIONS = {
+  "" : lambda party: True,
+  "hasgold" : lambda party, gold: party.has_gold(int(gold)),
+  "hasitem" : lambda party, item: party.has_item(item),
+  "hasitemtype" : lambda party, wtype: party.has_item_type(wtype),
+  "hasrace" : lambda party, race: party.has_race(race)
+  }
+
   def __init__(self, name, etree):
     self.name = name
     self.body = "" # used to describe what is happening
     self.choices = {} # key is the choice text the value is the list of other dialogs, if choices is empty default to next
-    self.condition = lambda party: True # used to check to see this dialog is available to the party
+    self.condition = "" # condition type, *args...
     self.chance = 100 # chance that this dialog will be successful
     self.fail = None
     self.action = None
@@ -39,7 +47,9 @@ class Dialog(object):
 
   def get_choices(self, party):
     """get the available choices based on the party"""
-    return self.choices # to be implemented
+    return [choice for choice, d in self.choices.items()
+            if Dialog.CONDITIONS[d.condition.split(' ')[0]](party,
+            *d.condition.split(' ')[1:])]
 
   def make_choice(self, choice):
     """Returns the dialogue that was chosen, if every roll fails it will default to returning the last roll"""

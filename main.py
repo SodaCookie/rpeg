@@ -5,17 +5,11 @@ import view
 import controller
 import main_menu
 
-from objects import effect
-from objects import monster
-from objects import player
-from objects import item
-from objects import moves
-
 if __name__ == "__main__":
 
     view.init_pygame()
 
-    main_menu.open(lambda:main_menu.close(), None)
+    main_menu.open(main_menu.close, None)
 
     running = True
     while running:

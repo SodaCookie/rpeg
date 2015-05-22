@@ -16,7 +16,7 @@
         <dialog name="picked sword">
             <body>Hey man!!! You got some gold for cutting down that tree!</body>
             <chance fail="picked sword failed">80</chance>
-            <condition>sword</condition>
+            <condition>hasitemtype sword</condition>
             <action>gold 50</action>
         </dialog>
         <dialog name="picked sword failed">
