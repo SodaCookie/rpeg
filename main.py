@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     view.init_pygame()
 
-    main_menu.open(lambda:main_menu.close(), None)
+    main_menu.open()
 
     running = True
     while running:
