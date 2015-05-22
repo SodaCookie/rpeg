@@ -30,6 +30,11 @@ def open(on_sp, on_mp):
 def close():
     global _title, _single_player, _multi_player
 
-    del _title
-    del _single_player
-    del _multi_player
+    _title.delete()
+    _title = None
+
+    _single_player.delete()
+    _single_player = None
+
+    _multi_player.delete()
+    _multi_player = None

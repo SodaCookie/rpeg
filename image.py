@@ -3,7 +3,7 @@ from view import Renderable
 
 class Image(Renderable):
     def __init__(self, pos, img, h_anchor=0, v_anchor=0, filename=""):
-        Renderable.__init__(self, pos)
+        super().__init__(pos)
 
         if filename != "":
             self.img = image.load(filename).convert()
@@ -12,8 +12,8 @@ class Image(Renderable):
         self.h_anchor = h_anchor
         self.v_anchor = v_anchor
 
-    def __del__(self):
-        super(Renderable)
+    def delete(self):
+        super().delete()
 
     def draw(surface):
         size = self.img.get_size()

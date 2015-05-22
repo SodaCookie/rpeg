@@ -35,7 +35,7 @@ class MouseController(object):
     def __init__(self):
         MouseController.mouse_controllers.append(self)
 
-    def __del__(self):
+    def delete(self):
         MouseController.mouse_controllers.remove(self)
 
     def mouse_motion(self, buttons, pos, rel):

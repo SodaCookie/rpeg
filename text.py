@@ -41,13 +41,13 @@ class Text(Renderable):
                  pos, 
                  text_info, 
                  default_text=""):
-        Renderable.__init__(self, pos)
+        super().__init__(pos)
         self.text_info = text_info
         self.text = default_text
         self.font = font.Font(text_info.fontname, text_info.fontsize)
 
-    def __del__(self):
-        super(Renderable)
+    def delete(self):
+        super().delete()
 
     def draw(self, surface):
         f_surf = self.font.render(self.text, True, self.text_info.fontcolor)

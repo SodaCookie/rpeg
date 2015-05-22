@@ -44,7 +44,7 @@ class Renderable(object):
         self.pos = pos
         Renderable.renderables.append(self)
 
-    def __del__(self):
+    def delete(self):
         Renderable.renderables.remove(self)
 
     def draw(self, surface):
