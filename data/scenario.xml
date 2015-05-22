@@ -40,7 +40,15 @@
         </dialog>
     </event>
 
-    <event name="empty event" type="event" level="prison">
+    <event name="empty event" type="entrance" level="any">
+        <dialog name="main">
+            <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus.</body>
+            <choices>
+                <choice name="leave">Leave.</choice>
+                <choice name="quit">Quit.</choice>
+                <choice name="peta">PETA!</choice>
+            </choices>
+        </dialog>
     </event>
 
 </data>

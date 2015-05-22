@@ -1,4 +1,6 @@
 import objects.character as character
+import objects.attribute as attribute
+import objects.moves as moves
 
 class Player(character.Character):
 

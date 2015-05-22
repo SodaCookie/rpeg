@@ -33,7 +33,7 @@ class RaiseStat(Attribute):
     return value
 
   def description(self):
-    return "Gain +%d bonus %s stat" % (1+self.amount, self.stype)
+    return "Gain +%d%% bonus %s stat" % (int(100*self.amount), self.stype)
 
 
 class LowerStat(Attribute):
@@ -52,7 +52,7 @@ class LowerStat(Attribute):
     return value
 
   def description(self):
-    return "Decrease +%d %s stat" % (1-min(1, self.amount), self.stype)
+    return "Decrease +%d%% %s stat" % (int(1-min(1, self.amount)), self.stype)
 
 
 attributes = {}

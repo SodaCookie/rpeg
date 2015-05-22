@@ -11,6 +11,7 @@ class Location(object):
                2 : ["fork"],\
                "default" : ["room"]}
   INPUT_PATTERN = re.compile("\[(.*?)\]", re.IGNORECASE)
+  EVENTS = tree.parse("data/scenario.xml")
 
   def __init__(self, loc_type, level):
     self.loc_type = loc_type # can be event, entrance, exit, shop, alter, item
@@ -22,8 +23,8 @@ class Location(object):
     self.dialog_cache = None
     self.neighbours = []
 
-  def open(self):
-    """Returns the dialog found at this location"""
+  def get_event(self):
+    """Returns the event found at this location"""
     if not self.dialog_cache:
       self.dialog_cache = dialog.Dialog("main", self.event)
     return self.dialog_cache
@@ -47,10 +48,17 @@ class Location(object):
     self.neighbours[index].tags.extend(tags)
     return self.neighbours[index]
 
-  def generate(self, etree):
+  def generate(self):
     """Method is used to generate event and description based off the situation of the node"""
+    etree = Location.EVENTS
     possible_dialogs = list(chain(etree.findall("event[@type='%s'][@level='%s']"%(self.loc_type, self.level)), etree.findall("event[@type='%s'][@level='%s']"%(self.loc_type, "any"))))
     self.event = choice(possible_dialogs)
+
+    if self.loc_type == "entrance": # special descriptions of types for ends
+      return
+
+    if self.loc_type == "exit":
+      return
 
     # this method will use the number of incoming nodes, out going nodes, adjacent tags and tags to determine the description
     if Location.ROOM_TYPE.get(len(self.get_neighbours())) != None:
@@ -59,6 +67,7 @@ class Location(object):
       room_type = choice(Location.ROOM_TYPE["default"])
 
     tag = self.event.find("tag")
+    tags = {}
     if tag is not None:
       tags = dict((t.split('@') for t in tag.text.split(', ')))
 

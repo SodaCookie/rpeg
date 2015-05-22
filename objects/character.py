@@ -31,22 +31,29 @@ class Character(object):
         self.base_speed = 5
         self.base_resist = 0
 
-    def config_for_new_battle(self):
-        self.update()
-
     def handle(self, battle):
         pass
 
-    def deal_damage(self, battle, source, damage, damage_type):
+    def decrease_durations(self, amount):
         for effect in self.effects:
-            damage = effect.on_damage(battle, source, damage, damage_type)
+            if effect.duration == "permanent":
+                continue
+            effect.duration -= amount
+        self.effects = filter(lambda effect: effect.duration == "permanent"
+                              or effect.duration > 0, self.effects)
+
+    def deal_damage(self, source, damage, damage_type):
+        for effect in self.effects:
+            damage = effect.on_damage(source, damage, damage_type)
         damage = int(damage - self.get_defense() * (random.randint(100-Character.DAMAGE_VARIATION, 100+Character.DAMAGE_VARIATION)/100))
         if damage <= 0:
             damage = 1
+        for effect in source.effects:
+            damage = effect.on_deal_damage()
         self.current_health -= damage
         return damage
 
-    def apply_heal(self, battle, source, heal):
+    def apply_heal(self, source, heal):
         for effect in self.effects:
             if not effect.active:
                 continue
@@ -55,6 +62,8 @@ class Character(object):
         heal = int(heal*(random.randint(100-Character.HEAL_VARIATION, 100+CharacterHEAL_VARIATION)/100))
         if self.fallen:
             heal = 0
+        for effect in source.effects:
+            heal = effect.on_apply_heal(heal)
         if self.current_health + heal > self.get_max_health():
             self.current_health = self.health
         else:
@@ -122,15 +131,9 @@ class Character(object):
 
     def remove_effect(self, ename):
         for eff in self.effects[:]:
-            if eff.name == ename:
+            if eff.name == ename and eff.duration != "permanent":
                 self.effects.remove(eff)
                 return True
-        return False
-
-    def remove_last_effect(self):
-        if self.effects:
-            self.effects = self.effects[:-1]
-            return True
         return False
 
     def add_move(self, move):

@@ -2,7 +2,7 @@ import objects.monster as monster
 import objects.item as item
 import objects.player as player
 import objects.location as location
-import objects.logging as logging
+import logging as logging
 from random import randint, sample
 from functools import reduce
 
