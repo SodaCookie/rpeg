@@ -9,7 +9,11 @@ if __name__ == "__main__":
 
     view.init_pygame()
 
+<<<<<<< HEAD
     main_menu.open(main_menu.close, None)
+=======
+    main_menu.open()
+>>>>>>> origin/master
 
     running = True
     while running:

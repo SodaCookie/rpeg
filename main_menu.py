@@ -3,10 +3,19 @@ import view
 from text import Text, TextInfo
 from button import Button, ButtonInfo
 import game_menu
+<<<<<<< HEAD
+=======
+
+import copy
+>>>>>>> origin/master
 
 _has_opened = False
 
-def open(on_sp, on_mp):
+def singleplayer():
+    close()
+    game_menu.open()
+
+def open():
     global _has_opened, _title, _single_player, _multi_player, _button, _button_h, _button_p, _button_d
 
     if not _has_opened:
@@ -18,6 +27,7 @@ def open(on_sp, on_mp):
 
 
     text_style = TextInfo(fontcolor=(255,255,255), fontsize=50, h_anchor=0, v_anchor=0, alignment=0);
+
     button_style = ButtonInfo(500, 120, _button, _button_h, _button_p, _button_d);
 
     resolution = view.get_resolution()
