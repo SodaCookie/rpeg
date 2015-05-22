@@ -4,11 +4,12 @@ from text import Text, TextInfo
 from button import Button, ButtonInfo
 import objects.dungeon as dungeon
 import objects.party as party
+import copy
 
 _has_opened = False
 
 def open():
-    global _has_opened, _body, _single_player, _button, _button_h, _button_p, _button_d, _dungeon, _party
+    global _has_opened, _body, _choices, _button, _button_h, _button_p, _button_d, _dungeon, _party
 
     if not _has_opened:
         _has_opened = True
@@ -18,17 +19,18 @@ def open():
         _button_d = image.load("images/menu/button_d500x120.png").convert()
         _dungeon = dungeon.Dungeon("test")
         _party = party.Party([])
+        _choices = []
         _dungeon.start.generate()
 
     text_style = TextInfo(fontcolor=(255,255,255), fontsize=14, alignment=0, wrap=True, width=300);
-    button_style = ButtonInfo(100, 20, _button, _button_h, _button_p, _button_d);
+    button_style = ButtonInfo(100, 20, (255, 255, 255), (255, 255, 255), (255, 255, 255), (255, 255, 255), _button, _button_h, _button_p, _button_d);
 
     resolution = view.get_resolution()
 
     event = _dungeon.start.get_event()
     _body = Text((50, 50), text_style, event.body)
     for i, choice in enumerate(event.get_choices(_party)):
-        _single_player = Button((50, 300+i*20), None, None, text_style, button_style, True, "Single Player")
+        _choices.append(Button((50, 300+i*20), None, None, copy.copy(text_style), copy.copy(button_style), True, "Single Player"))
 
 
 

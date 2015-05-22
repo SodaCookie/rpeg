@@ -3,18 +3,14 @@ import view
 from text import Text, TextInfo
 from button import Button, ButtonInfo
 import game_menu
-<<<<<<< HEAD
-=======
-
 import copy
->>>>>>> origin/master
 
 _has_opened = False
 
 def singleplayer():
     close()
     game_menu.open()
-
+        
 def open():
     global _has_opened, _title, _single_player, _multi_player, _button, _button_h, _button_p, _button_d
 
@@ -26,15 +22,15 @@ def open():
         _button_d = image.load("images/menu/button_d500x120.png").convert()
 
 
-    text_style = TextInfo(fontcolor=(255,255,255), fontsize=50, h_anchor=0, v_anchor=0, alignment=0);
+    text_style = TextInfo(fontcolor=(255, 255, 255), fontsize=50, h_anchor=0, v_anchor=0, alignment=0);
 
-    button_style = ButtonInfo(500, 120, _button, _button_h, _button_p, _button_d);
+    button_style = ButtonInfo(500, 120, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0), _button, _button_h, _button_p, _button_d);
 
     resolution = view.get_resolution()
 
-    _title = Text((resolution[0] / 2, resolution[1] / 4), text_style, "RNG Kitty Blaster")
-    _single_player = Button((resolution[0] / 2, resolution[1] / 2), on_sp, None, text_style, button_style, True, "Single Player")
-    _multi_player = Button((resolution[0] / 2, resolution[1] / 4 * 3), on_mp, None, text_style, button_style, True, "Multi Player")
+    _title = Text((resolution[0] / 2, resolution[1] / 4), copy.copy(text_style), "RNG Kitty Blaster")
+    _single_player = Button((resolution[0] / 2, resolution[1] / 2), singleplayer, None, copy.copy(text_style), copy.copy(button_style), True, "Single Player")
+    _multi_player = Button((resolution[0] / 2, resolution[1] / 4 * 3), None, None, copy.copy(text_style), copy.copy(button_style), True, "Multi Player")
 
 
 
@@ -49,5 +45,3 @@ def close():
 
     _multi_player.delete()
     _multi_player = None
-
-    game_menu.open()
