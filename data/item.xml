@@ -4,8 +4,8 @@
   <tags>
     <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/>
     <tag type="ice" defense="0.2" resist="0.2" magic="0.2" exclude="fire, nature"/>
-    <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/><!---
-    <tag type="dark" attack="0.5" defense="0.5" exclude="light"/>
+    <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/>
+    <tag type="dark" attack="0.5" defense="0.5" exclude="light"/><!---
     <tag type="light"resist="2" magic="2" exclude="dark"/>
     <tag type="poison" magic="1.5" exclude="light, healing"/>
     <tag type="healing" magic="1.5" exclude="poison, dark">
@@ -20,6 +20,7 @@
     <name type="ice" rarity="common" word="blue" speech="adjective"/>
     <name type="nature" rarity="common" word="green" speech="adjective"/>
     <name type="bad" rarity="common" word="worn" speech="adjective"/>
+    <name type="dark" rarity="common" word="dark" speech="adjective"/>
   </names>
 
   <attributes>
@@ -27,6 +28,7 @@
     <attribute type="ice" rarity="common">raise 0.05 defense</attribute>
     <attribute type="ice" rarity="common">raise 0.05 resist</attribute>
     <attribute type="nature" rarity="common">raise 0.03 health</attribute>
+    <attribute type="dark" rarity="common">raise 0.03 health</attribute>
     <attribute type="bad">lower 0.03 health</attribute>
   </attributes>
 

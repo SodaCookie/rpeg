@@ -84,7 +84,7 @@ class Item:
     #print(list(t.attrib["type"] for t in tags)) # testing
     for attrib in attribute_rolls:
       args = attrib.text.split(' ') # name, arg1, arg2, arg3...
-      self.attributes.append(attribute.attributes[args[0]](*args[1:]))
+      self.attributes.append(args) # attributes get made during char update
 
     # generate type
     item_type = choice(Item.TYPES.findall("type"))

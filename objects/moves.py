@@ -82,12 +82,6 @@ class Move(object):
         pass
 
 
-class SelfMove(Move):
-
-    def get_target(self, *args):
-       return self.caster
-
-
 if __name__ == "__main__":
     # Testing
     nmove = Move("test")

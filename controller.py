@@ -21,7 +21,7 @@ class MouseController(object):
     def handle_mouse_motion(e):
         for controller in MouseController.mouse_controllers:
             controller.mouse_motion(e.buttons, e.pos, e.rel)
-            
+
     @staticmethod
     def handle_mouse_button_down(e):
         for controller in MouseController.mouse_controllers:
@@ -40,7 +40,7 @@ class MouseController(object):
 
     def mouse_motion(self, buttons, pos, rel):
         pass
-    
+
     def mouse_button_down(self, button, pos):
         pass
 

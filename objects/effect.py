@@ -55,6 +55,9 @@ class Effect:
     def on_heal(self, source, heal):
         return heal
 
+    def on_apply_heal(self, heal):
+        return heal
+
     def on_cast(self, source, move):
         pass
 

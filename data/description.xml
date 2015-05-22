@@ -4,6 +4,7 @@
   <templates>
     <template type="room">Upon moving forward, your party come across a [lighting] lit room. At the [location] of the room, one of you spots [object].</template>
     <template type="tunnel">Your party treks forward and comes across a [adj] tunnel. Moving through the [size] sized tunnel, you come across [object].</template>
+    <template type="room">Upon moving forward, your party come across a [lighting] lit room. At the [location] of the room, one of you spots [object].</template>
   </templates>
 
   <object>a broken cart, a pile of rubble, uniformly sized piles of dirt</object>
