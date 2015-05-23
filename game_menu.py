@@ -1,44 +1,33 @@
-from pygame import image
 import view
+from image_cache import ImageCache
 from text import Text, TextInfo
 from button import Button, ButtonInfo
 import objects.dungeon as dungeon
 import objects.party as party
 import copy
 
-_has_opened = False
+class GameMenu(object):
+    def __init__(self):
+        button = ImageCache.add("images/menu/button500x120.png")
+        button_h = ImageCache.add("images/menu/button_h500x120.png")
+        button_p = ImageCache.add("images/menu/button_p500x120.png")
+        button_d = ImageCache.add("images/menu/button_d500x120.png")
+        self.dungeon = dungeon.Dungeon("test")
+        self.party = party.Party([])
+        self.choices = []
+        self.dungeon.start.generate()
+        
+        text_style = TextInfo(fontcolor=(255,255,255), fontsize=20, alignment=0, h_anchor=0, v_anchor=0, wrap=True, width=300);
+        button_style = ButtonInfo(500, 14, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0), None, None, None, None);
 
-def open():
-    global _has_opened, _body, _choices, _button, _button_h, _button_p, _button_d, _dungeon, _party
+        resolution = view.get_resolution()
 
-    if not _has_opened:
-        _has_opened = True
-        _button = image.load("images/menu/button500x120.png").convert()
-        _button_h = image.load("images/menu/button_h500x120.png").convert()
-        _button_p = image.load("images/menu/button_p500x120.png").convert()
-        _button_d = image.load("images/menu/button_d500x120.png").convert()
-        _dungeon = dungeon.Dungeon("test")
-        _party = party.Party([])
-        _choices = []
-        _dungeon.start.generate()
+        event = self.dungeon.start.get_event()
+        self.body = Text((resolution[0]/4, 50), text_style, event.body)
+        for i, choice in enumerate(event.get_choices(self.party)):
+            self.choices.append(Button((resolution[0]/4, 300+i*50), None, None, copy.copy(text_style), copy.copy(button_style), True, choice))
 
-    text_style = TextInfo(fontcolor=(255,255,255), fontsize=14, alignment=0, wrap=True, width=300);
-    button_style = ButtonInfo(100, 20, (255, 255, 255), (255, 255, 255), (255, 255, 255), (255, 255, 255), _button, _button_h, _button_p, _button_d);
-
-    resolution = view.get_resolution()
-
-    event = _dungeon.start.get_event()
-    _body = Text((50, 50), text_style, event.body)
-    for i, choice in enumerate(event.get_choices(_party)):
-        _choices.append(Button((50, 300+i*20), None, None, copy.copy(text_style), copy.copy(button_style), True, "Single Player"))
-
-
-
-def close():
-    global _body, _single_player
-
-    _body.delete()
-    _body = None
-
-    _single_player.delete()
-    _single_player = None
+    def close(self):
+        self.body.delete()
+        for i in self.choices:
+            i.delete()

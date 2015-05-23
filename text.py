@@ -82,21 +82,12 @@ class Text(Renderable):
             if line_width > max_width:
                 max_width = line_width
 
-        if self.text_info.wrap:
-            if self.text_info.h_anchor < 0:
-                x_offset = -self.text_info.width
-            elif self.text_info.h_anchor > 0:
-                x_offset = 0
-            else:
-                x_offset = -self.text_info.width / 2
+        if self.text_info.h_anchor < 0:
+            x_offset = -max_width
+        elif self.text_info.h_anchor > 0:
+            x_offset = 0
         else:
-
-            if self.text_info.h_anchor < 0:
-                x_offset = -max_width
-            elif self.text_info.h_anchor > 0:
-                x_offset = 0
-            else:
-                x_offset = -max_width / 2
+            x_offset = -max_width / 2
 
         if self.text_info.v_anchor < 0:
             y_offset = -self.text_info.fontsize * len(lines)
