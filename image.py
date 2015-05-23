@@ -1,12 +1,12 @@
-from pygame import image
+from image_cache import ImageCache
 from view import Renderable
 
 class Image(Renderable):
-    def __init__(self, pos, img, h_anchor=0, v_anchor=0, filename=""):
+    def __init__(self, pos, h_anchor=0, v_anchor=0, surface=None, filename="", alpha=False):
         super().__init__(pos)
 
         if filename != "":
-            self.img = image.load(filename).convert()
+            self.img = ImageCache.add(filename, alpha)
         else:
             self.img = surface
         self.h_anchor = h_anchor
