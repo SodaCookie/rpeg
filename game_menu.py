@@ -40,7 +40,7 @@ class GameMenu(object):
                                    width=149*GameMenu.SCALE);
         self.button_style = ButtonInfo(
             500, 14, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0),
-            None, None, None, None);
+            None, None, None, None, h_anchor=1, v_anchor=1);
 
         self.resolution = view.get_resolution()
         self.event = self.dungeon.start.get_event()
@@ -106,7 +106,7 @@ class GameMenu(object):
             button_func = partial(self.display_dialog,
                                   self.event.make_choice(choice))
             self.choices.append(Button(
-                (self.resolution[0]/4, 300+i*50), button_func, None,
+                (6*GameMenu.SCALE, 250+i*25), button_func, None,
                 copy.copy(self.text_style), copy.copy(self.button_style),
                 True, choice))
         if not choices:

@@ -3,19 +3,21 @@ from text import Text
 from controller import MouseController
 
 class ButtonInfo:
-    def __init__(self, 
-                 width, 
-                 height, 
-                 text_color = None, 
-                 h_text_color = None, 
-                 p_text_color = None, 
-                 d_text_color = None, 
-                 img=None, 
-                 hovered_img=None, 
-                 pressed_img=None, 
-                 disabled_img=None, 
-                 stretch=True, 
-                 tile=False):
+    def __init__(self,
+                 width,
+                 height,
+                 text_color = None,
+                 h_text_color = None,
+                 p_text_color = None,
+                 d_text_color = None,
+                 img=None,
+                 hovered_img=None,
+                 pressed_img=None,
+                 disabled_img=None,
+                 stretch=True,
+                 tile=False,
+                 h_anchor=0,
+                 v_anchor=0):
         self.width = width
         self.height = height
         self.text_color = text_color
@@ -28,6 +30,8 @@ class ButtonInfo:
         self.disabled_img = disabled_img
         self.stretch = stretch
         self.tile = tile
+        self.h_anchor = h_anchor
+        self.v_anchor = v_anchor
 
 
 
@@ -37,13 +41,13 @@ class Button(Text, MouseController):
     PRESSED=2
     DISABLED=3
 
-    def __init__(self, 
-                 pos, 
-                 on_pressed, 
-                 on_released, 
-                 text_info, 
-                 button_info, 
-                 enabled, 
+    def __init__(self,
+                 pos,
+                 on_pressed,
+                 on_released,
+                 text_info,
+                 button_info,
+                 enabled,
                  default_text = ""):
         Text.__init__(self, pos, text_info, default_text)
         MouseController.__init__(self)
@@ -68,6 +72,7 @@ class Button(Text, MouseController):
 
     def draw(self, surface):
         pos = (self.pos[0] - self.button_info.width / 2, self.pos[1] - self.button_info.height / 2)
+
         if self.state == Button.DISABLED and self.button_info.disabled_img != None:
             surface.blit(self.button_info.disabled_img, pos)
         elif self.state == Button.NEUTRAL and self.button_info.img != None:
@@ -78,7 +83,7 @@ class Button(Text, MouseController):
             surface.blit(self.button_info.pressed_img, pos)
 
         Text.draw(self, surface)
-        
+
     def mouse_motion(self, buttons, pos, rel):
         if self.state == Button.DISABLED:
             return
@@ -100,7 +105,7 @@ class Button(Text, MouseController):
                 self.state = Button.NEUTRAL
                 if self.button_info.text_color != None:
                     self.text_info.fontcolor = self.button_info.text_color
-    
+
     def mouse_button_down(self, button, pos):
         if self.state == Button.DISABLED:
             return
