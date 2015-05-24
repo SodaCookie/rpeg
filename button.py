@@ -5,7 +5,7 @@ from controller import MouseController
 class ButtonInfo:
     def __init__(self,
                  width,
-                 height,
+                 height=0,
                  text_color = None,
                  h_text_color = None,
                  p_text_color = None,
@@ -55,6 +55,8 @@ class Button(Text, MouseController):
         self.on_released = on_released
         self.button_info = button_info
         self.toggle(enabled)
+        if self.button_info.height == 0:
+            self.button_info.height = self.get_height()[1]
 
     def delete(self):
         Text.delete(self)
