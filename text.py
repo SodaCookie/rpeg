@@ -45,6 +45,9 @@ class Text(Renderable):
         self.text_info = text_info
         self.text = default_text
         self.font = font.Font(text_info.fontname, text_info.fontsize)
+        self.lines = self.text.split('\n')
+        if self.text_info.wrap:
+            self._wrap_text()
 
     def delete(self):
         super().delete()
@@ -52,33 +55,18 @@ class Text(Renderable):
     def draw(self, surface):
         f_surf = self.font.render(self.text, True, self.text_info.fontcolor)
 
-        lines = self.text.split('\n')
-
         # Star out sensitive information
+        # (this is currently broken when used with text wrapping)
         if self.text_info.sensitive:
             for i in range(len(lines)):
-              lines[i] = "".join("*" for j in range(len(lines[i])))
-
-        # Wrap text if necessary
-        if self.text_info.wrap:
-            j = 0
-            while j < len(lines):
-                i = 0
-                words = lines[j].split(' ')
-                while i < len(words):
-                    line_size = self.font.size(' '.join(words[:i+1]))[0]
-                    if line_size > self.text_info.width:
-                        lines = lines[:j]+[' '.join(words[:i-1])]+[' '.join(words[i-1:])]+lines[j+1:]
-                        break
-                    i += 1
-                j += 1
+              self.lines[i] = "".join("*" for j in range(len(self.lines[i])))
 
         # Decide on where to put each line of text. Anchors define the
         # x_offset, y_offset variables and alignment decides the align
         # variable.
         max_width = 0
-        for i in range(len(lines)):
-            line_width = self.font.size(lines[i])[0]
+        for i in range(len(self.lines)):
+            line_width = self.font.size(self.lines[i])[0]
             if line_width > max_width:
                 max_width = line_width
 
@@ -90,25 +78,49 @@ class Text(Renderable):
             x_offset = -max_width / 2
 
         if self.text_info.v_anchor < 0:
-            y_offset = -self.text_info.fontsize * len(lines)
+            y_offset = -self.text_info.fontsize * len(self.lines)
         elif self.text_info.v_anchor > 0:
             y_offset = 0
         else:
-            y_offset = -self.text_info.fontsize * len(lines) / 2
+            y_offset = -self.text_info.fontsize * len(self.lines) / 2
 
         if self.text_info.alignment < 0:
             align = 0
 
         # Iterate over the lines of text to draw them.
-        for i in range(len(lines)):
+        for i in range(len(self.lines)):
             if self.text_info.alignment > 0:
-                align = max_width - self.font.size(lines[i])[0]
+                align = max_width - self.font.size(self.lines[i])[0]
             elif self.text_info.alignment == 0:
-                align = (max_width - self.font.size(lines[i])[0]) / 2
+                align = (max_width - self.font.size(self.lines[i])[0]) / 2
 
-            surface.blit(self.font.render(lines[i], True, self.text_info.fontcolor),
+            surface.blit(self.font.render(self.lines[i], True, self.text_info.fontcolor),
                             (x_offset + self.pos[0] + align,
                              y_offset + self.pos[1] + self.text_info.fontsize * i))
+
+    def get_size(self):
+        max_width = 0
+        for i in range(len(self.lines)):
+            line_width = self.font.size(self.lines[i])[0]
+            if line_width > max_width:
+                max_width = line_width
+
+        return (max_width, len(self.lines) * self.text_info.fontsize);
+
+    def _wrap_text(self):
+        if self.text_info.wrap:
+            j = 0
+            while j < len(self.lines):
+                i = 0
+                words = self.lines[j].split(' ')
+                while i < len(words):
+                    line_size = self.font.size(' '.join(words[:i + 1]))[0]
+                    if line_size > self.text_info.width:
+                        self.lines = self.lines[:j] + [' '.join(words[:i - 1])] + [' '.join(words[i - 1:])] + self.lines[j + 1:]
+                        break
+                    i += 1
+                j += 1
+
 
 
 if __name__ == "__main__":

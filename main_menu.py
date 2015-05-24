@@ -11,8 +11,22 @@ class MainMenu(object):
         button_p = ImageCache.add("images/menu/button_p500x120.png")
         button_d = ImageCache.add("images/menu/button_d500x120.png")
 
-        text_style = TextInfo(fontcolor=(255, 255, 255), fontsize=50, h_anchor=0, v_anchor=0, alignment=0);
-        button_style = ButtonInfo(500, 120, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0), button, button_h, button_p, button_d);
+        text_style = TextInfo(fontcolor=(255, 255, 255),
+                              fontsize=50,
+                              h_anchor=0,
+                              v_anchor=0,
+                              alignment=0);
+        button_style = ButtonInfo(500, 120,
+                                  (255, 255, 255),
+                                  (255, 255, 0),
+                                  (0, 128, 0),
+                                  (0, 0, 0),
+                                  button,
+                                  button_h,
+                                  button_p,
+                                  button_d,
+                                  h_anchor=0,
+                                  v_anchor=0);
 
         resolution = view.get_resolution()
 

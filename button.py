@@ -16,8 +16,8 @@ class ButtonInfo:
                  disabled_img=None,
                  stretch=True,
                  tile=False,
-                 h_anchor=0,
-                 v_anchor=0):
+                 h_anchor=1,
+                 v_anchor=1):
         self.width = width
         self.height = height
         self.text_color = text_color
@@ -28,8 +28,8 @@ class ButtonInfo:
         self.hovered_img = hovered_img
         self.pressed_img = pressed_img
         self.disabled_img = disabled_img
-        self.stretch = stretch
-        self.tile = tile
+        self.stretch = stretch  # Not implemented
+        self.tile = tile        # Not implemented
         self.h_anchor = h_anchor
         self.v_anchor = v_anchor
 
@@ -71,7 +71,21 @@ class Button(Text, MouseController):
                 self.text_info.fontcolor = self.button_info.d_text_color
 
     def draw(self, surface):
-        pos = (self.pos[0] - self.button_info.width / 2, self.pos[1] - self.button_info.height / 2)
+        if self.button_info.h_anchor < 0:
+            x_offset = -self.button_info.width
+        elif self.button_info.h_anchor > 0:
+            x_offset = 0
+        else:
+            x_offset = -self.button_info.width / 2
+
+        if self.button_info.v_anchor < 0:
+            y_offset = -self.button_info.height
+        elif self.button_info.v_anchor > 0:
+            y_offset = 0
+        else:
+            y_offset = -self.button_info.height / 2
+
+        pos = (self.pos[0] + x_offset, self.pos[1] + y_offset)
 
         if self.state == Button.DISABLED and self.button_info.disabled_img != None:
             surface.blit(self.button_info.disabled_img, pos)
@@ -87,9 +101,23 @@ class Button(Text, MouseController):
     def mouse_motion(self, buttons, pos, rel):
         if self.state == Button.DISABLED:
             return
+        
+        if self.button_info.h_anchor < 0:
+            x_offset = self.button_info.width / 2
+        elif self.button_info.h_anchor > 0:
+            x_offset = -self.button_info.width / 2
+        else:
+            x_offset = 0
 
-        if self.pos[0] - self.button_info.width / 2 <= pos[0] <= self.pos[0] + self.button_info.width / 2 and\
-           self.pos[1] - self.button_info.height / 2 <= pos[1] <= self.pos[1] + self.button_info.height / 2:
+        if self.button_info.v_anchor < 0:
+            y_offset = self.button_info.height / 2
+        elif self.button_info.v_anchor > 0:
+            y_offset = -self.button_info.height / 2
+        else:
+            y_offset = 0
+
+        if self.pos[0] - self.button_info.width / 2 <= pos[0] + x_offset <= self.pos[0] + self.button_info.width / 2 and\
+           self.pos[1] - self.button_info.height / 2 <= pos[1] + y_offset <= self.pos[1] + self.button_info.height / 2:
             if self.state == Button.NEUTRAL:
                 self.state = Button.HOVERED
                 if self.button_info.h_text_color != None:

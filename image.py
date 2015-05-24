@@ -2,13 +2,17 @@ from image_cache import ImageCache
 from view import Renderable
 
 class Image(Renderable):
-    def __init__(self, pos, h_anchor=0, v_anchor=0, surface=None, filename="", alpha=False):
+    # Getting close to warrenting its own ImageInfo
+    def __init__(self, pos, width=0, height=0, h_anchor=0, v_anchor=0, surface=None, filename="", alpha=False):
         super().__init__(pos)
 
         if filename != "":
             self.img = ImageCache.add(filename, alpha)
         else:
             self.img = surface
+
+        self.width = width
+        self.height = height
         self.h_anchor = h_anchor
         self.v_anchor = v_anchor
 
@@ -32,4 +36,8 @@ class Image(Renderable):
         else:
             y_offset = -size[1] / 2
 
-        surface.blit(self.img, (self.pos[0] + x_offset, self.pos[1] + y_offset))
+        if self.width > 0 and self.height > 0:
+            # This is a bad way to do this since you can only clip in two directions
+            surface.blit(self.img, (self.pos[0] + x_offset, self.pos[1] + y_offset), (0, 0, self.width, self.height))
+        else:
+            surface.blit(self.img, (self.pos[0] + x_offset, self.pos[1] + y_offset))
