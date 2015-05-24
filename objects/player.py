@@ -1,3 +1,5 @@
+from random import choice
+
 import objects.character as character
 import objects.attribute as attribute
 import objects.moves as moves
@@ -7,6 +9,14 @@ class Player(character.Character):
 
     MAX_LEVEL = 15
     POINTS_PER_LEVEL = 10
+    FEMALE_PORTRAITS = ["images/player/female1.png",
+                        "images/player/female2.png",
+                        "images/player/female3.png",
+                        "images/player/female4.png"]
+    MALE_PORTRAITS = ["images/player/male1.png",
+                      "images/player/male2.png",
+                      "images/player/male3.png",
+                      "images/player/male4.png"]
 
     def __init__(self, name, race="human"):
         super().__init__(name)
@@ -14,7 +24,7 @@ class Player(character.Character):
         self.experience = 0
         self.level = 1
         self.race = race
-
+        self.gender = choice(["male", "female"])
         self.equipment = {}
         self.equipment["hand1"] = item.Item(0, "common", generate=False)
         self.equipment["hand2"] = item.Item(0, "common", generate=False)
@@ -25,6 +35,10 @@ class Player(character.Character):
         self.equipment["head"] = item.Item(0, "common", generate=False)
         self.equipment["extra1"] = item.Item(0, "common", generate=False)
         self.equipment["extra2"] = item.Item(0, "common", generate=False)
+        if self.gender == "male":
+            self.portrait = choice(Player.MALE_PORTRAITS)
+        else:
+            self.portrait = choice(Player.FEMALE_PORTRAITS)
 
     def update(self):
         self.attack = self.base_attack

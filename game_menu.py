@@ -13,6 +13,12 @@ import objects.dungeon as dungeon
 import objects.party as party
 import objects.player as player
 
+class PlayerDisplayData(object):
+
+    def __init__(self):
+        self.back = None
+        self.portrait = None
+        self.name = None
 
 class GameMenu(object):
 
@@ -26,11 +32,12 @@ class GameMenu(object):
         button_p = ImageCache.add("images/menu/button_p500x120.png")
         button_d = ImageCache.add("images/menu/button_d500x120.png")
         self.dungeon = dungeon.Dungeon("test")
-        self.party = party.Party([player.Player("Eric") for i in range(4)])
+        players = [player.Player("Player the Terrible") for i in range(4)]
+        self.player_display_data = []
+        self.party = party.Party(players)
         self.choices = []
         self.body = None
         self.dungeon.start.generate()
-        self.player_backs = []
         self.text_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=16,
                                    alignment=-1,
@@ -49,28 +56,43 @@ class GameMenu(object):
 
     def display_party(self):
         # Clean up previous dialogs
-        if self.player_backs:
-            for back in self.player_backs:
-                 back.delete()
-            self.player_backs = []
+        self.close_party()
 
-        # Create new backs for the players
+        # Create new ui for the players
         for i, member in enumerate(self.party.players):
+            player_display_data = PlayerDisplayData()
             chosen_back = random.choice(self.player_bg)
-            self.player_backs.append(Image(
-            pos = (
-               6*GameMenu.SCALE+(i*(chosen_back.get_width()+5))*GameMenu.SCALE,
-               self.resolution[1]-(chosen_back.get_height()+5)*GameMenu.SCALE),
-            surface = scale(chosen_back, tuple([z * GameMenu.SCALE for z in chosen_back.get_size()])),
-            h_anchor = 1,
-            v_anchor = 1,
-            alpha = True))
+            player_display_data.back = Image(
+                pos = (
+                   6*GameMenu.SCALE+(i*(chosen_back.get_width()+5))*GameMenu.SCALE, self.resolution[1]-(chosen_back.get_height()+5)*GameMenu.SCALE),
+                surface = scale(
+                    chosen_back, tuple([z * GameMenu.SCALE
+                    for z in chosen_back.get_size()])),
+                h_anchor = 1,
+                v_anchor = 1,
+                alpha = True)
+            portrait = ImageCache.add(member.portrait, True)
+
+            player_display_data.portrait = Image(
+                pos = (
+                   6*GameMenu.SCALE+(i*(chosen_back.get_width()+5))*GameMenu.SCALE, self.resolution[1]-(chosen_back.get_height()+5)*GameMenu.SCALE),
+                surface = scale(
+                    portrait, tuple([z * GameMenu.SCALE
+                    for z in portrait.get_size()])),
+                h_anchor = 1,
+                v_anchor = 1,
+                alpha = True)
+
+            player_display_data.text =  Text((
+                6*GameMenu.SCALE+(i*(chosen_back.get_width()+5))*GameMenu.SCALE, self.resolution[1]-(chosen_back.get_height()+10)*GameMenu.SCALE), self.text_style,
+                member.name)
 
     def close_party(self):
-        if self.player_backs:
-            for back in self.player_backs:
-                 back.delete()
-            self.player_backs = []
+        if self.player_display_data:
+            for player in self.player_display_data:
+                player.back.delete()
+                player.portrait.delete()
+                player.text.delete()
 
     def display_dialog(self, dialog):
         # Clean up previous dialog if any
