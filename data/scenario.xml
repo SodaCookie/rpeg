@@ -42,12 +42,25 @@
 
     <event name="empty event" type="entrance" level="any">
         <dialog name="main">
-            <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus.</body>
+            <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus. test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a</body>
             <choices>
                 <choice name="leave">Leave.</choice>
                 <choice name="quit">Quit.</choice>
                 <choice name="peta">PETA!</choice>
             </choices>
+        </dialog>
+        <dialog name="peta">
+            <body>PETA isn`t coming.</body>
+            <chance fail="peta came">50</chance>
+        </dialog>
+        <dialog name="peta came">
+            <body>PETA came to the rescue. The End.</body>
+        </dialog>
+        <dialog name="leave">
+            <body>You storm away. After all what kind of sick game designer would make you such horrible things.</body>
+        </dialog>
+        <dialog name="quit">
+            <body>Quitting is not an option.</body>
         </dialog>
     </event>
 

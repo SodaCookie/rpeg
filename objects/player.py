@@ -8,23 +8,23 @@ class Player(character.Character):
     MAX_LEVEL = 15
     POINTS_PER_LEVEL = 10
 
-    def __init__(self, name):
+    def __init__(self, name, race="human"):
         super().__init__(name)
         self.skill_points = 0
         self.experience = 0
         self.level = 1
-        self.race = "human"
+        self.race = race
 
         self.equipment = {}
-        self.equipment["hand1"] = item.Item(generate=False)
-        self.equipment["hand2"] = item.Item(generate=False)
-        self.equipment["body"] = item.Item(generate=False)
-        self.equipment["legs"] = item.Item(generate=False)
-        self.equipment["feet"] = item.Item(generate=False)
-        self.equipment["arms"] = item.Item(generate=False)
-        self.equipment["head"] = item.Item(generate=False)
-        self.equipment["extra1"] = item.Item(generate=False)
-        self.equipment["extra2"] = item.Item(generate=False)
+        self.equipment["hand1"] = item.Item(0, "common", generate=False)
+        self.equipment["hand2"] = item.Item(0, "common", generate=False)
+        self.equipment["body"] = item.Item(0, "common", generate=False)
+        self.equipment["legs"] = item.Item(0, "common", generate=False)
+        self.equipment["feet"] = item.Item(0, "common", generate=False)
+        self.equipment["arms"] = item.Item(0, "common", generate=False)
+        self.equipment["head"] = item.Item(0, "common", generate=False)
+        self.equipment["extra1"] = item.Item(0, "common", generate=False)
+        self.equipment["extra2"] = item.Item(0, "common", generate=False)
 
     def update(self):
         self.attack = self.base_attack

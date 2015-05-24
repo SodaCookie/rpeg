@@ -146,7 +146,7 @@ class Dungeon(object):
       node.set_type("item")
       nodes.remove(node)
 
-    print(*["Depth %d: [%s]"%(i, ", ".join(loc.loc_type for loc in locs)) for i, locs in frame.items()], sep="\n")
+    #print(*["Depth %d: [%s]"%(i, ", ".join(loc.loc_type for loc in locs)) for i, locs in frame.items()], sep="\n")
 
 
 if __name__ == "__main__":

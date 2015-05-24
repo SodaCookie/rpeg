@@ -3,7 +3,7 @@ from pygame import display
 
 _screen = None
 
-_resolution = (800, 600)
+_resolution = (1280, 720)
 def set_resolution(new_resolution):
     global _resolution
     _resolution = new_resolution
@@ -32,7 +32,7 @@ def render():
     _screen.fill((0, 0, 0))
     for obj in Renderable.renderables:
         obj.draw(_screen)
-        
+
     display.flip()
 
 

@@ -33,7 +33,6 @@ class Dialog(object):
           self.chance = int(dialog.find("chance").text)
           if dialog.find("chance").attrib.get("fail") is not None:
             self.fail = Dialog(dialog.find("chance").attrib["fail"], etree)
-            print(self.name, self.fail.name)
         if dialog.find("action") is not None:
           self.action = dialog.find("action").text
     elif name == "main":
@@ -53,7 +52,9 @@ class Dialog(object):
 
   def make_choice(self, choice):
     """Returns the dialogue that was chosen, if every roll fails it will default to returning the last roll"""
-    choice = self.choices[choice]
+    choice = self.choices.get(choice)
+    if not choice:
+      return None
     if choice.fail is None: # just to make sure im not dumb >.<
       return choice # in the event that a single choice is given a chance with fail dialog
     while not choice.roll(): # while keep failing

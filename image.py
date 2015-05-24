@@ -15,7 +15,7 @@ class Image(Renderable):
     def delete(self):
         super().delete()
 
-    def draw(surface):
+    def draw(self, surface):
         size = self.img.get_size()
 
         if self.h_anchor < 0:
