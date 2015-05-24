@@ -123,17 +123,20 @@ class GameMenu(object):
         self.body = Text((10*GameMenu.SCALE, 10*GameMenu.SCALE),
                           self.text_style,
                           self.event.body)
+        displacement = self.body.get_size()[1]+14*GameMenu.SCALE
         choices = self.event.get_choices(self.party)
         for i, choice in enumerate(choices):
             button_func = partial(self.display_dialog,
                                   self.event.make_choice(choice))
             self.choices.append(Button(
-                (6*GameMenu.SCALE, 250+i*25), button_func, None,
+                (10*GameMenu.SCALE, displacement), button_func, None,
                 copy.copy(self.text_style), copy.copy(self.button_style),
-                True, choice))
+                True, "%d. %s"%(i+1, choice)))
+            displacement += self.choices[-1].get_size()[1]+1*GameMenu.SCALE
+            print(displacement)
         if not choices:
             self.choices.append(Button(
-                (self.resolution[0]/4, 300), self.close_dialog, None,
+                (10*GameMenu.SCALE, displacement), self.close_dialog, None,
                 copy.copy(self.text_style), copy.copy(self.button_style),
                 True, "Next"))
 

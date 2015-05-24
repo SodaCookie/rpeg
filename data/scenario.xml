@@ -44,7 +44,7 @@
         <dialog name="main">
             <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus. test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a</body>
             <choices>
-                <choice name="leave">Leave.</choice>
+                <choice name="leave">Leave. test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test</choice>
                 <choice name="quit">Quit.</choice>
                 <choice name="peta">PETA!</choice>
             </choices>
