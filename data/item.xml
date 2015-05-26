@@ -32,6 +32,15 @@
     <attribute type="bad">lower 0.03 health</attribute>
   </attributes>
 
+  <images>
+    <base>
+    </base>
+    <overlay>
+    </overlay>
+    <back>
+    </back>
+  </images>
+
   <types>
     <type name="sword" slot="hand" attack="1" defense="-0.8" resist="-0.8" health="-0.9" magic="-0.5"/>
   </types>

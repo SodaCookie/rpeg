@@ -3,7 +3,7 @@ from view import Renderable
 
 class Image(Renderable):
     # Getting close to warrenting its own ImageInfo
-    def __init__(self, pos, width=0, height=0, h_anchor=0, v_anchor=0, surface=None, filename="", alpha=False):
+    def __init__(self, pos, width=None, height=None, h_anchor=0, v_anchor=0, surface=None, filename="", alpha=False):
         super().__init__(pos)
 
         if filename != "":
@@ -36,7 +36,7 @@ class Image(Renderable):
         else:
             y_offset = -size[1] / 2
 
-        if self.width > 0 and self.height > 0:
+        if self.width != None and self.height != None:
             # This is a bad way to do this since you can only clip in two directions
             surface.blit(self.img, (self.pos[0] + x_offset, self.pos[1] + y_offset), (0, 0, self.width, self.height))
         else:

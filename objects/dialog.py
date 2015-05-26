@@ -1,5 +1,4 @@
 import random
-import objects.action as action
 
 class Dialog(object):
   """Dialog object is used to keep track of possible text"""
@@ -19,7 +18,7 @@ class Dialog(object):
     self.condition = "" # condition type, *args...
     self.chance = 100 # chance that this dialog will be successful
     self.fail = None
-    self.action = None
+    self.action = ""
 
     dialog = etree.find("dialog[@name='%s']"%name)
     if dialog is not None:
@@ -43,6 +42,9 @@ class Dialog(object):
     if random.randint(1,100) < self.chance:
       return True
     return False
+
+  def get_action(self):
+    pass
 
   def get_choices(self, party):
     """get the available choices based on the party"""

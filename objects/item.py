@@ -17,6 +17,7 @@ class Item:
   TAGS = _XML.findall("tags/tag") # all tags including bad tags
   NAMES = _XML.find("names")
   ATTRIB = _XML.find("attributes")
+  IMAGE = _XML.find("image")
   TYPES = _XML.find("types")
 
   def __init__(self, power, rarity, generate=True):

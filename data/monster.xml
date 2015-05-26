@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<data>
+
+  <tags>
+    <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/><!---
+    <tag type="ice" defense="0.2" resist="0.2" magic="0.2" exclude="fire, nature"/>
+    <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/>
+    <tag type="dark" attack="0.5" defense="0.5" exclude="light"/>
+    <tag type="light"resist="2" magic="2" exclude="dark"/>
+    <tag type="poison" magic="1.5" exclude="light, healing"/>
+    <tag type="healing" magic="1.5" exclude="poison, dark">
+    <tag type="power" attack="3" magic="3" health="-0.5" exclude="defense"/>
+    <tag type="defense" defense="2" resist="2" health="2" exclude="power"/>
+    <tag type="speed" speed="2"/>
+    <tag type="magic" magic="2"/>-->
+  </tags>
+
+  <names>
+    <name type="fire" diff="common" word="red" speech="adjective"/>
+    <name type="ice" diff="elite" word="blizzard" speech="adjective"/>
+    <name type="nature" diff="common" word="green" speech="adjective"/>
+    <name type="dark" diff="common" word="dark" speech="adjective"/>
+    <name type="dark" diff="boss" word="amduscas" speech="name"/>
+  </names>
+
+  <image>
+  </image>
+
+  <moves>
+  </moves>
+
+  <mtypes>
+    <mtype>Jeremy</mtype>
+  </mtypes>
+
+</data>

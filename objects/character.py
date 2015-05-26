@@ -23,6 +23,8 @@ class Character(object):
         self.health = 100
         self.resist = 0
         self.speed = 5
+        self.action_max = 100
+        self.action = 0
 
         self.base_attack = 10
         self.base_defense = 0

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <data>
 
-    <event name="sword_event" type="event" level="any" >
+    <event name="Sword Event" type="event" level="any" >
         <tag>object@a sword, adj@mossy</tag>
         <dialog name="main">
             <body>This is some text testing.
@@ -17,35 +17,29 @@
             <body>Hey man!!! You got some gold for cutting down that tree!</body>
             <chance fail="picked sword failed">80</chance>
             <condition>hasitemtype sword</condition>
-            <action>gold 50</action>
         </dialog>
         <dialog name="picked sword failed">
             <body>Your sword got stuck in the tree.</body>
             <chance fail="picked sword failed failed">50</chance>
-            <action>lose sword</action>
         </dialog>
         <dialog name="picked sword failed failed">
             <body>You are super unlucky</body>
-            <chance>0</chance>
             <action>lose sword</action>
         </dialog>
         <dialog name="try">
             <body>Wow you tried to cut down a tree with your own hands. Tsk tsk.</body>
-            <chance>0</chance>
-            <action>nothing</action>
         </dialog>
         <dialog name="quit">
             <body>You turn your back on your duty.</body>
-            <action>nothing</action>
         </dialog>
     </event>
 
-    <event name="empty event" type="entrance" level="any">
+    <event name="the catacombs" type="entrance" level="any">
         <dialog name="main">
-            <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus. test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a</body>
+            <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus.</body>
             <choices>
-                <choice name="leave">Leave. test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test</choice>
                 <choice name="quit">Quit.</choice>
+                <choice name="leave">Leave.</choice>
                 <choice name="peta">PETA!</choice>
             </choices>
         </dialog>
@@ -61,6 +55,11 @@
         </dialog>
         <dialog name="quit">
             <body>Quitting is not an option.</body>
+            <chance fail="quit money">0</chance>
+        </dialog>
+        <dialog name="quit money">
+            <body>Quitting is not an option. OHHH A PENNY</body>
+            <action>addgold 50</action>
         </dialog>
     </event>
 

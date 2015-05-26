@@ -7,8 +7,7 @@ import re
 class Location(object):
   """Location object is the node for each part of a dungeon"""
 
-  ROOM_TYPE = {1 : ["bridge", "hallway", "tunnel"],\
-               2 : ["fork"],\
+  ROOM_TYPE = {
                "default" : ["room"]}
   INPUT_PATTERN = re.compile("\[(.*?)\]", re.IGNORECASE)
   EVENTS = tree.parse("data/scenario.xml")
@@ -28,6 +27,9 @@ class Location(object):
     if not self.dialog_cache:
       self.dialog_cache = dialog.Dialog("main", self.event)
     return self.dialog_cache
+
+  def get_event_name(self):
+    return self.event.attrib["name"]
 
   def set_block(self):
     self.blocked = True

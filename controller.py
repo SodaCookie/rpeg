@@ -14,6 +14,9 @@ def update():
         for e in event.get(pygame.MOUSEBUTTONUP):
             MouseController.handle_mouse_button_up(e)
 
+    if event.peek(pygame.USEREVENT):
+        pass
+
 def merge(*funcs):
     for func in funcs:
         func()

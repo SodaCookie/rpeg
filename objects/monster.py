@@ -1,58 +1,65 @@
+from random import choice, randint
+import xml.etree.ElementTree as tree
+
+from pygame import image, Surface
+
 import objects.character as character
 
 class Monster(character.Character):
 
-    def __init__(self, power, difficulty = 1, mtype=""):
+    _XML = tree.parse("data/item.xml")
+    TAGS = _XML.findall("tags/tag") # all tags including bad tags
+    NAMES = _XML.find("names")
+    IMAGE = _XML.find("images")
+    TYPES = _XML.find("mtypes")
+
+    def __init__(self, power, difficulty = "common", mtype=""):
+        """Power is used to calculate the amount of stats the monster is
+        given. difficulty will modify a few things about the monster
+        for example 1 is a normal spawn but 2 is a elite mob and a
+        3 is a boss mob"""
         super().__init__("")
         self.difficulty = difficulty
         self.monster = monster
-        self.monstertype = mtype
+        self.tags = []
+        self.mtype = mtype
         self.attack = 0
         self.defense = 0
         self.resist = 0
         self.magic = 0
-        self.current_health = 0
-        self.health = 0
+        self.current_health = 100
+        self.health = 100
         self.speed = 0
         self.power = power
-        with open("prefix.txt", "r") as f:
-            self.prefix = f.read().split("\n")
-        with open("monster.txt", "r") as f:
-            self.monster = f.read().split("\n")
-        with open("suffix.txt", "r") as f:
-            self.suffix = f.read().split("\n")
+        self.name = "Jeremy's Face"
+        self.surface = image.load("images/monster/test_monster.png").convert_alpha()
+        self.generate_tags()
+        self.generate_name()
+        self.generate_stats(power)
 
-        # if power == 0:
-        #     power = 0
-        #     for p in party:
-        #         power += p.attack + p.defense + p.health + p.magic + p.speed
-        #     power /= len(party)
+    def generate_tags(self):
+        # generate tags
+        if self.difficulty == "common":
+          num_tags = randint(1, 2)
+        elif self.difficulty == "elite":
+          num_tags = randint(2, 3)
+        elif self.difficulty == "boss":
+          num_tags = max(randint(2, 3), randint(2, 3))
 
-        self.generateName()
-        self.generateStats(power)
+        # roll for tags
+        tags = [choice(Item.TAGS) for i in range(num_tags)]
+        # fix exclusions (first come first serve) will be replaced with a tag
+        # before it. Based off the first tag
+        excludes = set(tags[0].attrib.get("exclude").split(', ')) or not set()
+        for i, tag in enumerate(tags):
+          if tag.attrib["type"] in excludes:
+            tags[i] = tags[i-1]
+          else: # add more exclusions if any
+            excludes.union(set(tag.attrib.get("exclude").split(', ') or not set()))
 
-    def randCoef(self, min, max):
-        return random.random() * (max - min) + min
-
-    def generateStats(self, power):
+    def generate_stats(self):
         """Generates stats based on the power level of the players"""
         pass
 
-    def generateName(self):
-        choices = {}
-        if self.monstertype == "":
-            choices["monster"] = random.choice(self.monster)
-        else:
-            # Placeholder. If specified monster type
-            choices["monster"] = self.monster
-        if self.difficulty >= 2:
-            choices["prefix"] = random.choice(self.prefix)
-        if self.difficulty >= 3:
-            choices["suffix"] = random.choice(self.suffix)
-
-        if self.difficulty == 1:
-            self.name = "%(monster)s" % (choices)
-        elif self.difficulty == 2:
-            self.name = "%(prefix)s %(monster)s" % (choices)
-        elif self.difficulty == 3:
-            self.name = "%(prefix)s %(monster)s of %(suffix)s" % (choices)
+    def generate_name(self):
+        pass

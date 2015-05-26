@@ -56,7 +56,7 @@ class Button(Text, MouseController):
         self.button_info = button_info
         self.toggle(enabled)
         if self.button_info.height == 0:
-            self.button_info.height = self.get_height()[1]
+            self.button_info.height = self.get_size()[1]
 
     def delete(self):
         Text.delete(self)
@@ -103,7 +103,7 @@ class Button(Text, MouseController):
     def mouse_motion(self, buttons, pos, rel):
         if self.state == Button.DISABLED:
             return
-        
+
         if self.button_info.h_anchor < 0:
             x_offset = self.button_info.width / 2
         elif self.button_info.h_anchor > 0:
