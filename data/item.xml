@@ -2,10 +2,10 @@
 <data>
 
   <tags>
-    <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/>
+    <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/><!---
     <tag type="ice" defense="0.2" resist="0.2" magic="0.2" exclude="fire, nature"/>
     <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/>
-    <tag type="dark" attack="0.5" defense="0.5" exclude="light"/><!---
+    <tag type="dark" attack="0.5" defense="0.5" exclude="light"/>
     <tag type="light"resist="2" magic="2" exclude="dark"/>
     <tag type="poison" magic="1.5" exclude="light, healing"/>
     <tag type="healing" magic="1.5" exclude="poison, dark">
@@ -17,18 +17,96 @@
 
   <names>
     <name type="fire" rarity="common" word="red" speech="adjective"/>
+    <name type="fire" rarity="common" word="fire" speech="adjective"/>
+    <name type="fire" rarity="common" word="heat" speech="adjective"/>
+    <name type="fire" rarity="common" word="ember" speech="adjective"/>
+    <name type="fire" rarity="rare" word="fire" speech="noun"/>
+    <name type="fire" rarity="rare" word="embers" speech="noun"/>
+    <name type="fire" rarity="rare" word="heat" speech="noun"/>
+    <name type="fire" rarity="rare" word="cinders" speech="noun"/>
+    <name type="fire" rarity="rare" word="glowing" speech="adjective"/>
+    <name type="fire" rarity="rare" word="pyre" speech="adjective"/>
+    <name type="fire" rarity="rare" word="flame" speech="adjective"/>
+    <name type="fire" rarity="rare" word="flaming" speech="adjective"/>
+    <name type="fire" rarity="rare" word="kindle" speech="adjective"/>
+    <name type="fire" rarity="epic" word="solar" speech="adjective"/>
+    <name type="fire" rarity="epic" word="sun" speech="noun"/>
+    <name type="fire" rarity="epic" word="wildfire" speech="noun"/>
+    <name type="fire" rarity="epic" word="furance" speech="adjective"/>
+    <name type="fire" rarity="epic" word="flame" speech="adjective"/>
+    <name type="fire" rarity="epic" word="cinder" speech="adjective"/>
+    <name type="fire" rarity="epic" word="magma" speech="adjective"/>
+    <name type="fire" rarity="epic" word="volcanic" speech="adjective"/>
+    <name type="fire" rarity="epic" word="inferno" speech="adjective"/>
+    <name type="fire" rarity="epic" word="fire" speech="noun"/>
+    <name type="fire" rarity="epic" word="furnace" speech="noun"/>
+    <name type="fire" rarity="epic" word="pyre" speech="noun"/>
+    <name type="fire" rarity="epic" word="flare" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="flare" speech="noun"/>
+    <name type="fire" rarity="legendary" word="pyre" speech="noun"/>
+    <name type="fire" rarity="legendary" word="cinders" speech="noun"/>
+    <name type="fire" rarity="legendary" word="sun" speech="noun"/>
+    <name type="fire" rarity="legendary" word="wildfire" speech="noun"/>
+    <name type="fire" rarity="legendary" word="inferno" speech="noun"/>
+    <name type="fire" rarity="legendary" word="volcanic" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="burning" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="glowing" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="shining" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="radiant" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="shimmering" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="sunlit" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="flaming" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="solar" speech="adjective"/>
+    <name type="fire" rarity="legendary" word="radiance" speech="noun"/>
+    <name type="fire" rarity="legendary" word="incessantly" speech="adverb"/>
+    <name type="fire" rarity="legendary" word="endlessly" speech="adverb"/>
+    <name type="fire" rarity="legendary" word="infinitely" speech="adverb"/>
+    <name type="fire" rarity="legendary" word="unendingly" speech="adverb"/>
+    <name type="fire" rarity="legendary" word="vulcan" speech="pronoun"/>
+    <name type="fire" rarity="legendary" word="cacus" speech="pronoun"/>
+    <name type="fire" rarity="legendary" word="zhulong" speech="pronoun"/>
+    <name type="fire" rarity="legendary" word="amaterasu" speech="pronoun"/>
+    <name type="fire" rarity="legendary" word="apollo" speech="pronoun"/>
+    <name type="fire" rarity="legendary" word="dread lord" speech="pronoun"/>
+
+
     <name type="ice" rarity="common" word="blue" speech="adjective"/>
+
     <name type="nature" rarity="common" word="green" speech="adjective"/>
+
     <name type="bad" rarity="common" word="worn" speech="adjective"/>
+    <name type="bad" rarity="legendary" word="worn" speech="shattered"/>
+
     <name type="dark" rarity="common" word="dark" speech="adjective"/>
   </names>
 
   <attributes>
     <attribute type="fire" rarity="common">raise 0.05 attack</attribute>
+    <attribute type="fire" rarity="rare">raise 0.08 attack</attribute>
+    <attribute type="fire" rarity="epic">raise 0.10 attack</attribute>
+    <attribute type="fire" rarity="legendary">raise 0.15 attack</attribute>
+
     <attribute type="ice" rarity="common">raise 0.05 defense</attribute>
     <attribute type="ice" rarity="common">raise 0.05 resist</attribute>
-    <attribute type="nature" rarity="common">raise 0.03 health</attribute>
+    <attribute type="ice" rarity="rare">raise 0.08 defense</attribute>
+    <attribute type="ice" rarity="rare">raise 0.08 resist</attribute>
+    <attribute type="ice" rarity="epic">raise 0.10 defense</attribute>
+    <attribute type="ice" rarity="epic">raise 0.10 resist</attribute>
+    <attribute type="ice" rarity="legendary">raise 0.15 defense</attribute>
+    <attribute type="ice" rarity="legendary">raise 0.15 resist</attribute>
+
+    <attribute type="nature" rarity="common">raise 0.05 health</attribute>
+    <attribute type="nature" rarity="rare">raise 0.08 health</attribute>
+    <attribute type="nature" rarity="epic">raise 0.10 health</attribute>
+    <attribute type="nature" rarity="legendary">raise 0.15 health</attribute>
+
     <attribute type="dark" rarity="common">raise 0.03 health</attribute>
+
+    <attribute type="bad">lower 0.03 attack</attribute>
+    <attribute type="bad">lower 0.03 magic</attribute>
+    <attribute type="bad">lower 0.03 speed</attribute>
+    <attribute type="bad">lower 0.03 defense</attribute>
+    <attribute type="bad">lower 0.03 resist</attribute>
     <attribute type="bad">lower 0.03 health</attribute>
   </attributes>
 

@@ -34,6 +34,38 @@
         </dialog>
     </event>
 
+    <event name="Claire Sucks" type="event" level="any" >
+        <tag>object@a sword, adj@mossy</tag>
+        <dialog name="main">
+            <body>This is some text testing.
+                testing spacing
+                testing spacing</body>
+            <choices>
+                <choice name="picked sword">I would like to cut down a tree</choice>
+                <choice name="try">I can give it a try</choice>
+                <choice name="quit">Sorry, I can't cut down the tree</choice>
+            </choices>
+        </dialog>
+        <dialog name="picked sword">
+            <body>Hey man!!! You got some gold for cutting down that tree!</body>
+            <chance fail="picked sword failed">80</chance>
+            <condition>hasitemtype sword</condition>
+        </dialog>
+        <dialog name="picked sword failed">
+            <body>Your sword got stuck in the tree.</body>
+            <chance fail="picked sword failed failed">50</chance>
+        </dialog>
+        <dialog name="picked sword failed failed">
+            <body>You are super unlucky</body>
+        </dialog>
+        <dialog name="try">
+            <body>Wow you tried to cut down a tree with your own hands. Tsk tsk.</body>
+        </dialog>
+        <dialog name="quit">
+            <body>You turn your back on your duty.</body>
+        </dialog>
+    </event>
+
     <event name="the catacombs" type="entrance" level="any">
         <dialog name="main">
             <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus.</body>

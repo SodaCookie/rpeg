@@ -17,9 +17,6 @@ def update():
     if event.peek(pygame.USEREVENT):
         pass
 
-def merge(*funcs):
-    for func in funcs:
-        func()
 
 class MouseController(object):
     mouse_controllers = []

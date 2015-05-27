@@ -109,6 +109,9 @@ class OptionsDisplayData(object):
 class BattleDisplayData(object):
     pass
 
+class ShopDisplayData(object):
+    pass
+
 class GameMenu(object):
 
     SCALE = 4 # 1:4 scale
@@ -245,7 +248,9 @@ class GameMenu(object):
 
     def display_travel(self):
         # Clean up previous dialog if any
-
+        if TravelDisplayData.body:
+            TravelDisplayData.delete()
+            return
 
         # Create new back
         chosen_back = random.choice(self.text_bg)
@@ -387,6 +392,9 @@ class GameMenu(object):
                 copy.copy(self.button_title_style),
                 copy.copy(self.large_button_style),
                 True, "CLOSE")
+
+    def display_battle(self):
+        pass
 
     def handle_action(self, action):
         key = action.split(" ")[0]

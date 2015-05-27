@@ -33,6 +33,7 @@ class Item:
     self.magic = 0
     self.resist = 0
     self.speed = 0
+    self.surface = 0
     self.attributes = []
 
     if generate: self.generate()
@@ -149,12 +150,15 @@ class Item:
       if bad_tag:
         template = "[adverb] [adjective] [item] of [bad] [noun]"
       else:
-        template = "[adverb] [adjective] [item] of [adjective] [noun]"
+        template = choice(("[adverb] [adjective] [item] of [adjective] [noun]",
+                          "[adjective] [item] of the [adjective] [noun]",
+                          "[pronoun]'s [item] of [noun]"))
     elif self.rarity == "epic":
       if bad_tag:
         template = "[bad] [item] of [adjective] [noun]"
       else:
-        template = "[adjective] [item] of [adjective] [noun]"
+        template = choice(("[adjective] [item] of [adjective] [noun]",
+                          "[adjective] [item] of the [noun]"))
     elif self.rarity == "rare":
       if bad_tag:
         template = "[bad] [item] of [noun]"
@@ -180,7 +184,7 @@ class Item:
                           % (tags[counter].attrib["type"],
                           self.rarity, match.group(1)))
         counter += 1
-      template = template.replace(match.group(0), choice(replacements).attrib["word"])
+      template = template.replace(match.group(0), choice(replacements).attrib["word"], 1)
     self.name = template.title()
 
 
@@ -190,5 +194,5 @@ if __name__ == "__main__":
   ITERATIONS = 10
   li = []
   for i in range(ITERATIONS):
-    li.append(Item(100, "common"))
-    print(li[-1].name, li[-1].attributes)
+    li.append(Item(100, "legendary"))
+    print(li[-1].name)
