@@ -2,10 +2,11 @@
 <data>
 
   <tags>
-    <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/><!---
+    <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/><!--
     <tag type="ice" defense="0.2" resist="0.2" magic="0.2" exclude="fire, nature"/>
-    <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/>
+    <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/>-->
     <tag type="dark" attack="0.5" defense="0.5" exclude="light"/>
+    <!--
     <tag type="light"resist="2" magic="2" exclude="dark"/>
     <tag type="poison" magic="1.5" exclude="light, healing"/>
     <tag type="healing" magic="1.5" exclude="poison, dark">
@@ -69,13 +70,66 @@
     <name type="fire" rarity="legendary" word="apollo" speech="pronoun"/>
     <name type="fire" rarity="legendary" word="dread lord" speech="pronoun"/>
 
-
     <name type="ice" rarity="common" word="blue" speech="adjective"/>
 
     <name type="nature" rarity="common" word="green" speech="adjective"/>
 
+    <name type="dark" rarity="common" word="grey" speech="adjective"/>
+    <name type="dark" rarity="common" word="dark" speech="adjective"/>
+    <name type="dark" rarity="common" word="mist" speech="adjective"/>
+    <name type="dark" rarity="common" word="black" speech="adjective"/>
+    <name type="dark" rarity="rare" word="darkness" speech="noun"/>
+    <name type="dark" rarity="rare" word="shadow" speech="noun"/>
+    <name type="dark" rarity="rare" word="night" speech="noun"/>
+    <name type="dark" rarity="rare" word="fog" speech="noun"/>
+    <name type="dark" rarity="rare" word="veiled" speech="adjective"/>
+    <name type="dark" rarity="rare" word="dusk" speech="adjective"/>
+    <name type="dark" rarity="rare" word="grim" speech="adjective"/>
+    <name type="dark" rarity="rare" word="mist" speech="adjective"/>
+    <name type="dark" rarity="rare" word="dark" speech="adjective"/>
+    <name type="dark" rarity="epic" word="veiled" speech="adjective"/>
+    <name type="dark" rarity="epic" word="demons" speech="noun"/>
+    <name type="dark" rarity="epic" word="darkfire" speech="noun"/>
+    <name type="dark" rarity="epic" word="demonic" speech="adjective"/>
+    <name type="dark" rarity="epic" word="devil" speech="adjective"/>
+    <name type="dark" rarity="epic" word="night" speech="adjective"/>
+    <name type="dark" rarity="epic" word="midnight" speech="adjective"/>
+    <name type="dark" rarity="epic" word="nocturne" speech="adjective"/>
+    <name type="dark" rarity="epic" word="abyssal" speech="adjective"/>
+    <name type="dark" rarity="epic" word="nightmare" speech="noun"/>
+    <name type="dark" rarity="epic" word="silence" speech="noun"/>
+    <name type="dark" rarity="epic" word="eclipse" speech="noun"/>
+    <name type="dark" rarity="epic" word="dread" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="eclipse" speech="noun"/>
+    <name type="dark" rarity="legendary" word="abyss" speech="noun"/>
+    <name type="dark" rarity="legendary" word="demonfire" speech="noun"/>
+    <name type="dark" rarity="legendary" word="demon" speech="noun"/>
+    <name type="dark" rarity="legendary" word="midnight" speech="noun"/>
+    <name type="dark" rarity="legendary" word="death" speech="noun"/>
+    <name type="dark" rarity="legendary" word="veiled" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="sunless" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="demonic" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="satanic" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="nocturnal" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="silenced" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="shrouded" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="shaded" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="consuming" speech="adjective"/>
+    <name type="dark" rarity="legendary" word="incessantly" speech="adverb"/>
+    <name type="dark" rarity="legendary" word="endlessly" speech="adverb"/>
+    <name type="dark" rarity="legendary" word="infinitely" speech="adverb"/>
+    <name type="dark" rarity="legendary" word="unendingly" speech="adverb"/>
+    <name type="dark" rarity="legendary" word="insatiably" speech="adverb"/>
+    <name type="dark" rarity="legendary" word="watchers" speech="pronoun"/>
+    <name type="dark" rarity="legendary" word="belial" speech="pronoun"/>
+    <name type="dark" rarity="legendary" word="reaper" speech="pronoun"/>
+    <name type="dark" rarity="legendary" word="hades" speech="pronoun"/>
+    <name type="dark" rarity="legendary" word="the lost one" speech="pronoun"/>
+    <name type="dark" rarity="legendary" word="devil" speech="pronoun"/>
+
     <name type="bad" rarity="common" word="worn" speech="adjective"/>
     <name type="bad" rarity="legendary" word="worn" speech="shattered"/>
+    <name type="bad" rarity="legendary" word="worn" speech="cursed"/>
 
     <name type="dark" rarity="common" word="dark" speech="adjective"/>
   </names>
@@ -101,6 +155,9 @@
     <attribute type="nature" rarity="legendary">raise 0.15 health</attribute>
 
     <attribute type="dark" rarity="common">raise 0.03 health</attribute>
+    <attribute type="dark" rarity="rare">raise 0.03 health</attribute>
+    <attribute type="dark" rarity="epic">raise 0.03 health</attribute>
+    <attribute type="dark" rarity="legendary">raise 0.03 health</attribute>
 
     <attribute type="bad">lower 0.03 attack</attribute>
     <attribute type="bad">lower 0.03 magic</attribute>

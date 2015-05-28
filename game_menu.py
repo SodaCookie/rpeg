@@ -7,6 +7,7 @@ from pygame import Surface, SRCALPHA
 
 import view
 from image_cache import ImageCache
+from dragable import Dragable
 from image import Image
 from text import Text, TextInfo
 from button import Button, ButtonInfo
@@ -170,31 +171,36 @@ class GameMenu(object):
                                    width=149*GameMenu.SCALE);
 
         self.button_style = ButtonInfo(
-            500, 0, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0),
-            None, None, None, None, h_anchor=1, v_anchor=1);
-        self.large_button_style = ButtonInfo(
-            60, 0, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0),
-            None, None, None, None, h_anchor=0, v_anchor=0);
-        self.option_button_style = ButtonInfo(
-            70, 0, (255, 255, 255), (255, 255, 0), (0, 128, 0), (0, 0, 0),
-            option_button, option_button, option_button, option_button,
-            h_anchor=-1, v_anchor=1);
+            text_color=(255, 255, 255),
+            h_text_color=(255, 255, 0),
+            p_text_color=(0, 128, 0),
+            d_text_color=(0, 0, 0));
+        self.large_button_style = ButtonInfo(self.button_style, h_anchor=0, v_anchor=0);
+        self.option_button_style = ButtonInfo(self.button_style,
+            img=option_button,
+            hovered_img=option_button,
+            pressed_img=option_button,
+            disabled_img=option_button,
+            h_anchor=-1,
+            v_anchor=1);
 
         self.display_dialog(self.event)
         self.display_party()
         self.display_options()
+        Dragable((100, 100),
+                 surface=scale(ImageCache.add("images/item/test_icon.png", True), (16*4, 16*4)),
+                 alpha=True,
+                 on_release=None)
 
     def display_options(self):
-        button_position = (self.resolution[0]-5*GameMenu.SCALE,
-                           7*GameMenu.SCALE)
+        button_position = (self.resolution[0]-12*GameMenu.SCALE,
+                           5*GameMenu.SCALE)
         OptionsDisplayData.travel = Button(
-            pos = button_position,
+            button_position,
             on_pressed = self.display_travel,
-            on_released = None,
-            text_info = self.option_style,
-            button_info = self.option_button_style,
-            enabled = True,
-            default_text = "Travel")
+            t_info = self.option_style,
+            b_info = self.option_button_style,
+            text = "Travel")
 
     def display_party(self):
         # Clean up previous dialogs
@@ -224,7 +230,7 @@ class GameMenu(object):
 
             PlayerDisplayData.name.append(Text((
                 6*GameMenu.SCALE+(i*(chosen_back.get_width()+5))*GameMenu.SCALE, self.resolution[1]-(chosen_back.get_height()+10)*GameMenu.SCALE), self.text_style,
-                member.name))
+                text=member.name))
 
             # Create health bar and speed bar
             health = ImageCache.add("images/ui/health.png")
@@ -257,7 +263,7 @@ class GameMenu(object):
         position = (6*GameMenu.SCALE,
                     10*GameMenu.SCALE)
         TravelDisplayData.back = Image(
-            pos = position,
+            position,
             surface = scale(chosen_back, tuple([z * GameMenu.SCALE for z in chosen_back.get_size()])),
             h_anchor = 1,
             v_anchor = 1,
@@ -265,19 +271,21 @@ class GameMenu(object):
 
         # Create new dialog
         TravelDisplayData.title = Text((6*GameMenu.SCALE, 10*GameMenu.SCALE),
-                                        self.title_style,
-                                        "Travel")
+                                        t_info=self.title_style,
+                                        text="Travel")
         TravelDisplayData.body = Text((10*GameMenu.SCALE, 15*GameMenu.SCALE),
-                                       self.text_style,
-                                       "You are traveling...")
+                                       t_info=self.text_style,
+                                       text="You are traveling...")
         displacement = TravelDisplayData.body.get_size()[1]+19*GameMenu.SCALE
         choices = self.current_location.get_neighbours()
         for i, choice in enumerate(choices):
             button_func = partial(self.travel, choice)
             TravelDisplayData.choices.append(Button(
-                (10*GameMenu.SCALE, displacement), button_func, None,
-                copy.copy(self.text_style), copy.copy(self.button_style),
-                True, "%d. %s"%(i+1, choice.loc_type)))
+                (10*GameMenu.SCALE, displacement),
+                on_pressed=button_func,
+                t_info=copy.copy(self.text_style),
+                b_info=copy.copy(self.button_style),
+                text="%d. %s"%(i+1, choice.loc_type)))
             displacement += TravelDisplayData.choices[-1].get_size()[1]+1*GameMenu.SCALE
 
     def travel(self, location):
@@ -312,25 +320,26 @@ class GameMenu(object):
         # Create new dialog
         DialogDisplayData.title = Text((6*GameMenu.SCALE, 10*GameMenu.SCALE),
                           self.title_style,
-                          self.current_location.get_event_name().title())
+                          text=self.current_location.get_event_name().title())
         DialogDisplayData.body = Text((10*GameMenu.SCALE, 15*GameMenu.SCALE),
                           self.text_style,
-                          self.event.body)
+                          text=self.event.body)
         displacement = DialogDisplayData.body.get_size()[1]+19*GameMenu.SCALE
         choices = self.event.get_choices(self.party)
         for i, choice in enumerate(choices):
             button_func = partial(self.display_dialog,
                                   self.event.make_choice(choice))
             DialogDisplayData.choices.append(Button(
-                (10*GameMenu.SCALE, displacement), button_func, None,
+                (10*GameMenu.SCALE, displacement), True,
                 copy.copy(self.text_style), copy.copy(self.button_style),
-                True, "%d. %s"%(i+1, choice)))
+                on_pressed=button_func, text="%d. %s"%(i+1, choice)))
             displacement += DialogDisplayData.choices[-1].get_size()[1]+1*GameMenu.SCALE
         if not choices:
             DialogDisplayData.choices.append(Button(
-                (10*GameMenu.SCALE, displacement), self.close_dialog, None,
+                (10*GameMenu.SCALE, displacement), True,
                 copy.copy(self.text_style), copy.copy(self.button_style),
-                True, "Next"))
+                on_pressed=self.close_dialog,
+                text="Next"))
 
     def close_dialog(self):
         DialogDisplayData.delete()
@@ -379,19 +388,25 @@ class GameMenu(object):
             v_anchor = 1,
             alpha = True)
 
-        LootDisplayData.title = Text(title_position, self.loot_style, "Treasure")
+        LootDisplayData.title = Text(
+            title_position,
+            t_info=self.loot_style,
+            text="Treasure")
         displacement = 20*GameMenu.SCALE
         if gold:
             title_position = (self.resolution[0]/2,
                               displacement)
-            LootDisplayData.gold = Text(title_position, self.loot_style,
-                "Gold - %dg + (%dg)"%(self.party.gold-gold, gold))
+            LootDisplayData.gold = Text(
+                title_position,
+                t_info=self.loot_style,
+                text="Gold - %dg + (%dg)"%(self.party.gold-gold, gold))
 
         LootDisplayData.close = Button(
-                button_position, LootDisplayData.delete, None,
-                copy.copy(self.button_title_style),
-                copy.copy(self.large_button_style),
-                True, "CLOSE")
+                button_position,
+                on_pressed=LootDisplayData.delete,
+                t_info=copy.copy(self.button_title_style),
+                b_info=copy.copy(self.large_button_style),
+                text="CLOSE")
 
     def display_battle(self):
         pass
@@ -403,7 +418,7 @@ class GameMenu(object):
             args = action.split(" ")[1:]
 
         gold = 0
-        items = []
+        items = [1,2,3]
         if key == "battle":
             if args:
                 pass

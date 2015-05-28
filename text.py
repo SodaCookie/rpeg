@@ -5,49 +5,52 @@ from view import Renderable
 """
 Struct for condensing text parameters
 """
-class TextInfo:
-    """
-    For anchors (and alignment) negative values represent left/bottom,
-    zero represents middle, and positive represents right/top.
-    """
-    def __init__(self,
-                 fontcolor=(0,0,0),
-                 fontname="fonts/VT323-Regular.ttf",
-                 fontsize=12,
-                 h_anchor=1,
-                 v_anchor=1,
-                 alignment=-1,
-                 width=0,
-                 height=0,
-                 wrap=False,
-                 sensitive=False):
-        self.fontcolor = fontcolor
-        self.fontname = fontname
-        self.fontsize = fontsize
-        self.h_anchor = h_anchor
-        self.v_anchor = v_anchor
-        self.alignment = alignment
-        self.width = width
-        self.height = height
-        self.wrap = wrap
-        self.sensitive = sensitive
+
+
+
+class TextInfo(dict):
+    def __init__(self, t_info=None, **kwarg):
+        # h_text_color = hover, p_text_color = press, d_text_color = disable
+        super().__init__(self)
+        self["fontcolor"] = (0,0,0)
+        self["fontname"] = "fonts/VT323-Regular.ttf"
+        self["fontsize"] = 12
+        self["h_anchor"] = 1
+        self["v_anchor"] = 1
+        self["alignment"] = 1
+        self["width"] = None
+        self["height"] = None
+        self["wrap"] = False
+        self["sensitive"] = False
+        self["text"] = ""
+        if t_info: self.update(t_info)
+        self.update(kwarg)
+
+    def update(self, other):
+        other = {key: other[key] for key in self.keys() if key in other}
+        super().update(other)
+        self.__dict__ = self # magic line, beware of references ERIC
 
 
 """
 The text class is a widget that gives you tools to render text
 """
 class Text(Renderable):
-    def __init__(self,
-                 pos,
-                 text_info,
-                 default_text=""):
+    def __init__(self, pos, t_info=None, **kwarg):
         super().__init__(pos)
-        self.text_info = text_info
-        self.text = default_text
-        self.font = font.Font(text_info.fontname, text_info.fontsize)
+        if t_info:
+            self.text_info = t_info
+        else:
+            self.text_info = TextInfo()
+        self.text_info.update(kwarg)
+        self.font = font.Font(self.text_info.fontname, self.text_info.fontsize)
         self.lines = self.text.split('\n')
         if self.text_info.wrap:
             self._wrap_text()
+
+    @property
+    def text(self):
+        return self.text_info.text
 
     def delete(self):
         super().delete()
@@ -93,7 +96,6 @@ class Text(Renderable):
                 align = max_width - self.font.size(self.lines[i])[0]
             elif self.text_info.alignment == 0:
                 align = (max_width - self.font.size(self.lines[i])[0]) / 2
-
             surface.blit(self.font.render(self.lines[i], True, self.text_info.fontcolor),
                             (x_offset + self.pos[0] + align,
                              y_offset + self.pos[1] + self.text_info.fontsize * i))
@@ -124,4 +126,5 @@ class Text(Renderable):
 
 
 if __name__ == "__main__":
-    pass
+    font.init()
+    text = Text((0, 0), text="hello world")

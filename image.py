@@ -11,8 +11,14 @@ class Image(Renderable):
         else:
             self.img = surface
 
-        self.width = width
-        self.height = height
+        if width != None:
+            self.width = width
+        else:
+            self.width = self.img.get_width()
+        if height != None:
+            self.height = height
+        else:
+            self.height = self.img.get_height()
         self.h_anchor = h_anchor
         self.v_anchor = v_anchor
 

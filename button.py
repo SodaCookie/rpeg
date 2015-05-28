@@ -2,37 +2,33 @@ import pygame
 from text import Text
 from controller import MouseController
 
-class ButtonInfo:
-    def __init__(self,
-                 width,
-                 height=0,
-                 text_color = None,
-                 h_text_color = None,
-                 p_text_color = None,
-                 d_text_color = None,
-                 img=None,
-                 hovered_img=None,
-                 pressed_img=None,
-                 disabled_img=None,
-                 stretch=True,
-                 tile=False,
-                 h_anchor=1,
-                 v_anchor=1):
-        self.width = width
-        self.height = height
-        self.text_color = text_color
-        self.h_text_color = h_text_color
-        self.p_text_color = p_text_color
-        self.d_text_color = d_text_color
-        self.img = img
-        self.hovered_img = hovered_img
-        self.pressed_img = pressed_img
-        self.disabled_img = disabled_img
-        self.stretch = stretch  # Not implemented
-        self.tile = tile        # Not implemented
-        self.h_anchor = h_anchor
-        self.v_anchor = v_anchor
+class ButtonInfo(dict):
+    def __init__(self, b_info=None, **kwarg):
+        # h_text_color = hover, p_text_color = press, d_text_color = disable
+        super().__init__(self)
+        self["width"] = None
+        self["height"] = None
+        self["text_color"] = None
+        self["h_text_color"] = None
+        self["p_text_color"] = None
+        self["d_text_color"] = None
+        self["img"] = None
+        self["hovered_img"] = None
+        self["pressed_img"] = None
+        self["disabled_img"] = None
+        self["stretch"] = True
+        self["tile"] = False
+        self["h_anchor"] = 1
+        self["v_anchor"] = 1
+        self["on_released"] = None
+        self["on_pressed"] = None
+        if b_info: self.update(b_info)
+        self.update(kwarg)
 
+    def update(self, other):
+        other = {key: other[key] for key in self.keys() if key in other}
+        super().update(other)
+        self.__dict__ = self
 
 
 class Button(Text, MouseController):
@@ -41,22 +37,35 @@ class Button(Text, MouseController):
     PRESSED=2
     DISABLED=3
 
-    def __init__(self,
-                 pos,
-                 on_pressed,
-                 on_released,
-                 text_info,
-                 button_info,
-                 enabled,
-                 default_text = ""):
-        Text.__init__(self, pos, text_info, default_text)
+    def __init__(self, pos, enabled=True, t_info=None, b_info=None, **kwarg):
         MouseController.__init__(self)
-        self.on_pressed = on_pressed
-        self.on_released = on_released
-        self.button_info = button_info
+        # initiate text
+        text_kwarg = {key.replace("text_", "", 1): kwarg[key]
+            for key in kwarg.keys() if key.startswith("text_")} # get text keys
+        if kwarg.get("text"): # special hook for simplicity
+            text_kwarg["text"] = kwarg["text"]
+
+        Text.__init__(self, pos, t_info, **text_kwarg)
+
+        if b_info:
+            self.button_info = b_info
+        else:
+            self.button_info = ButtonInfo(**kwarg)
+        self.button_info.update(kwarg)
+
         self.toggle(enabled)
-        if self.button_info.height == 0:
+        if self.button_info.height == None:
             self.button_info.height = self.get_size()[1]
+        if self.button_info.width == None:
+            self.button_info.width = self.get_size()[0]
+
+    @property
+    def on_pressed(self):
+        return self.button_info.on_pressed
+
+    @property
+    def on_released(self):
+        return self.button_info.on_released
 
     def delete(self):
         Text.delete(self)
@@ -161,4 +170,5 @@ class Button(Text, MouseController):
 
 
 if __name__ == "__main__":
-    pass
+    pygame.font.init()
+    b = Button((0, 0), text="hello world")
