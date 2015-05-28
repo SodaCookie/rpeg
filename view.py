@@ -42,10 +42,15 @@ class Renderable(object):
 
     def __init__(self, pos):
         self.pos = pos
+
+    def display(self):
         Renderable.renderables.append(self)
 
     def delete(self):
         Renderable.renderables.remove(self)
+
+    def move(self, pos):
+        self.pos = pos
 
     def draw(self, surface):
         pass

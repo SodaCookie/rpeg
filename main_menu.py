@@ -32,17 +32,20 @@ class MainMenu(object):
         self.title = Text((resolution[0] / 2, resolution[1] / 4),
                           t_info=copy.deepcopy(text_style),
                           text="RNG Kitty Blaster")
+        self.title.display()
         self.single_player = Button((resolution[0] / 2, resolution[1] / 2),
                                     enabled=True,
                                     t_info=copy.copy(text_style),
                                     b_info=copy.copy(button_style),
                                     on_pressed=singleplayer,
                                     text="Single Player")
+        self.single_player.display()
         self.multi_player = Button((resolution[0] / 2, resolution[1] / 4 * 3),
                             enabled=True,
                             t_info=copy.copy(text_style),
                             b_info=copy.copy(button_style),
                             text="Multi Player")
+        self.multi_player.display()
 
     def close(self):
         self.title.delete()

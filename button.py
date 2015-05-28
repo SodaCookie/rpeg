@@ -71,6 +71,16 @@ class Button(Text, MouseController):
         Text.delete(self)
         MouseController.delete(self)
 
+    def get_size(self):
+        width = 0
+        height = 0
+        if self.button_info.img:
+            width = self.button_info.img.get_width()
+            height = self.button_info.img.get_height()
+        width = max(super().get_size()[0], width)
+        height = max(super().get_size()[1], height)
+        return (width, height)
+
     def toggle(self, enabled):
         if enabled:
             self.state = Button.NEUTRAL
