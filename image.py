@@ -22,9 +22,6 @@ class Image(Renderable):
         self.h_anchor = h_anchor
         self.v_anchor = v_anchor
 
-    def delete(self):
-        super().delete()
-
     def draw(self, surface):
         size = self.img.get_size()
 

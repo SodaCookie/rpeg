@@ -1,4 +1,28 @@
 <?xml version="1.0"?>
+<!--
+USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
+================================================
+<event> -> Used to group related dialogs (will scope), so a dialog from
+           EventA will not be able to refer to a dialog from EventB
+
+           name: identifier of the event (will show up as title in game)
+           type: defines what type of room the event will show up in
+                 currently (event, entrance, exit, alter, item and shop)
+           level: defines what floor type this event will should up (dungeon,
+                  lava, hell, etc...) can use special word 'any' to allow in
+                  any floor type
+
+<tag> -> Used inside <event>. Will replace special identifiers in templates
+         such as "[word]" where 'word' is the identifier to be replaced. Usage
+         indentifier@replacement. Ex. object@sword with replace [object] with
+         sword. Also useful in general to tag what the event is all about.
+
+<dialog> ->
+<choices>
+<chance>
+<condition>
+<action>
+-->
 <data>
 
     <event name="Sword Event" type="event" level="any" >
@@ -92,6 +116,13 @@
         <dialog name="quit money">
             <body>Quitting is not an option. OHHH A PENNY</body>
             <action>addgold 50</action>
+        </dialog>
+    </event>
+
+    <event name="A New Shop" type="shop" level="any">
+        <dialog name="main">
+            <body>You spot a shop.</body>
+            <action>shop Cranky_Ben's</action>
         </dialog>
     </event>
 

@@ -1,4 +1,5 @@
 import pygame
+import logging
 from pygame import display
 
 _screen = None
@@ -47,7 +48,11 @@ class Renderable(object):
         Renderable.renderables.append(self)
 
     def delete(self):
-        Renderable.renderables.remove(self)
+        """Will attempt to delete """
+        if self in Renderable.renderables:
+            Renderable.renderables.remove(self)
+        else:
+            logging.info("Attempted to delete already non-displayed renderable: %s"%str(self))
 
     def move(self, pos):
         self.pos = pos

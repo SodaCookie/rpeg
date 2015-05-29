@@ -15,13 +15,15 @@ import objects.dungeon as dungeon
 import objects.party as party
 import objects.player as player
 import objects.monster as monster
+import objects.shop as shop
 
 class Group:
 
     groups = {}
 
-    def __init__(self, name, pos):
+    def __init__(self, name, pos, back=None):
         self.renderables = []
+        self.back = back
         self.pos = pos
         setattr(Group, name, self)
 
@@ -44,12 +46,16 @@ class Group:
     def delete(self):
         for r in self.renderables:
             r.delete()
-        self.renderables = []
+        if self.back:
+            self.renderables = [self.back]
+        else:
+            self.renderables = []
 
 
 class GameMenu(object):
 
     SCALE = 4 # 1:4 scale
+    POWER_PER_LEVEL = 100
 
     def __init__(self):
         self.text_bg = [ImageCache.add("images/ui/text_back1.png", True)]
@@ -64,7 +70,9 @@ class GameMenu(object):
         button_d = ImageCache.add("images/menu/button_d500x120.png")
         players = [player.Player("Player Tester") for i in range(4)]
 
-        self.dungeon = dungeon.Dungeon("test")
+        self.level = 1
+        self.power = self.level*GameMenu.POWER_PER_LEVEL
+        self.dungeon = dungeon.Dungeon(self.level)
         self.party = party.Party(players)
         self.test_monster = None
         self.resolution = view.get_resolution()
@@ -118,12 +126,16 @@ class GameMenu(object):
             h_anchor=-1,
             v_anchor=1);
 
+        self.single_renderables = {} # add to single_renderables to control
+                                     # small elements on the screen
         self.create_group("event", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
         self.create_group("option", (self.resolution[0]-7*GameMenu.SCALE,
                                      5*GameMenu.SCALE))
         self.create_group("party", (0, self.resolution[1]))
         self.create_group("loot", (self.resolution[0]//2, 0))
         self.create_group("travel", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
+        self.create_group("shop", (self.resolution[0]//2, 10*GameMenu.SCALE),
+            ImageCache.add("images/ui/shop_back.png"), h_anchor=0, v_anchor=1)
         self.render_event(self.event)
         self.render_option()
         self.render_party()
@@ -133,14 +145,15 @@ class GameMenu(object):
         parameter is giving. keyword args are passed onto the
         backgroup image object. Alpha is guarenteed True.
         All groups can be accessed via the Group classmethod
-        get_group"""
+        get_group. Will scale the given image to SCALE"""
         new_group = Group(name, pos)
         if back:
-            bg = Image((0, 0),
+            back = scale(back, [GameMenu.SCALE*z for z in back.get_size()])
+            bg = Image(pos,
                        surface=back,
                        alpha=True,
                        **kwarg)
-            new_group.add(back)
+            new_group.back = bg
         return new_group
 
     def render_option(self):
@@ -181,7 +194,7 @@ class GameMenu(object):
                 alpha = True))
 
             Group.party.add(Text((
-                6*GameMenu.SCALE+(i*(chosen_back.get_width()+5))*GameMenu.SCALE, self.resolution[1]-(chosen_back.get_height()+10)*GameMenu.SCALE), self.text_style,
+                6*GameMenu.SCALE+i*chosen_back.get_width()+i*5*GameMenu.SCALE, -chosen_back.get_height()-10*GameMenu.SCALE), self.text_style,
                 text=member.name))
 
         Group.party.display()
@@ -224,6 +237,9 @@ class GameMenu(object):
         Group.travel.display()
 
     def travel(self, location):
+        if self.single_renderables.get("shop"):
+            self.single_renderables["shop"].delete()
+            self.single_renderables.pop("shop")
         self.current_location = location
         self.current_location.generate()
         Group.travel.delete()
@@ -249,7 +265,7 @@ class GameMenu(object):
             alpha = True))
 
         # Create new dialog
-        Group.event.add(Text((0, 0),
+        Group.event.add(Text((GameMenu.SCALE, 0),
                     self.title_style,
                     text=self.current_location.get_event_name().title()))
         body = Text((5*GameMenu.SCALE, 5*GameMenu.SCALE),
@@ -275,6 +291,49 @@ class GameMenu(object):
                 on_pressed=self.close_dialog,
                 text="Next"))
         Group.event.display()
+
+    def render_shop(self, shop):
+        Group.shop.delete()
+        button_position = (self.resolution[0]-7*GameMenu.SCALE,
+                           (15+5)*GameMenu.SCALE)
+        button_func = partial(self.render_shop, shop)
+        self.single_renderables["shop"] = Button(button_position,
+            on_pressed = button_func, t_info = self.option_style,
+            b_info = self.option_button_style, text = "Shop")
+
+        Group.shop.add(Text((0, 0), t_info=self.title_style, text=shop.name,
+                             h_anchor=0))
+        Group.shop.add(Button((0, 0*GameMenu.SCALE+Group.shop.back.height),
+                             on_pressed=Group.shop.delete,
+                             b_info=self.large_button_style,
+                             t_info=self.title_style,
+                             text="CLOSE",
+                             h_anchor=0,
+                             v_anchor=1,
+                             text_h_anchor=0,
+                             text_v_anchor=1))
+
+        for i, pair in enumerate(shop.items):
+            item, value = pair
+            Group.shop.add(Dragable(
+                (-73*GameMenu.SCALE, 4*GameMenu.SCALE+i*20*GameMenu.SCALE),
+                filename="images/item/test_icon.png",
+                alpha=True,
+                h_anchor=1,
+                v_anchor=1))
+            Group.shop.add(Text(
+                (-55*GameMenu.SCALE, 4*GameMenu.SCALE+i*20*GameMenu.SCALE),
+                t_info=self.text_style,
+                text=item.name))
+            Group.shop.add(Text(
+                (-55*GameMenu.SCALE, 8*GameMenu.SCALE+i*20*GameMenu.SCALE),
+                t_info=self.text_style,
+                text="Price: %d"%value,
+                fontsize=18,
+                fontcolor=(255, 255, 51)))
+
+        self.single_renderables["shop"].display()
+        Group.shop.display()
 
     def close_dialog(self):
         Group.event.delete()
@@ -352,7 +411,7 @@ class GameMenu(object):
             args = action.split(" ")[1:]
 
         gold = 0
-        items = [1,2,3]
+        items = []
         if key == "battle":
             if args:
                 pass
@@ -368,7 +427,8 @@ class GameMenu(object):
         elif key == "reward":
             pass
         elif key == "shop":
-            pass
+            s = shop.Shop(self.power, *args)
+            self.render_shop(s)
         elif key == "alter":
             pass
 

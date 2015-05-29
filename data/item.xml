@@ -128,8 +128,10 @@
     <name type="dark" rarity="legendary" word="devil" speech="pronoun"/>
 
     <name type="bad" rarity="common" word="worn" speech="adjective"/>
-    <name type="bad" rarity="legendary" word="worn" speech="shattered"/>
-    <name type="bad" rarity="legendary" word="worn" speech="cursed"/>
+    <name type="bad" rarity="rare" word="chipped" speech="adjective"/>
+    <name type="bad" rarity="epic" word="cursed" speech="adjective"/>
+    <name type="bad" rarity="legendary" word="shattered" speech="adjective"/>
+    <name type="bad" rarity="legendary" word="cursed" speech="adjective"/>
 
     <name type="dark" rarity="common" word="dark" speech="adjective"/>
   </names>

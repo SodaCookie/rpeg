@@ -1,3 +1,4 @@
+from copy import copy
 import pygame
 from text import Text
 from controller import MouseController
@@ -48,7 +49,7 @@ class Button(Text, MouseController):
         Text.__init__(self, pos, t_info, **text_kwarg)
 
         if b_info:
-            self.button_info = b_info
+            self.button_info = copy(b_info)
         else:
             self.button_info = ButtonInfo(**kwarg)
         self.button_info.update(kwarg)
@@ -116,6 +117,25 @@ class Button(Text, MouseController):
             surface.blit(self.button_info.hovered_img, pos)
         elif self.state == Button.PRESSED and self.button_info.pressed_img != None:
             surface.blit(self.button_info.pressed_img, pos)
+
+        # HORRIBE CODE, MIGHT REWRITE AFTER SOME MORE THOUGHT
+        # old_pos = self.pos
+        # if self.text_info.h_anchor == self.button_info.h_anchor:
+        #     x_offset = self.pos[0] # don't move anything we're good
+        # else:
+        #     if self.text_info.h_anchor < 0:
+        #         x_offset = -self.height
+        #     elif self.text_info.h_anchor > 0:
+        #         x_offset = 0
+        #     else:
+        #         x_offset = -self.height / 2
+
+        # if self.text_info.v_anchor < 0:
+        #     y_offset = -self.height
+        # elif self.text_info.v_anchor > 0:
+        #     y_offset = 0
+        # else:
+        #     y_offset = -self.height / 2
 
         Text.draw(self, surface)
 

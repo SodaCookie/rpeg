@@ -184,8 +184,30 @@ class Item:
                           % (tags[counter].attrib["type"],
                           self.rarity, match.group(1)))
         counter += 1
+
+      assert replacements, "Type: %s, Rarity: %s, Speech %s"%(tags[counter].attrib["type"], self.rarity, match.group(1))
+
       template = template.replace(match.group(0), choice(replacements).attrib["word"], 1)
     self.name = template.title()
+
+  def get_value(self):
+    if self.rarity == "legendary":
+      value = 1000
+    elif self.rarity == "epic":
+      value = 500
+    elif self.rarity == "rare":
+      value = 200
+    else:
+      value = 100
+
+    value += self.attack*Item.ATTACK_HEURISTIC
+    value += self.defense*Item.DEFENSE_HEURISTIC
+    value += self.health*Item.HEALTH_HEURISTIC
+    value += self.speed*Item.SPEED_HEURISTIC
+    value += self.magic*Item.MAGIC_HEURISTIC
+    value += self.resist*Item.RESIST_HEURISTIC
+
+    return value
 
 
 if __name__ == "__main__":

@@ -17,11 +17,11 @@ class Dragable(Image, MouseController):
                surface=None,
                filename="",
                alpha=False,
-               on_release=None):
+               on_released=None):
       Image.__init__(self, pos, width, height, h_anchor,
                      v_anchor, surface, filename, alpha)
       MouseController.__init__(self)
-      self.on_release = on_release
+      self.on_released = on_released
       self.mouse_x_offset = 0
       self.mouse_y_offset = 0
       self.state = Dragable.NEUTRAL
@@ -41,8 +41,8 @@ class Dragable(Image, MouseController):
 
       if self.state == Dragable.PRESSED:
           self.state = Dragable.HOVERED
-          if self.on_release:
-            self.on_release(self)
+          if self.on_released:
+            self.on_released(self)
 
   def mouse_motion(self, buttons, pos, rel):
       if self.state == Dragable.DISABLED:

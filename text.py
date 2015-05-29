@@ -1,6 +1,6 @@
 from pygame import font
 from view import Renderable
-
+from copy import copy
 
 """
 Struct for condensing text parameters
@@ -39,7 +39,7 @@ class Text(Renderable):
     def __init__(self, pos, t_info=None, **kwarg):
         super().__init__(pos)
         if t_info:
-            self.text_info = t_info
+            self.text_info = copy(t_info)
         else:
             self.text_info = TextInfo()
         self.text_info.update(kwarg)
