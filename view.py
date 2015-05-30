@@ -45,7 +45,8 @@ class Renderable(object):
         self.pos = pos
 
     def display(self):
-        Renderable.renderables.append(self)
+        if self not in Renderable.renderables:
+            Renderable.renderables.append(self)
 
     def delete(self):
         """Will attempt to delete """

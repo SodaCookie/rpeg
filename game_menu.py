@@ -293,13 +293,17 @@ class GameMenu(object):
         Group.event.display()
 
     def render_shop(self, shop):
+
         Group.shop.delete()
         button_position = (self.resolution[0]-7*GameMenu.SCALE,
                            (15+5)*GameMenu.SCALE)
         button_func = partial(self.render_shop, shop)
-        self.single_renderables["shop"] = Button(button_position,
-            on_pressed = button_func, t_info = self.option_style,
-            b_info = self.option_button_style, text = "Shop")
+
+        if not self.single_renderables.get("shop"):
+            self.single_renderables["shop"] = Button(button_position,
+                on_pressed = button_func, t_info = self.option_style,
+                b_info = self.option_button_style, text = "Shop")
+            self.single_renderables["shop"].display()
 
         Group.shop.add(Text((0, 0), t_info=self.title_style, text=shop.name,
                              h_anchor=0))
@@ -332,7 +336,6 @@ class GameMenu(object):
                 fontsize=18,
                 fontcolor=(255, 255, 51)))
 
-        self.single_renderables["shop"].display()
         Group.shop.display()
 
     def close_dialog(self):
