@@ -79,6 +79,7 @@ class GameMenu(object):
         self.current_location = self.dungeon.start
         self.current_location.generate()
         self.event = self.current_location.get_event()
+        self.current_dialog = None
 
         self.text_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=16,
@@ -201,7 +202,12 @@ class GameMenu(object):
 
     def render_travel(self):
         # Clean up previous dialog if any
-        Group.travel.delete()
+        if self.current_dialog is not Group.travel and\
+                self.current_dialog is not None:
+            return
+        elif self.current_dialog is Group.travel:
+            self.close_travel()
+            return
 
         # Create new back
         chosen_back = random.choice(self.text_bg)
@@ -235,6 +241,7 @@ class GameMenu(object):
             displacement += choice.get_size()[1]+1*GameMenu.SCALE
 
         Group.travel.display()
+        self.current_dialog = Group.travel
 
     def travel(self, location):
         if self.single_renderables.get("shop"):
@@ -248,7 +255,11 @@ class GameMenu(object):
 
     def render_event(self, dialog):
         # Clean up previous dialog if any
-        Group.event.delete()
+        if self.current_dialog is not Group.shop and\
+                self.current_dialog is not None: # event is overriding
+            self.current_dialog.delete()
+        else:
+            Group.event.delete()
         self.event = dialog
 
         #there is no more dialog
@@ -288,11 +299,19 @@ class GameMenu(object):
             Group.event.add(Button(
                 (5*GameMenu.SCALE, displacement), True,
                 copy.copy(self.text_style), copy.copy(self.button_style),
-                on_pressed=self.close_dialog,
+                on_pressed=self.close_event,
                 text="Next"))
         Group.event.display()
+        self.current_dialog = Group.event
 
     def render_shop(self, shop):
+        # Clean up previous dialog if any
+        if self.current_dialog is not Group.shop and\
+                self.current_dialog is not None:
+            return
+        elif self.current_dialog is Group.shop:
+            self.close_shop()
+            return
 
         Group.shop.delete()
         button_position = (self.resolution[0]-7*GameMenu.SCALE,
@@ -308,7 +327,7 @@ class GameMenu(object):
         Group.shop.add(Text((0, 0), t_info=self.title_style, text=shop.name,
                              h_anchor=0))
         Group.shop.add(Button((0, 0*GameMenu.SCALE+Group.shop.back.height),
-                             on_pressed=Group.shop.delete,
+                             on_pressed=self.close_shop,
                              b_info=self.large_button_style,
                              t_info=self.title_style,
                              text="CLOSE",
@@ -337,15 +356,13 @@ class GameMenu(object):
                 fontcolor=(255, 255, 51)))
 
         Group.shop.display()
-
-    def close_dialog(self):
-        Group.event.delete()
-        if self.event.action:
-            self.handle_action(self.event.action)
+        self.current_dialog = Group.shop
 
     def render_loot(self, items, gold):
         #Clean up
-        Group.loot.delete()
+        if self.current_dialog is not Group.shop and\
+                self.current_dialog is not None:
+            return
 
         # Create new back
         tmp_surface = Surface((77, 115), SRCALPHA)
@@ -397,15 +414,35 @@ class GameMenu(object):
 
         Group.loot.add(Button(
                 button_position,
-                on_pressed=Group.loot.delete,
+                on_pressed=self.close_loot,
                 t_info=copy.copy(self.button_title_style),
                 b_info=copy.copy(self.large_button_style),
                 text="CLOSE"))
 
         Group.loot.display()
+        self.current_dialog = Group.loot
 
-    def display_battle(self):
-        pass
+    def close_event(self):
+        Group.event.delete()
+        self.current_dialog = None
+        if self.event.action:
+            self.handle_action(self.event.action)
+
+    def close_loot(self):
+        Group.loot.delete()
+        self.current_dialog = None
+
+    def close_shop(self):
+        Group.shop.delete()
+        self.current_dialog = None
+
+    def close_travel(self):
+        Group.travel.delete()
+        self.current_dialog = None
+
+    def close_loot(self):
+        Group.loot.delete()
+        self.current_dialog = None
 
     def handle_action(self, action):
         key = action.split(" ")[0]
