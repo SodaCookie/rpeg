@@ -3,18 +3,26 @@ import pickle
 import math
 import random
 
-class Character(object):
+from controller import BattleController
 
+class Character(BattleController):
+
+    ACTION_SPEED = 5 # how quickly the action bar goes up
+    SPEED_CAP = 5 # times the normal speed
+    SPEED_BASE = 50 # diminishing returns shows how fast speed will go
     DAMAGE_VARIATION = 20
     HEAL_VARIATION = 20
 
     def __init__(self, name):
+        super().__init__()
+
         self.name = name
         self.effects = []
         self.moves = []
         self.fallen = False
         self.drop = None
         self.args = []
+        self.overflow = 0
 
         self.attack = 10
         self.defense = 0
@@ -22,9 +30,11 @@ class Character(object):
         self.current_health = 100
         self.health = 100
         self.resist = 0
-        self.speed = 5
+         # enough to do 1 ACTION_SPEED per second
+        self.speed = Character.SPEED_BASE/(Character.SPEED_CAP-1)
         self.action_max = 100
         self.action = 0
+        self.ready = False
 
         self.base_attack = 10
         self.base_defense = 0
@@ -33,8 +43,28 @@ class Character(object):
         self.base_speed = 5
         self.base_resist = 0
 
-    def handle(self, battle):
-        pass
+    def battle(self, delta):
+        steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
+        self.overflow = (self.overflow+delta)-steps    # Used for carry over
+        self.decrease_durations(steps)
+        action = delta * Character.ACTION_SPEED *\
+            (Character.SPEED_CAP*self.speed/(Character.SPEED_BASE+self.speed))
+        self.build_action(action)
+
+        if self.action == self.action_max and not self.ready:
+            # Available to cast
+            self.start_turn()
+        if self.action < self.action_max:
+            self.ready = False
+
+    def cast(self, battle):
+        if move in self.moves:
+            move.cast(battle)
+
+    def start_turn(self):
+        for effect in self.effects:
+            effect.on_start_turn()
+        self.ready = True
 
     def decrease_durations(self, amount):
         for effect in self.effects:
@@ -43,6 +73,19 @@ class Character(object):
             effect.duration -= amount
         self.effects = filter(lambda effect: effect.duration == "permanent"
                               or effect.duration > 0, self.effects)
+        removed = filter(lambda effect: not effect.active
+                                      or effect.duration <= 0, self.effects)
+        for effect in removed:
+            effect.on_remove()
+
+    def build_action(self, action):
+        for effect in self.effects:
+            action = effect.on_build_action(action)
+        self.action += action
+        if self.action < 0:
+            self.action = 0
+        elif self.action > self.action_max:
+            self.action = self.action_max
 
     def deal_damage(self, source, damage, damage_type):
         for effect in self.effects:

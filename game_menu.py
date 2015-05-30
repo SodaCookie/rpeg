@@ -3,7 +3,7 @@ import random
 import copy
 
 from pygame.transform import scale
-from pygame import Surface, SRCALPHA
+import pygame
 
 import view
 from image_cache import ImageCache
@@ -11,11 +11,17 @@ from dragable import Dragable
 from image import Image
 from text import Text, TextInfo
 from button import Button, ButtonInfo
+from controller import BattleController
 import objects.dungeon as dungeon
 import objects.party as party
 import objects.player as player
 import objects.monster as monster
 import objects.shop as shop
+import objects.battle as battle
+
+BATTLESTART = pygame.USEREVENT
+BATTLETICK = pygame.USEREVENT + 1
+BATTLESTOP = pygame.USEREVENT + 2
 
 class Group:
 
@@ -52,12 +58,13 @@ class Group:
             self.renderables = []
 
 
-class GameMenu(object):
+class GameMenu(BattleController):
 
     SCALE = 4 # 1:4 scale
     POWER_PER_LEVEL = 100
 
     def __init__(self):
+        super().__init__()
         self.text_bg = [ImageCache.add("images/ui/text_back1.png", True)]
         self.player_bg = [ImageCache.add("images/ui/player_back1.png", True)]
 
@@ -140,6 +147,10 @@ class GameMenu(object):
         self.render_event(self.event)
         self.render_option()
         self.render_party()
+
+    def battle(self, delta):
+        self.render_party()
+        self.busy = True
 
     def create_group(self, name, pos, back=None, **kwarg):
         """Create and return a new display group, optional bg
@@ -343,7 +354,8 @@ class GameMenu(object):
                 filename="images/item/test_icon.png",
                 alpha=True,
                 h_anchor=1,
-                v_anchor=1))
+                v_anchor=1,
+                on_released=self.move_item))
             Group.shop.add(Text(
                 (-55*GameMenu.SCALE, 4*GameMenu.SCALE+i*20*GameMenu.SCALE),
                 t_info=self.text_style,
@@ -365,7 +377,7 @@ class GameMenu(object):
             return
 
         # Create new back
-        tmp_surface = Surface((77, 115), SRCALPHA)
+        tmp_surface = pygame.Surface((77, 115), SRCALPHA)
         tmp_surface.fill((255,255,255,0))
         displacement = 0
 
@@ -452,11 +464,12 @@ class GameMenu(object):
 
         gold = 0
         items = []
+
         if key == "battle":
             if args:
                 pass
-            else:
-                pass
+            pygame.event.post(pygame.event.Event(BATTLESTART))
+            pygame.time.set_timer(BATTLETICK, 30)
         elif key == "addgold":
             gold = int(args[0])
             self.party.add_gold(gold)
@@ -471,6 +484,8 @@ class GameMenu(object):
             self.render_shop(s)
         elif key == "alter":
             pass
-
         if gold > 0 or items:
             self.render_loot(items, gold)
+
+    def move_item(self, item):
+        pass

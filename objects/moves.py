@@ -45,7 +45,7 @@ class Move(object):
         self.target = self.get_target(battle)
 
         if self.prev:
-            self.prev.cast()
+            self.prev.cast(battle)
 
         if random.randint(0, 99) <= self.cur_accuracy:  # accuracy roll
             if isinstance(self.target(), list):

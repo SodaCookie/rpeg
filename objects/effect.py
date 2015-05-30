@@ -27,6 +27,9 @@ class Effect:
         self.duration = 0
         self.active = False
 
+    def on_remove(self):
+        pass
+
     def on_refresh(self, effect):
         self.duration = self.max_duration
 
@@ -45,9 +48,11 @@ class Effect:
         return value
 
     def on_start_turn(self):
-        """Return a tuple index 0 true if you can go, return false if you
-           can't (ie stun, dead), index 1 is the message"""
         pass
+
+    def on_build_action(self, action):
+        """Each time the character wants to build action value"""
+        return action
 
     def on_damage(self, source, damage, damage_type):
         return damage
@@ -64,10 +69,6 @@ class Effect:
     def on_death(self):
         """If truly dead then return True"""
         return True
-
-    def on_end_turn(self):
-        """That is the end of the characters turn (not the WHOLE turn), returns message"""
-        pass
 
     def on_move(self, location):
         pass

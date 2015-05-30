@@ -126,4 +126,11 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
         </dialog>
     </event>
 
+    <event name="A New Shop" type="monster" level="any">
+        <dialog name="main">
+            <body>You spot a monster.</body>
+            <action>battle</action>
+        </dialog>
+    </event>
+
 </data>

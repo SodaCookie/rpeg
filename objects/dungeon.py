@@ -20,6 +20,8 @@ class Dungeon(object):
     self.max_shops = 3
     self.min_alters = 0
     self.max_alters = 2
+    self.min_monster = 5
+    self.max_monster = 7
     self.min_items = 0
     self.max_items = 4
     # can be normal, low, high or bell
@@ -27,6 +29,7 @@ class Dungeon(object):
     self.shop_distribution = "normal"
     self.alter_distribution = "normal"
     self.item_distribution = "normal"
+    self.mon_distribution = "normal"
 
     for key in kwargs.keys():
       if key == "depth": self.depth = kwargs[key]
@@ -40,12 +43,15 @@ class Dungeon(object):
       elif key == "max_alters": self.max_alters = kwargs[key]
       elif key == "min_item": self.min_item = kwargs[key]
       elif key == "max_item": self.max_item = kwargs[key]
+      elif key == "min_monster": self.min_monster = kwargs[key]
+      elif key == "max_monster": self.max_monster = kwargs[key]
       elif key == "branch_distribution": self.branch_distribution = kwargs[key]
       elif key == "shop_distribution": self.shop_distribution = kwargs[key]
       elif key == "alter_distribution": self.alter_distribution = kwargs[key]
       elif key == "item_distribution": self.item_distribution = kwargs[key]
+      elif key == "mon_distribution": self.mon_distribution = kwargs[key]
 
-    self.start = location.Location("shop", level)
+    self.start = location.Location("monster", level)
     self.stop = location.Location("exit", level)
 
     # create the inbetween nodes
@@ -85,6 +91,27 @@ class Dungeon(object):
 
     # populate Dungeon
     nodes = reduce(lambda x, y: x + y, frame.values())
+
+    # populate monsters
+    # get monsters distributions
+    if self.mon_distribution == "normal":
+      mdist = lambda x, y: randint(x, y)
+    elif self.mon_distribution == "low":
+      mdist = lambda x, y: min(randint(x, y), randint(x, y))
+    elif self.mon_distribution == "high":
+      mdist = lambda x, y: max(randint(x, y), randint(x, y))
+    elif self.mon_distribution == "bell":
+      mdist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
+
+    monster = mdist(self.min_monster, self.max_monster)
+    if monster > len(nodes):
+        # check for overflow means that if there is no space certain
+        # nodes cannot be added
+      logging.warning("All nodes are full only creating %d monster from %d monster"%(len(nodes), monster))
+      monster = len(nodes)
+    for node in sample(nodes, monster):
+      node.set_type("monster")
+      nodes.remove(node)
 
     # populate shops
     # get shop distributions
