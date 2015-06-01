@@ -87,6 +87,7 @@ class GameMenu(BattleController):
         self.current_location.generate()
         self.event = self.current_location.get_event()
         self.current_dialog = None
+        self.current_battle = None
 
         self.text_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=16,
@@ -144,13 +145,18 @@ class GameMenu(BattleController):
         self.create_group("travel", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
         self.create_group("shop", (self.resolution[0]//2, 10*GameMenu.SCALE),
             ImageCache.add("images/ui/shop_back.png"), h_anchor=0, v_anchor=1)
+        self.create_group("monster", (0, 0))
         self.render_event(self.event)
         self.render_option()
         self.render_party()
 
     def battle(self, delta):
         self.render_party()
-        self.busy = True
+        self.render_monster()
+        for monster in self.current_battle.monsters:
+            if monster.ready:
+                print("%s attacks!"%monster.name)
+                monster.cast("hello", self.current_battle)
 
     def create_group(self, name, pos, back=None, **kwarg):
         """Create and return a new display group, optional bg
@@ -167,6 +173,44 @@ class GameMenu(BattleController):
                        **kwarg)
             new_group.back = bg
         return new_group
+
+    def render_monster(self):
+        Group.monster.delete()
+
+        health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
+        speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
+
+        for i, monster in enumerate(self.current_battle.monsters):
+            x = self.resolution[0]/len(self.current_battle.monsters)/2 + \
+                self.resolution[0]/len(self.current_battle.monsters)*i
+            y = self.resolution[1]/3*2
+
+            Group.monster.add(Image(
+                (round(x), round(y)),
+                h_anchor = 0,
+                v_anchor = -1,
+                surface = scale(ImageCache.add("images/monster/test_monster.png", True), (292, 400)),
+                alpha = True))
+
+            Group.monster.add(Image(
+                (round(x-health.get_width()/2), round(y)),
+                width = round(health.get_width()*monster.current_health/
+                    monster.health),
+                h_anchor = 1,
+                v_anchor = -1,
+                surface = health,
+                alpha = True))
+
+            Group.monster.add(Image(
+                (round(x-speed.get_width()/2), round(y)+4*GameMenu.SCALE),
+                width = round(speed.get_width()*monster.action/
+                    monster.action_max),
+                h_anchor = 1,
+                v_anchor = -1,
+                surface = speed,
+                alpha = True))
+
+        Group.monster.display()
 
     def render_option(self):
         Group.option.delete()
@@ -193,10 +237,9 @@ class GameMenu(BattleController):
                                 chosen_back.get_size()]))
             chosen_back.blit(health, (37*GameMenu.SCALE, 5*GameMenu.SCALE),
                 (0, 0, round(health.get_width()*member.current_health/
-                member.health*GameMenu.SCALE), health.get_height()))
+                member.health), health.get_height()))
             chosen_back.blit(speed, (37*GameMenu.SCALE, 10*GameMenu.SCALE),
-                (0, 0, round(speed.get_width()*member.action/member.action_max*
-                GameMenu.SCALE), speed.get_height()))
+                (0, 0, round(speed.get_width()*member.action/member.action_max), speed.get_height()))
 
             Group.party.add(Image(
                 pos = (6*GameMenu.SCALE+i*(chosen_back.get_width()+5*GameMenu.SCALE), -5*GameMenu.SCALE),
@@ -470,6 +513,9 @@ class GameMenu(BattleController):
                 pass
             pygame.event.post(pygame.event.Event(BATTLESTART))
             pygame.time.set_timer(BATTLETICK, 30)
+            monsters = [monster.Monster(100) for i in range(4)]
+            self.current_battle = battle.Battle(self.party, monsters)
+            self.busy = True
         elif key == "addgold":
             gold = int(args[0])
             self.party.add_gold(gold)
