@@ -2,6 +2,7 @@ from random import choice, randint
 import xml.etree.ElementTree as tree
 
 from pygame import image, Surface
+from pygame.transform import scale
 
 import objects.character as character
 
@@ -20,22 +21,14 @@ class Monster(character.Character):
         3 is a boss mob"""
         super().__init__("")
         self.difficulty = difficulty
-        self.monster = monster
         self.tags = []
         self.mtype = mtype
-        self.attack = 0
-        self.defense = 0
-        self.resist = 0
-        self.magic = 0
-        self.current_health = 100
-        self.health = 100
-        self.speed = 0
         self.power = power
         self.name = "Jeremy's Face"
-        self.surface = image.load("images/monster/test_monster.png").convert_alpha()
+        self.surface = scale(image.load("images/monster/test_monster.png").convert_alpha(), (292, 400))
         self.generate_tags()
         self.generate_name()
-        self.generate_stats(power)
+        self.generate_stats()
 
     def generate_tags(self):
         # generate tags
@@ -47,7 +40,7 @@ class Monster(character.Character):
           num_tags = max(randint(2, 3), randint(2, 3))
 
         # roll for tags
-        tags = [choice(Item.TAGS) for i in range(num_tags)]
+        tags = [choice(Monster.TAGS) for i in range(num_tags)]
         # fix exclusions (first come first serve) will be replaced with a tag
         # before it. Based off the first tag
         excludes = set(tags[0].attrib.get("exclude").split(', ')) or not set()

@@ -7,7 +7,7 @@ from controller import BattleController
 
 class Character(BattleController):
 
-    ACTION_SPEED = 5 # how quickly the action bar goes up
+    ACTION_SPEED = 25 # how quickly the action bar goes up
     SPEED_CAP = 5 # times the normal speed
     SPEED_BASE = 50 # diminishing returns shows how fast speed will go
     DAMAGE_VARIATION = 20
@@ -44,22 +44,27 @@ class Character(BattleController):
         self.base_resist = 0
 
     def battle(self, delta):
+
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
         self.overflow = (self.overflow+delta)-steps    # Used for carry over
         self.decrease_durations(steps)
         action = delta * Character.ACTION_SPEED *\
             (Character.SPEED_CAP*self.speed/(Character.SPEED_BASE+self.speed))
+        if action == 0: # being nice as if you have speed 1
+            action = delta * Character.ACTION_SPEED *\
+                (Character.SPEED_CAP*1/\
+                (Character.SPEED_BASE+1))
         self.build_action(action)
-
         if self.action == self.action_max and not self.ready:
             # Available to cast
             self.start_turn()
         if self.action < self.action_max:
             self.ready = False
 
-    def cast(self, battle):
+    def cast(self, move, battle):
         if move in self.moves:
             move.cast(battle)
+        self.action = 0
 
     def start_turn(self):
         for effect in self.effects:
