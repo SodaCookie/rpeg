@@ -35,6 +35,11 @@ class BattleController(object):
         delta = pygame.time.get_ticks() - BattleController.delta_time
         for controller in BattleController.battle_controllers:
             controller.battle(delta/1000)
+        MouseController.handle_mouse_motion(
+            pygame.event.Event(pygame.MOUSEMOTION,
+            buttons=pygame.mouse.get_pressed(),
+            pos=pygame.mouse.get_pos(),
+            rel=pygame.mouse.get_rel()))
         BattleController.delta_time = pygame.time.get_ticks()
 
     @staticmethod

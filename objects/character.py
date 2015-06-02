@@ -161,7 +161,7 @@ class Character(BattleController):
         return int(magic)
 
     def get_cur_health(self):
-        return self.current_health()
+        return self.current_health
 
     def get_max_health(self):
         health = self.health

@@ -68,7 +68,7 @@ class GameMenu(BattleController):
         self.text_bg = [ImageCache.add("images/ui/text_back1.png", True)]
         self.player_bg = [ImageCache.add("images/ui/player_back1.png", True)]
 
-        option_button = ImageCache.add("images/ui/button_back.png")
+        option_button = ImageCache.add("images/ui/button_back.png", True)
         option_button = scale(option_button,
             [z*GameMenu.SCALE for z in option_button.get_size()])
         button = ImageCache.add("images/menu/button500x120.png")
@@ -81,13 +81,14 @@ class GameMenu(BattleController):
         self.power = self.level*GameMenu.POWER_PER_LEVEL
         self.dungeon = dungeon.Dungeon(self.level)
         self.party = party.Party(players)
-        self.test_monster = None
         self.resolution = view.get_resolution()
         self.current_location = self.dungeon.start
         self.current_location.generate()
         self.event = self.current_location.get_event()
         self.current_dialog = None
         self.current_battle = None
+        self.current_target = None
+        self.current_char = players[0]
 
         self.text_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=16,
@@ -135,6 +136,8 @@ class GameMenu(BattleController):
             h_anchor=-1,
             v_anchor=1);
 
+        self.background = Image((0,0), filename="images/ui/background.png", h_anchor=1, v_anchor=1)
+        self.background.display()
         self.single_renderables = {} # add to single_renderables to control
                                      # small elements on the screen
         self.create_group("event", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
@@ -144,8 +147,12 @@ class GameMenu(BattleController):
         self.create_group("loot", (self.resolution[0]//2, 0))
         self.create_group("travel", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
         self.create_group("shop", (self.resolution[0]//2, 10*GameMenu.SCALE),
-            ImageCache.add("images/ui/shop_back.png"), h_anchor=0, v_anchor=1)
-        self.create_group("monster", (0, 0))
+            ImageCache.add("images/ui/shop_back.png", True),
+            h_anchor=0, v_anchor=1)
+        self.create_group("monster", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
+        self.create_group("battle_info", (6*GameMenu.SCALE, 5*GameMenu.SCALE),
+            ImageCache.add("images/ui/battle_info.png", True),
+            h_anchor=1, v_anchor=1)
         self.render_event(self.event)
         self.render_option()
         self.render_party()
@@ -153,9 +160,9 @@ class GameMenu(BattleController):
     def battle(self, delta):
         self.render_party()
         self.render_monster()
+        self.render_battle_info()
         for monster in self.current_battle.monsters:
             if monster.ready:
-                print("%s attacks!"%monster.name)
                 monster.cast("hello", self.current_battle)
 
     def create_group(self, name, pos, back=None, **kwarg):
@@ -174,6 +181,67 @@ class GameMenu(BattleController):
             new_group.back = bg
         return new_group
 
+    def render_battle_info(self):
+        Group.battle_info.delete()
+
+        if self.current_battle and self.current_char:
+            abilities = ImageCache.add("images/ui/abilities.png", True)
+            abilities = scale(abilities, (abilities.get_width()*GameMenu.SCALE,
+                abilities.get_height()*GameMenu.SCALE))
+            health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
+            speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
+            portrait = ImageCache.add(self.current_char.portrait, True)
+            portrait = scale(portrait, (portrait.get_width()*GameMenu.SCALE,
+                portrait.get_height()*GameMenu.SCALE))
+
+            Group.battle_info.add(Image((37*GameMenu.SCALE, 0),
+                surface = portrait,
+                h_anchor = 1,
+                v_anchor = 1))
+
+            Group.battle_info.add(Image((0, 0),
+                surface = abilities,
+                alpha = True,
+                h_anchor = 1,
+                v_anchor = 1))
+
+            Group.battle_info.add(Text((3*GameMenu.SCALE, GameMenu.SCALE),
+                         t_info = self.title_style,
+                         v_anchor = 1,
+                         text = self.current_char.name))
+
+            Group.battle_info.add(Image((4*GameMenu.SCALE, 11*GameMenu.SCALE),
+                surface = health,
+                width = round(health.get_width()*
+                    self.current_char.current_health/
+                    self.current_char.health),
+                h_anchor = 1,
+                v_anchor = 1))
+
+            Group.battle_info.add(Text((4*GameMenu.SCALE, 13*GameMenu.SCALE+2),
+                         t_info = self.text_style,
+                         v_anchor = 1,
+                         text = "Health: %d/%d" % (self.current_char.get_cur_health(), self.current_char.get_max_health())))
+
+            Group.battle_info.add(Image((4*GameMenu.SCALE, 19*GameMenu.SCALE),
+                surface = speed,
+                width = round(speed.get_width()*self.current_char.action/
+                    self.current_char.action_max),
+                h_anchor = 1,
+                v_anchor = 1))
+
+            Group.battle_info.add(Text((4*GameMenu.SCALE, 21*GameMenu.SCALE+2),
+                         t_info = self.text_style,
+                         v_anchor = 1,
+                         text = "Action: %d/%d" % (self.current_char.action, self.current_char.action_max)))
+
+            Group.battle_info.add(Text((3*GameMenu.SCALE, 50*GameMenu.SCALE),
+                         t_info = self.title_style,
+                         v_anchor = 1,
+                         text = "Skills"))
+
+        Group.battle_info.display()
+
     def render_monster(self):
         Group.monster.delete()
 
@@ -181,19 +249,28 @@ class GameMenu(BattleController):
         speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
 
         for i, monster in enumerate(self.current_battle.monsters):
-            x = self.resolution[0]/len(self.current_battle.monsters)/2 + \
-                self.resolution[0]/len(self.current_battle.monsters)*i
+            x = self.resolution[0]/4+(self.resolution[0]*3/4)/\
+                len(self.current_battle.monsters)/2+\
+                (self.resolution[0]*3/4)/len(self.current_battle.monsters)*i
             y = self.resolution[1]/3*2
 
             Group.monster.add(Image(
-                (round(x), round(y)),
+                (round(x), round(y)-GameMenu.SCALE),
                 h_anchor = 0,
                 v_anchor = -1,
-                surface = scale(ImageCache.add("images/monster/test_monster.png", True), (292, 400)),
+                surface = monster.surface,
                 alpha = True))
 
+            Group.monster.add(Text(
+                (round(x), round(y-monster.surface.get_height())-10*GameMenu.SCALE),
+                t_info = self.text_style,
+                fontsize = 18,
+                h_anchor = 0,
+                v_anchor = -1,
+                text=monster.name))
+
             Group.monster.add(Image(
-                (round(x-health.get_width()/2), round(y)),
+                (round(x-health.get_width()/2), round(y-monster.surface.get_height())-6*GameMenu.SCALE),
                 width = round(health.get_width()*monster.current_health/
                     monster.health),
                 h_anchor = 1,
@@ -202,7 +279,7 @@ class GameMenu(BattleController):
                 alpha = True))
 
             Group.monster.add(Image(
-                (round(x-speed.get_width()/2), round(y)+4*GameMenu.SCALE),
+                (round(x-speed.get_width()/2), round(y-monster.surface.get_height())-2*GameMenu.SCALE),
                 width = round(speed.get_width()*monster.action/
                     monster.action_max),
                 h_anchor = 1,
@@ -233,6 +310,9 @@ class GameMenu(BattleController):
         for i, member in enumerate(self.party.players):
             chosen_back = random.choice(self.player_bg).copy()
             chosen_back.blit(ImageCache.add(member.portrait, True), (0, 0))
+            hover_back = ImageCache.add("images/ui/hover_player_back1.png", True)
+            hover_back = scale(hover_back, tuple([z*GameMenu.SCALE for z in
+                                hover_back.get_size()]))
             chosen_back = scale(chosen_back, tuple([z*GameMenu.SCALE for z in
                                 chosen_back.get_size()]))
             chosen_back.blit(health, (37*GameMenu.SCALE, 5*GameMenu.SCALE),
@@ -240,12 +320,18 @@ class GameMenu(BattleController):
                 member.health), health.get_height()))
             chosen_back.blit(speed, (37*GameMenu.SCALE, 10*GameMenu.SCALE),
                 (0, 0, round(speed.get_width()*member.action/member.action_max), speed.get_height()))
+            hover_back.blit(chosen_back, (GameMenu.SCALE, GameMenu.SCALE))
+            button_func = partial(self.set_current_character, member)
 
-            Group.party.add(Image(
-                pos = (6*GameMenu.SCALE+i*(chosen_back.get_width()+5*GameMenu.SCALE), -5*GameMenu.SCALE),
-                surface = chosen_back,
-                h_anchor = 1,
-                v_anchor = -1,
+            Group.party.add(Button(
+                pos = (6*GameMenu.SCALE+i*(chosen_back.get_width()+5*GameMenu.SCALE)+chosen_back.get_width()//2, -5*GameMenu.SCALE-chosen_back.get_height()//2),
+                img = chosen_back,
+                hovered_img = hover_back,
+                pressed_img = chosen_back,
+                disabled_img = chosen_back,
+                on_pressed = button_func,
+                h_anchor = 0,
+                v_anchor = 0,
                 alpha = True))
 
             Group.party.add(Text((
@@ -253,6 +339,9 @@ class GameMenu(BattleController):
                 text=member.name))
 
         Group.party.display()
+
+    def set_current_character(self, character):
+        self.current_char = character
 
     def render_travel(self):
         # Clean up previous dialog if any
@@ -514,6 +603,7 @@ class GameMenu(BattleController):
             pygame.event.post(pygame.event.Event(BATTLESTART))
             pygame.time.set_timer(BATTLETICK, 30)
             monsters = [monster.Monster(100) for i in range(4)]
+            Group.option.delete()
             self.current_battle = battle.Battle(self.party, monsters)
             self.busy = True
         elif key == "addgold":

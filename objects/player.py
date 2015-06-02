@@ -23,6 +23,7 @@ class Player(character.Character):
         self.skill_points = 0
         self.experience = 0
         self.level = 1
+        self.target = None
         self.race = race
         self.gender = choice(["male", "female"])
         self.equipment = {}
