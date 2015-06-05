@@ -1,4 +1,5 @@
 import objects.item as item
+from objects.builtin_moves import skills
 import pickle
 import math
 import random
@@ -18,9 +19,10 @@ class Character(BattleController):
 
         self.name = name
         self.effects = []
-        self.moves = []
+        self.moves = [skills["attack"], skills["magic-bolt"]]
         self.fallen = False
         self.drop = None
+        self.target = None
         self.args = []
         self.overflow = 0
 
@@ -35,6 +37,7 @@ class Character(BattleController):
         self.action_max = 100
         self.action = 0
         self.ready = False
+        self.scroll = 0
 
         self.base_attack = 10
         self.base_defense = 0
@@ -63,7 +66,7 @@ class Character(BattleController):
 
     def cast(self, move, battle):
         if move in self.moves:
-            move.cast(battle)
+            move.run(battle)
         self.action = 0
 
     def start_turn(self):

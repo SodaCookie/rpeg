@@ -1,8 +1,9 @@
+import copy
+
 import view
 from image_cache import ImageCache
 from text import Text, TextInfo
 from button import Button, ButtonInfo
-import copy
 
 class MainMenu(object):
     def __init__(self, singleplayer):
