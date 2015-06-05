@@ -1,7 +1,9 @@
 from copy import copy
+
 import pygame
-from text import Text
-from controller import MouseController
+
+from classes.rendering.text import Text
+from classes.controller import MouseController
 
 class ButtonInfo(dict):
     def __init__(self, b_info=None, **kwarg):

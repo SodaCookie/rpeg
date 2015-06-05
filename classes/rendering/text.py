@@ -1,12 +1,12 @@
-from pygame import font
-from view import Renderable
 from copy import copy
+
+from pygame import font
+
+from classes.rendering.view import Renderable
 
 """
 Struct for condensing text parameters
 """
-
-
 
 class TextInfo(dict):
     def __init__(self, t_info=None, **kwarg):

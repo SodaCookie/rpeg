@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-import objects.effect as effect
+import classes.game.effect as effect
 
 
 class MoveBase(object):

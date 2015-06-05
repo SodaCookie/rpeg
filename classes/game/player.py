@@ -1,9 +1,9 @@
 from random import choice
 
-import objects.character as character
-import objects.attribute as attribute
-import objects.moves as moves
-import objects.item as item
+import classes.game.character as character
+import classes.game.attribute as attribute
+import classes.game.moves as moves
+import classes.game.item as item
 
 class Player(character.Character):
 

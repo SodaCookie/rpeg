@@ -1,10 +1,10 @@
 import pygame
 from pygame import time, event
 
-import view
-import controller
-from main_menu import MainMenu
-from game_menu import GameMenu
+import classes.rendering.view as view
+import classes.controller as controller
+from classes.main_menu import MainMenu
+from classes.game_menu import GameMenu
 
 # So we can just define all our transitions like this...
 # This kinda makes menus singletons anyways. Ideally we have
@@ -12,7 +12,7 @@ from game_menu import GameMenu
 # events which are triggered by buttons.
 def singleplayer():
     global _main_menu, _game_menu
-    _main_menu.close()
+    _main_menu.delete()
     _main_menu = None
     _game_menu = GameMenu()
 
@@ -21,6 +21,7 @@ if __name__ == "__main__":
     view.init_pygame()
 
     _main_menu = MainMenu(singleplayer)
+    _main_menu.display()
 
     running = True
     while running:

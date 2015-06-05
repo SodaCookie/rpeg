@@ -5,19 +5,20 @@ import copy
 from pygame.transform import scale
 import pygame
 
-import view
-from image_cache import ImageCache
-from dragable import Dragable
-from image import Image
-from text import Text, TextInfo
-from button import Button, ButtonInfo
-from controller import BattleController
-import objects.dungeon as dungeon
-import objects.party as party
-import objects.player as player
-import objects.monster as monster
-import objects.shop as shop
-import objects.battle as battle
+import classes.rendering.view as view
+from classes.party_menu import PartyMenu
+from classes.image_cache import ImageCache
+from classes.rendering.dragable import Dragable
+from classes.rendering.image import Image
+from classes.rendering.text import Text, TextInfo
+from classes.rendering.button import Button, ButtonInfo
+from classes.controller import BattleController
+import classes.game.dungeon as dungeon
+import classes.game.party as party
+import classes.game.player as player
+import classes.game.monster as monster
+import classes.game.shop as shop
+import classes.game.battle as battle
 
 BATTLESTART = pygame.USEREVENT
 BATTLETICK = pygame.USEREVENT + 1
@@ -32,7 +33,7 @@ class GameMenu(BattleController):
     def __init__(self):
         super().__init__()
         self.text_bg = [ImageCache.add("images/ui/text_back1.png", True)]
-        self.player_bg = [ImageCache.add("images/ui/player_back1.png", True)]
+
 
         option_button = ImageCache.add("images/ui/button_back.png", True)
         option_button = scale(option_button,
@@ -104,25 +105,27 @@ class GameMenu(BattleController):
 
         self.background = Image((0,0), filename="images/ui/background.png", h_anchor=1, v_anchor=1)
         self.background.display()
-        self.single_renderables = {} # add to single_renderables to control
-                                     # small elements on the screen
-        self.create_group("event", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
-        self.create_group("option", (self.resolution[0]-7*GameMenu.SCALE,
-                                     5*GameMenu.SCALE))
-        self.create_group("party", (0, self.resolution[1]))
-        self.create_group("loot", (self.resolution[0]//2, 0))
-        self.create_group("travel", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
-        self.create_group("shop", (self.resolution[0]//2, 10*GameMenu.SCALE),
-            ImageCache.add("images/ui/shop_back.png", True),
-            h_anchor=0, v_anchor=1)
-        self.create_group("bars", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
-        self.create_group("monster", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
-        self.create_group("battle_info", (6*GameMenu.SCALE, 5*GameMenu.SCALE),
-            ImageCache.add("images/ui/battle_info.png", True),
-            h_anchor=1, v_anchor=1)
-        self.render_event(self.event)
-        self.render_option()
-        self.render_party()
+        self.party_menu = PartyMenu(self.party)
+        self.party_menu.display()
+        # self.single_renderables = {} # add to single_renderables to control
+        #                              # small elements on the screen
+        # self.create_group("event", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
+        # self.create_group("option", (self.resolution[0]-7*GameMenu.SCALE,
+        #                              5*GameMenu.SCALE))
+        # self.create_group("party", (0, self.resolution[1]))
+        # self.create_group("loot", (self.resolution[0]//2, 0))
+        # self.create_group("travel", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
+        # self.create_group("shop", (self.resolution[0]//2, 10*GameMenu.SCALE),
+        #     ImageCache.add("images/ui/shop_back.png", True),
+        #     h_anchor=0, v_anchor=1)
+        # self.create_group("bars", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
+        # self.create_group("monster", (6*GameMenu.SCALE, 10*GameMenu.SCALE))
+        # self.create_group("battle_info", (6*GameMenu.SCALE, 5*GameMenu.SCALE),
+        #     ImageCache.add("images/ui/battle_info.png", True),
+        #     h_anchor=1, v_anchor=1)
+        # self.render_event(self.event)
+        # self.render_option()
+        # self.render_party()
 
     def battle(self, delta):
         self.render_bars()
@@ -185,20 +188,7 @@ class GameMenu(BattleController):
                 alpha = True))
 
         for i, member in enumerate(self.party.players):
-            Group.bars.add(Image((37*GameMenu.SCALE, 5*GameMenu.SCALE),
-                surface = health,
-                width = round(health.get_width()*
-                    member.current_health/
-                    member.health),
-                h_anchor = 1,
-                v_anchor = 1))
-
-            Group.bars.add(Image((37*GameMenu.SCALE, 5*GameMenu.SCALE),
-                surface = speed,
-                width = round(speed.get_width()*member.action/
-                    member.action_max),
-                h_anchor = 1,
-                v_anchor = 1))
+            pass
 
         if self.current_char:
             Group.bars.add(Image((4*GameMenu.SCALE, 11*GameMenu.SCALE),
@@ -315,41 +305,6 @@ class GameMenu(BattleController):
             b_info = self.option_button_style,
             text = "Travel"))
         Group.option.display()
-
-    def render_party(self):
-        # Clean up previous dialogs
-        Group.party.delete()
-        # hardcoded to save space (width*SCALE, height*SCALE)
-        health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
-        speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
-        # Create new ui for the players
-        for i, member in enumerate(self.party.players):
-            chosen_back = random.choice(self.player_bg).copy()
-            chosen_back.blit(ImageCache.add(member.portrait, True), (0, 0))
-            hover_back = ImageCache.add("images/ui/hover_player_back1.png", True)
-            hover_back = scale(hover_back, tuple([z*GameMenu.SCALE for z in
-                                hover_back.get_size()]))
-            chosen_back = scale(chosen_back, tuple([z*GameMenu.SCALE for z in
-                                chosen_back.get_size()]))
-            hover_back.blit(chosen_back, (GameMenu.SCALE, GameMenu.SCALE))
-            button_func = partial(self.set_current_character, member)
-
-            Group.party.add(Button(
-                pos = (6*GameMenu.SCALE+i*(chosen_back.get_width()+5*GameMenu.SCALE)+chosen_back.get_width()//2, -5*GameMenu.SCALE-chosen_back.get_height()//2),
-                img = chosen_back,
-                hovered_img = hover_back,
-                pressed_img = chosen_back,
-                disabled_img = chosen_back,
-                on_pressed = button_func,
-                h_anchor = 0,
-                v_anchor = 0,
-                alpha = True))
-
-            Group.party.add(Text((
-                6*GameMenu.SCALE+i*chosen_back.get_width()+i*5*GameMenu.SCALE, -chosen_back.get_height()-10*GameMenu.SCALE), self.text_style,
-                text=member.name))
-
-        Group.party.display()
 
     def set_current_character(self, character):
         self.current_char = character

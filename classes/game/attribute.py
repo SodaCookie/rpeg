@@ -1,4 +1,4 @@
-import objects.effect as effect
+import classes.game.effect as effect
 
 class Attribute(effect.Effect):
   """Attributes are permanent effects that are applied through items

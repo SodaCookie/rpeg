@@ -1,8 +1,9 @@
 from itertools import chain
 from random import choice
 import xml.etree.ElementTree as tree
-import objects.dialog as dialog
 import re
+
+import classes.game.dialog as dialog
 
 class Location(object):
   """Location object is the node for each part of a dungeon"""

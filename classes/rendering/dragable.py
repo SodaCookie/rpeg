@@ -1,6 +1,7 @@
 import pygame
-from image import Image
-from controller import MouseController
+
+from classes.controller import MouseController
+from classes.rendering.image import Image
 
 class Dragable(Image, MouseController):
 

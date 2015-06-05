@@ -1,5 +1,6 @@
-import objects.item as item
 from random import triangular, choice, uniform
+
+import classes.game.item as item
 
 class Shop(object):
 

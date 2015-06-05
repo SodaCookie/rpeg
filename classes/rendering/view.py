@@ -4,6 +4,8 @@ from pygame import display
 
 _screen = None
 
+SCALE = 4
+
 _resolution = (1280, 720)
 def set_resolution(new_resolution):
     global _resolution

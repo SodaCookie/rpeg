@@ -3,7 +3,7 @@ import xml.etree.ElementTree as tree
 
 from pygame import image, Surface, SRCALPHA, BLEND_RGBA_MULT
 
-import objects.character as character
+import classes.game.character as character
 
 class Monster(character.Character):
 

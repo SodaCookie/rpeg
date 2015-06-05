@@ -1,5 +1,5 @@
-from image_cache import ImageCache
-from view import Renderable
+from classes.image_cache import ImageCache
+from classes.rendering.view import Renderable
 
 class Image(Renderable):
     # Getting close to warrenting its own ImageInfo

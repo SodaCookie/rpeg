@@ -1,10 +1,10 @@
-import objects.item as item
-from objects.builtin_moves import skills
 import pickle
 import math
 import random
 
-from controller import BattleController
+from classes.builtin_moves import skills
+from classes.controller import BattleController
+import classes.game.item as item
 
 class Character(BattleController):
 

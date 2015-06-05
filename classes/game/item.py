@@ -1,7 +1,8 @@
 from random import randint, choice
 import xml.etree.ElementTree as tree
-import objects.attribute as attribute
 import re
+
+import classes.game.attribute as attribute
 
 class Item:
 

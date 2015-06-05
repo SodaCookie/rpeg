@@ -1,4 +1,4 @@
-from objects.moves import MoveBase, Move
+from classes.game.moves import MoveBase, Move
 
 class Damage(MoveBase):
     """Base damage class will only scale of user's attack stat.
