@@ -2,7 +2,7 @@ from classes.rendering.view import Renderable
 from classes.image_cache import ImageCache
 
 class RenderGroup(Renderable):
-    """docstring for RenderGroup"""
+
     def __init__(self, name, pos=(0, 0)):
         super().__init__(pos)
         self.name = name

@@ -115,7 +115,7 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
         </dialog>
         <dialog name="quit money">
             <body>Quitting is not an option. OHHH A PENNY</body>
-            <action>addgold 50</action>
+            <action>reward 50 []</action>
         </dialog>
     </event>
 

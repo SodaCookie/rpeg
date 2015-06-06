@@ -15,10 +15,10 @@ def update():
             MouseController.handle_mouse_button_up(e)
 
     if event.get(pygame.USEREVENT):
-        BattleController.start_battle()
+        BattleController._start_battle()
 
     if event.get(pygame.USEREVENT+1):
-        BattleController.handle_battle()
+        BattleController._handle_battle()
 
 class BattleController(object):
     battle_controllers = []
@@ -27,18 +27,18 @@ class BattleController(object):
     def __init__(self):
         BattleController.battle_controllers.append(self)
 
-    def battle(self, delta): # in seconds
+    def handle_battle(self, delta): # in seconds
         pass
 
     @staticmethod
-    def handle_battle():
+    def _handle_battle():
         delta = pygame.time.get_ticks() - BattleController.delta_time
         for controller in BattleController.battle_controllers:
-            controller.battle(delta/1000)
+            controller.handle_battle(delta/1000)
         BattleController.delta_time = pygame.time.get_ticks()
 
     @staticmethod
-    def start_battle():
+    def _start_battle():
         BattleController.delta_time = pygame.time.get_ticks()
 
 
