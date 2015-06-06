@@ -55,6 +55,8 @@ class SideBar(RenderGroup):
             b_info = self.option_button_style,
             text = "Loot")
 
+        self.render()
+
     def render(self):
         self.add(self.travel)
         self.add(self.shop)

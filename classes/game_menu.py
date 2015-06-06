@@ -1,9 +1,14 @@
+import random
+
 import classes.rendering.view as view
 from classes.party_menu import PartyMenu
 from classes.event_menu import EventMenu
 from classes.travel_menu import TravelMenu
+from classes.battle_info_menu import BattleInfoMenu
 from classes.loot_menu import LootMenu
+from classes.monster_menu import MonsterMenu
 from classes.sidebar import SideBar
+from classes.bars import Bars
 from classes.image_cache import ImageCache
 from classes.rendering.dragable import Dragable
 from classes.rendering.image import Image
@@ -35,39 +40,19 @@ class GameMenu(BattleController):
         self.current_location = self.dungeon.start
         self.current_location.generate()
         self.current_dialog = None
-        self.current_battle = None
+        self.battle = None
         self.current_target = None
-        self.current_char = players[0]
-
-        self.text_style = TextInfo(fontcolor=(255,255,255),
-                                   fontsize=16,
-                                   alignment=-1,
-                                   h_anchor=1,
-                                   v_anchor=1,
-                                   wrap=True,
-                                   width=149*view.SCALE)
-
-        self.button_title_style = TextInfo(fontcolor=(255,255,255),
-                                   fontsize=30,
-                                   alignment=-1,
-                                   h_anchor=0,
-                                   v_anchor=0)
-
-        self.loot_style = TextInfo(fontcolor=(255,255,255),
-                                   fontsize=30,
-                                   alignment=0,
-                                   h_anchor=0,
-                                   v_anchor=-1,
-                                   wrap=True,
-                                   width=149*view.SCALE);
-
-        # self.large_button_style = ButtonInfo(self.button_style, h_anchor=0, v_anchor=0);
+        self.current_char = None
+        self.updated_icons = False
 
         self.background = Image((0,0), filename="images/ui/background.png", h_anchor=1, v_anchor=1)
         self.background.display()
-        self.party_menu = PartyMenu(self.party)
+        self.party_menu = PartyMenu(self.party, self.set_character)
         self.event_menu = EventMenu(self.current_location, self.party, self)
         self.travel_menu = TravelMenu(self.current_location, self.travel)
+        self.battle_info_menu = None
+        self.bars = Bars()
+        self.bars.add(self.party_menu.bars)
         self.shop_menu = None
         self.loot_menu = None
         self.alter_menu = None
@@ -100,19 +85,45 @@ class GameMenu(BattleController):
         self.sidebar.loot.display()
 
     def create_monster(self):
-        pass
+        monsters = [monster.Monster(100, random.randint(0,2)) for i in range(3)]
+        self.battle = battle.Battle(self.party.players, monsters)
+        self.monster_menu = MonsterMenu(monsters)
+        self.sidebar.hide()
+        self.bars.add(self.monster_menu.bars)
 
     def create_shop(self):
         pass
+
+    def set_character(self, character):
+        self.current_char = character
+        is_battle = bool(self.battle)
+        is_limited = False
+        if self.battle_info_menu:
+            self.bars.remove(self.battle_info_menu.bars)
+            self.battle_info_menu.delete()
+        self.battle_info_menu = BattleInfoMenu(character,
+            is_battle, is_limited)
+        self.bars.add(self.battle_info_menu.bars)
+        self.battle_info_menu.display()
 
     def travel(self, location):
         """Returns given location"""
         self.current_location = location
 
     def handle_battle(self, delta):
-        for monster in self.current_battle.monsters:
+        self.bars.update()
+
+        if self.current_char:
+            if self.current_char.ready and not self.updated_icons:
+                self.battle_info_menu.icons.update(self.current_char.ready)
+                self.updated_icons = True
+            elif not self.current_char.ready and self.updated_icons:
+                self.battle_info_menu.icons.update(self.current_char.ready)
+                self.updated_icons = False
+
+        for monster in self.battle.monsters:
             if monster.ready:
-                monster.cast("hello", self.current_battle)
+                monster.cast("hello", self.battle)
 
     def set_current_character(self, character):
         self.current_char = character

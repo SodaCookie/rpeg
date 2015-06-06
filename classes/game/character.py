@@ -46,7 +46,7 @@ class Character(BattleController):
         self.base_speed = 5
         self.base_resist = 0
 
-    def battle(self, delta):
+    def handle_battle(self, delta):
 
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
         self.overflow = (self.overflow+delta)-steps    # Used for carry over

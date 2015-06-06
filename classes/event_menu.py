@@ -3,6 +3,7 @@ from functools import partial
 
 from pygame.transform import scale
 from pygame import USEREVENT
+import pygame
 
 from classes.rendering.render_group import RenderGroup
 from classes.rendering.button import Button, ButtonInfo
@@ -70,6 +71,7 @@ class EventMenu(RenderGroup):
         self.add(Text((view.SCALE, 0),
                     self.title_style,
                     text=self.location.get_event_name().title()))
+
         body = Text((5*view.SCALE, 5*view.SCALE),
                      self.text_style,
                      text=self.event.body)
@@ -108,12 +110,9 @@ class EventMenu(RenderGroup):
             if args:
                 pass
             pygame.event.post(pygame.event.Event(controller.BATTLEEVENT))
-            pygame.time.set_timer(controller.BATTLEEVENT, 30)
-            monsters = [monster.Monster(100, random.randint(0,2)) for i in range(3)]
-            self.current_battle = battle.Battle(self.party, monsters)
-            self.busy = True
-            self.render_monster()
-            self.render_battle_info()
+            pygame.time.set_timer(controller.BATTLETICK, 30)
+            self.game_menu.create_monster()
+            self.game_menu.display_monster()
         elif key == "addgold":
             pass
         elif key == "takegold":

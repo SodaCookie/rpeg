@@ -52,7 +52,7 @@ class Dungeon(object):
       elif key == "item_distribution": self.item_distribution = kwargs[key]
       elif key == "mon_distribution": self.mon_distribution = kwargs[key]
 
-    self.start = location.Location("entrance", level)
+    self.start = location.Location("monster", level)
     self.stop = location.Location("exit", level)
 
     # create the inbetween nodes

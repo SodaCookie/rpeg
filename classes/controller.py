@@ -1,6 +1,9 @@
 import pygame
 from pygame import event
 
+BATTLEEVENT = pygame.USEREVENT
+BATTLETICK = pygame.USEREVENT + 1
+
 def update():
     if event.peek(pygame.MOUSEMOTION):
         for e in event.get(pygame.MOUSEMOTION):
@@ -14,10 +17,10 @@ def update():
         for e in event.get(pygame.MOUSEBUTTONUP):
             MouseController.handle_mouse_button_up(e)
 
-    if event.get(pygame.USEREVENT):
+    if event.get(BATTLEEVENT):
         BattleController._start_battle()
 
-    if event.get(pygame.USEREVENT+1):
+    if event.get(BATTLETICK):
         BattleController._handle_battle()
 
 class BattleController(object):
