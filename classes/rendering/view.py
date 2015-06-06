@@ -34,7 +34,8 @@ def render():
 
     _screen.fill((0, 0, 0))
     for obj in Renderable.renderables:
-        obj.draw(_screen)
+        if obj.visible:
+            obj.draw(_screen)
 
     display.flip()
 
@@ -45,8 +46,10 @@ class Renderable(object):
 
     def __init__(self, pos):
         self.pos = pos
+        self.visible = False
 
     def display(self):
+        self.visible = True
         if self not in Renderable.renderables:
             Renderable.renderables.append(self)
 
@@ -56,6 +59,9 @@ class Renderable(object):
             Renderable.renderables.remove(self)
         else:
             logging.info("Attempted to delete already non-displayed renderable: %s"%str(self))
+
+    def hide(self):
+        self.visible = False
 
     def move(self, pos):
         self.pos = pos

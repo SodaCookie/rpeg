@@ -142,6 +142,9 @@ class Button(Text, MouseController):
         Text.draw(self, surface)
 
     def mouse_motion(self, buttons, pos, rel):
+        if not self.visible:
+            return
+
         if self.state == Button.DISABLED:
             return
 
@@ -178,6 +181,9 @@ class Button(Text, MouseController):
                     self.text_info.fontcolor = self.button_info.text_color
 
     def mouse_button_down(self, button, pos):
+        if not self.visible:
+            return
+
         if self.state == Button.DISABLED:
             return
 
@@ -189,6 +195,9 @@ class Button(Text, MouseController):
                 self.on_pressed()
 
     def mouse_button_up(self, button, pos):
+        if not self.visible:
+            return
+
         if self.state == Button.DISABLED:
             return
 

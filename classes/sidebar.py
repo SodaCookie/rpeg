@@ -9,7 +9,7 @@ import classes.rendering.view as view
 class SideBar(RenderGroup):
     """Special group where only single renderables are rendered"""
 
-    def __init__(self, display_travel, display_shop):
+    def __init__(self, game_menu):
         super().__init__("sidebar", (0, 0))
 
         option_button = ImageCache.add("images/ui/button_back.png", True)
@@ -36,19 +36,27 @@ class SideBar(RenderGroup):
 
         self.travel = Button(
             (view.get_resolution()[0]-7*view.SCALE, 5*view.SCALE),
-            on_pressed = display_travel,
+            on_pressed = game_menu.display_travel,
             t_info = self.option_style,
             b_info = self.option_button_style,
             text = "Travel")
 
         self.shop = Button(
-            (view.get_resolution()[0]-7*view.SCALE, 15*view.SCALE),
-            on_pressed = display_shop,
+            (view.get_resolution()[0]-7*view.SCALE, 20*view.SCALE),
+            on_pressed = game_menu.display_shop,
             t_info = self.option_style,
             b_info = self.option_button_style,
             text = "Shop")
 
+        self.loot = Button(
+            (view.get_resolution()[0]-7*view.SCALE, 35*view.SCALE),
+            on_pressed = game_menu.display_loot,
+            t_info = self.option_style,
+            b_info = self.option_button_style,
+            text = "Loot")
+
     def render(self):
         self.add(self.travel)
         self.add(self.shop)
+        self.add(self.loot)
 

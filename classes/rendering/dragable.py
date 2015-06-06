@@ -28,6 +28,9 @@ class Dragable(Image, MouseController):
       self.state = Dragable.NEUTRAL
 
   def mouse_button_down(self, drag, pos):
+      if not self.visible:
+        return
+
       if self.state == Dragable.DISABLED:
           return
 
@@ -37,6 +40,9 @@ class Dragable(Image, MouseController):
           self.mouse_y_offset = self.pos[1] - pygame.mouse.get_pos()[1]
 
   def mouse_button_up(self, drag, pos):
+      if not self.visible:
+        return
+
       if self.state == Dragable.DISABLED:
           return
 
@@ -46,6 +52,9 @@ class Dragable(Image, MouseController):
             self.on_released(self)
 
   def mouse_motion(self, buttons, pos, rel):
+      if not self.visible:
+        return
+
       if self.state == Dragable.DISABLED:
           return
 

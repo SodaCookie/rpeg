@@ -72,7 +72,7 @@ class GameMenu(BattleController):
         self.loot_menu = None
         self.alter_menu = None
         self.monster_menu = None
-        self.sidebar = SideBar(self.display_travel, self.display_shop)
+        self.sidebar = SideBar(self)
         self.party_menu.display()
         self.event_menu.display()
         self.sidebar.travel.display()
@@ -97,6 +97,7 @@ class GameMenu(BattleController):
 
     def create_loot(self, gold, items):
         self.loot_menu = LootMenu(self.party, gold, items)
+        self.sidebar.loot.display()
 
     def create_monster(self):
         pass

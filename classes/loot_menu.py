@@ -33,8 +33,8 @@ class LootMenu(RenderGroup):
         self.button_title_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=30,
                                    alignment=-1,
-                                   h_anchor=1,
-                                   v_anchor=-1,
+                                   h_anchor=0,
+                                   v_anchor=0,
                                    wrap=True,
                                    width=149*view.SCALE)
 
@@ -101,8 +101,7 @@ class LootMenu(RenderGroup):
             text="Treasure"))
         displacement = 20*view.SCALE
         if self.gold:
-            title_position = (view.get_resolution()[0]/2,
-                              displacement)
+            title_position = (0, displacement)
             self.add(Text(
                 title_position,
                 t_info=self.loot_style,
@@ -110,7 +109,7 @@ class LootMenu(RenderGroup):
 
         self.add(Button(
                 button_position,
-                on_pressed=self.delete(),
+                on_pressed=self.hide,
                 t_info=self.button_title_style,
                 b_info=self.large_button_style,
                 text="CLOSE"))

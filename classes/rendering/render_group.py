@@ -25,6 +25,11 @@ class RenderGroup(Renderable):
             renderable.move((self.pos[0]-pos[0], self.pos[1]-pos[1]))
             self.rendering.remove(renderable)
 
+    def hide(self):
+        self.displaying = False
+        for r in self.rendering:
+            r.hide()
+
     def render(self):
         pass
 
