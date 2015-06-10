@@ -1,3 +1,5 @@
+from functools import partial
+
 from pygame.transform import scale
 from pygame import Surface, SRCALPHA
 import pygame
@@ -30,7 +32,6 @@ class StatBars(RenderGroup):
         # hardcoded to save space (width*SCALE, height*SCALE)
         health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
         speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
-
         if self.character:
             self.add(Image((4*view.SCALE, 11*view.SCALE),
                 surface = health,
@@ -60,9 +61,10 @@ class StatBars(RenderGroup):
 
 class Icons(RenderGroup):
 
-    def __init__(self, character):
+    def __init__(self, character, cast_func):
         super().__init__("icons", (0, 0))
         self.character = character
+        self.cast_func = cast_func
         self.render()
 
     def update(self, enable):
@@ -80,11 +82,13 @@ class Icons(RenderGroup):
                 d_img = img.copy()
                 d_img.set_alpha(100)
                 enable = True if self.character.ready else False
+                button_func = partial(self.cast_func, move)
 
                 self.add(Button(
-                    (10*view.SCALE+i%3*20*view.SCALE,
-                        65*view.SCALE+i//3*20*view.SCALE),
+                    (4*view.SCALE+i%3*20*view.SCALE,
+                        60*view.SCALE+i//3*20*view.SCALE),
                     enabled = enable,
+                    on_pressed = button_func,
                     h_anchor = 1,
                     v_anchor = 1,
                     img = scale(img, (64, 64)),
@@ -96,7 +100,7 @@ class Icons(RenderGroup):
 
 class BattleInfoMenu(RenderGroup):
 
-    def __init__(self, character, battle=False, limited=False):
+    def __init__(self, character, cast_func, battle=False, limited=False):
         super().__init__("battle_info", (6*view.SCALE, 5*view.SCALE))
 
         self.title_style = TextInfo(fontcolor=(255,255,255),
@@ -111,7 +115,7 @@ class BattleInfoMenu(RenderGroup):
         self.battle = battle
         self.limited = limited
         self.bars = StatBars(character)
-        self.icons = Icons(character)
+        self.icons = Icons(character, cast_func)
         self.render()
 
     def render(self):

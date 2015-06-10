@@ -17,18 +17,20 @@ class MoveBase(object):
         if type(name) == str:
             self.name = name
             self.prev = None
+            self.targetting = None # an optional identifier for targeting type
         elif issubclass(type(name), MoveBase):
             self.name = name.name
             self.prev = name
 
+        self.targeting = "none"
         self.caster = None
         self.accuracy = 100
-        self.crit = 0
+        self.critical = 0
         self.target = None
         self.surface = None
 
         self.cur_accuracy = self.accuracy
-        self.cur_crit = self.crit
+        self.cur_crit = self.critical
 
     def set_caster(self, caster):
         self.caster = caster
@@ -48,20 +50,21 @@ class MoveBase(object):
         self.cur_accuracy = accuracy
 
     def get_target(self, battle):
-        return None
+        """Targeting function is taken via the most inner function"""
+        return []
 
     def run(self, battle):
         if random.randint(0, 99) <= self.cur_accuracy:  # accuracy roll
             if random.randint(0, 99) < self.cur_crit:  # crit roll
-                self._crit()
+                self._crit(battle)
             else:
-                self._cast()
+                self._cast(battle)
         else:
-            self._miss()
+            self._miss(battle)
 
         # reset the accuracy and crit after cast
         self.cur_accuracy = self.accuracy
-        self.cur_crit = self.crit
+        self.cur_crit = self.critical
 
     def _cast(self, battle):
         self.target = self.get_target(battle)
@@ -69,11 +72,17 @@ class MoveBase(object):
         if self.prev:
             self.prev._cast(battle)
 
+        for target in self.target:
+            self.cast(target)
+
     def _crit(self, battle):
         self.target = self.get_target(battle)
 
         if self.prev:
             self.prev._crit(battle)
+
+        for target in self.target:
+            self.crit(target)
 
     def _miss(self, battle):
         self.target = self.get_target(battle)
@@ -81,25 +90,30 @@ class MoveBase(object):
         if self.prev:
             self.prev._miss(battle)
 
-    def crit(self):
+        for target in self.target:
+            self.miss(target)
+
+    def crit(self, target):
         """Override when wanting to make crit effect"""
         pass
 
-    def miss(self):
+    def miss(self, target):
         """Override when want to make a miss effect"""
         pass
 
-    def cast(self):
+    def cast(self, target):
         """Override to create effects"""
         pass
+
 
 class Move(MoveBase):
     """Wrapper class that added critical chance and accuracy,
     implements a basic get_target method and crit method"""
 
-    def __init__(self, accuracy, crit, surface, name):
+    def __init__(self, accuracy, crit, surface, targeting, name):
         super().__init__(name)
 
+        self.targeting = targeting
         self.accuracy = accuracy
         self.crit = crit
         self.surface = surface
@@ -108,13 +122,9 @@ class Move(MoveBase):
         self.cur_accuracy = self.accuracy
         self.cur_crit = self.crit
 
-    def get_target(self, battle):
-        return self.caster.target
-
     def crit(self):
         """Override when wanting to make crit effect"""
         self.cast()
-
 
 if __name__ == "__main__":
     # Testing

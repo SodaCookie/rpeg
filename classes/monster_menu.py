@@ -21,6 +21,9 @@ class StatBars(RenderGroup):
         speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
 
         for i, monster in enumerate(self.monsters):
+            if monster.fallen:
+                continue
+
             x = view.get_resolution()[0]/4+(view.get_resolution()[0]*3/4)/\
                 len(self.monsters)/2+\
                 (view.get_resolution()[0]*3/4)/len(self.monsters)*i
@@ -62,8 +65,10 @@ class MonsterMenu(RenderGroup):
         self.render()
 
     def render(self):
-        self.add(self.bars)
         for i, monster in enumerate(self.monsters):
+
+            if monster.fallen:
+                continue
 
             x = view.get_resolution()[0]/4+(view.get_resolution()[0]*3/4)/\
                 len(self.monsters)/2+\
@@ -87,3 +92,4 @@ class MonsterMenu(RenderGroup):
                     (monster.surface.get_width()*view.SCALE,
                      monster.surface.get_height()*view.SCALE)),
                 alpha = True))
+        self.add(self.bars)

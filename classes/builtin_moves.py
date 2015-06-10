@@ -1,6 +1,21 @@
-from classes.game.moves import MoveBase, Move
+from classes.game.moves import *
 
-class Damage(MoveBase):
+class SingleTarget(MoveBase):
+
+    def get_target(self, battle):
+        return [self.caster.target]
+
+class PartyTarget(MoveBase):
+
+    def get_target(self, battle):
+        return battle.party.players
+
+class AllEnemyTarget(MoveBase):
+
+    def get_target(self, battle):
+        return battle.monsters
+
+class Damage(AllEnemyTarget, MoveBase):
     """Base damage class will only scale of user's attack stat.
     Implemented a basic critical (x2 damage) and damage method
     all moves extending damage should override damage"""
@@ -10,11 +25,11 @@ class Damage(MoveBase):
         self.base = base
         self.dtype = dtype
 
-    def cast(self):
-        dmg = self.target.deal_damage(self.caster, self.damage(), self.dtype)
+    def cast(self, target):
+        dmg = target.deal_damage(self.caster, self.damage(), self.dtype)
 
-    def crit(self):
-        dmg = self.target.deal_damage(self.caster, 2*self.damage(), self.dtype)
+    def crit(self, target):
+        dmg = target.deal_damage(self.caster, 2*self.damage(), self.dtype)
 
     def damage(self):
         return self.caster.get_attack()*self.base
@@ -54,21 +69,21 @@ class Repeat(MoveBase):
     def cast(self, *args):
         if self.prev:
             for i in range(self.repeat):
-                self.prev.cast(*args)
+                self.prev._cast(*args)
 
 
 skill_tree = {}
 skills = {}
 
 skills["attack"] = \
-    Move(80, 10, "images/icon/attack_icon.png",
+    Move(80, 10, "images/icon/attack_icon.png", "enemy",
         Damage(0.5, "physical", "attack"))
 
 skills["flurry"] = \
-    Move(80, 10, "images/icon/attack_icon.png",
+    Move(80, 10, "images/icon/attack_icon.png", "enemy",
         Repeat(3,
             Damage(0.3, "physical", "flurry")))
 
 skills["magic-bolt"] = \
-    Move(90, 5, "images/icon/magic_bolt_icon.png",
+    Move(90, 5, "images/icon/magic_bolt_icon.png", "enemy",
         ScaleDamage(1, "magic", 0.5, "magic", "magic-bolt"))

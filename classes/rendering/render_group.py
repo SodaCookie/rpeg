@@ -3,6 +3,8 @@ from classes.image_cache import ImageCache
 
 class RenderGroup(Renderable):
 
+    # theres a bug where pos is set but render is called before
+
     def __init__(self, name, pos=(0, 0)):
         super().__init__(pos)
         self.name = name
@@ -11,9 +13,17 @@ class RenderGroup(Renderable):
         self.pos = pos
 
     def add(self, renderable):
-        pos = renderable.pos
-        renderable.move((self.pos[0]+pos[0], self.pos[1]+pos[1]))
-        self.rendering.append(renderable)
+        if isinstance(renderable, RenderGroup):
+            for r in renderable.rendering:
+                pos = r.pos
+                r.move((self.pos[0]+pos[0], self.pos[1]+pos[1]))
+            pos = renderable.pos
+            renderable.move((self.pos[0]+pos[0], self.pos[1]+pos[1]))
+            self.rendering.append(renderable)
+        else:
+            pos = renderable.pos
+            renderable.move((self.pos[0]+pos[0], self.pos[1]+pos[1]))
+            self.rendering.append(renderable)
 
     def remove(self, renderable):
         pos = renderable.pos

@@ -24,6 +24,7 @@ class ButtonInfo(dict):
         self["h_anchor"] = 1
         self["v_anchor"] = 1
         self["on_released"] = None
+        self["on_hovered"] = None
         self["on_pressed"] = None
         if b_info: self.update(b_info)
         self.update(kwarg)

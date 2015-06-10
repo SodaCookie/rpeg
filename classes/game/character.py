@@ -19,7 +19,9 @@ class Character(BattleController):
 
         self.name = name
         self.effects = []
-        self.moves = [skills["attack"], skills["magic-bolt"]]
+        self.moves = []
+        self.add_move(skills["attack"])
+        self.add_move(skills["magic-bolt"])
         self.fallen = False
         self.drop = None
         self.target = None
@@ -64,6 +66,19 @@ class Character(BattleController):
         if self.action < self.action_max:
             self.ready = False
 
+        if self.get_cur_health() <= 0:
+            if self.kill:
+                self.fallen = True
+            else:
+                self.current_health = 1
+
+    def kill(self):
+        for effect in self.effects:
+            if effect.active:
+                if not effect.on_death():
+                    return False
+        return True
+
     def cast(self, move, battle):
         if move in self.moves:
             move.run(battle)
@@ -71,7 +86,8 @@ class Character(BattleController):
 
     def start_turn(self):
         for effect in self.effects:
-            effect.on_start_turn()
+            if effect.active:
+                effect.on_start_turn()
         self.ready = True
 
     def decrease_durations(self, amount):

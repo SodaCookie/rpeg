@@ -1,5 +1,7 @@
 import random
 
+import pygame
+
 import classes.rendering.view as view
 from classes.party_menu import PartyMenu
 from classes.event_menu import EventMenu
@@ -22,6 +24,7 @@ import classes.game.player as player
 import classes.game.monster as monster
 import classes.game.shop as shop
 import classes.game.battle as battle
+import classes.game.moves as moves
 
 
 class GameMenu(BattleController):
@@ -39,7 +42,7 @@ class GameMenu(BattleController):
         self.resolution = view.get_resolution()
         self.current_location = self.dungeon.start
         self.current_location.generate()
-        self.current_dialog = None
+        self.current_menu = None
         self.battle = None
         self.current_target = None
         self.current_char = None
@@ -47,6 +50,7 @@ class GameMenu(BattleController):
 
         self.background = Image((0,0), filename="images/ui/background.png", h_anchor=1, v_anchor=1)
         self.background.display()
+
         self.party_menu = PartyMenu(self.party, self.set_character)
         self.event_menu = EventMenu(self.current_location, self.party, self)
         self.travel_menu = TravelMenu(self.current_location, self.travel)
@@ -58,12 +62,18 @@ class GameMenu(BattleController):
         self.alter_menu = None
         self.monster_menu = None
         self.sidebar = SideBar(self)
+
         self.party_menu.display()
         self.event_menu.display()
         self.sidebar.travel.display()
 
+        self.current_menu = self.event_menu
+
     def display_travel(self):
-        self.travel_menu.display()
+        if self.current_menu == self.travel_menu:
+            self.travel_menu.hide()
+        else:
+            self.travel_menu.display()
 
     def display_shop(self):
         self.shop_menu.display()
@@ -101,10 +111,20 @@ class GameMenu(BattleController):
         if self.battle_info_menu:
             self.bars.remove(self.battle_info_menu.bars)
             self.battle_info_menu.delete()
-        self.battle_info_menu = BattleInfoMenu(character,
+        self.battle_info_menu = BattleInfoMenu(character, self.cast,
             is_battle, is_limited)
         self.bars.add(self.battle_info_menu.bars)
         self.battle_info_menu.display()
+
+    def cast(self, move):
+        target = self.get_target(move)
+        move.caster.target = target
+        move.caster.cast(move, self.battle)
+
+    def get_target(self, move):
+        if move.targeting == "single":
+            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        return None
 
     def travel(self, location):
         """Returns given location"""
@@ -120,6 +140,9 @@ class GameMenu(BattleController):
             elif not self.current_char.ready and self.updated_icons:
                 self.battle_info_menu.icons.update(self.current_char.ready)
                 self.updated_icons = False
+
+        if all(m.fallen for m in self.battle.monsters):
+            print(True)
 
         for monster in self.battle.monsters:
             if monster.ready:

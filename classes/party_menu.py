@@ -13,7 +13,7 @@ import classes.rendering.view as view
 class StatBars(RenderGroup):
 
     def __init__(self, party):
-        super().__init__("bars", (0, 0))
+        super().__init__("party-bars", (0, 0))
         self.party = party
         self.render()
 
