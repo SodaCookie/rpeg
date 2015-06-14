@@ -5,7 +5,7 @@ from pygame.transform import scale
 from pygame import USEREVENT
 import pygame
 
-from classes.rendering.render_group import RenderGroup
+from classes.rendering.menu import Menu
 from classes.rendering.button import Button, ButtonInfo
 from classes.rendering.image import Image
 from classes.rendering.text import Text, TextInfo
@@ -13,16 +13,12 @@ from classes.image_cache import ImageCache
 import classes.rendering.view as view
 import classes.controller as controller
 
-class EventMenu(RenderGroup):
+class EventMenu(Menu):
 
-    def __init__(self, location, party, game_menu):
-        super().__init__("event", (6*view.SCALE, 10*view.SCALE))
-        self.event_bg = [ImageCache.add("images/ui/text_back1.png", True)]
-        self.location = location
-        self.party = party
-        self.game_menu = game_menu
-        self.event = location.get_event()
-
+    def __init__(self, game, render_info):
+        super().__init__("event", (6*view.SCALE, 10*view.SCALE), game, render_info)
+        self.event_bg = ImageCache.add("images/ui/text_back1.png", True)
+        self.current = None
         self.title_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=30,
                                    alignment=-1,
@@ -45,21 +41,27 @@ class EventMenu(RenderGroup):
                                    p_text_color=(0, 128, 0),
                                    d_text_color=(0, 0, 0))
 
-        self.render(self.event)
+    def draw_before(self, surface):
+        if not self.render_info.display_event:
+            self.hide()
+            return Menu.BREAK
+        self.show()
 
-    def update(self, event):
-        self.delete()
-        self.render(event)
-        self.display()
+        if self.current != self.game.current_event:
+            self.render()
+            self.current = self.game.current_event
 
-    def render(self, dialog):
-        self.event = dialog
-        #there is no more dialog
-        if not dialog:
+    def render(self):
+        self.clear()
+
+        if self.game.current_event == None:
+            return
+
+        if self.render_info.display_event == False:
             return
 
         # Create new back
-        chosen_back = random.choice(self.event_bg)
+        chosen_back = self.event_bg.copy()
         self.add(Image(
             pos = (0, 0),
             surface = scale(chosen_back, tuple([z * view.SCALE for z in chosen_back.get_size()])),
@@ -70,18 +72,18 @@ class EventMenu(RenderGroup):
         # Create new dialog
         self.add(Text((view.SCALE, 0),
                     self.title_style,
-                    text=self.location.get_event_name().title()))
+                    text=self.game.current_location.get_event_name().title()))
 
         body = Text((5*view.SCALE, 5*view.SCALE),
                      self.text_style,
-                     text=self.event.body)
-
+                     text=self.game.current_event.body)
         self.add(body)
+
         displacement = body.get_size()[1]+9*view.SCALE
-        choices = self.event.get_choices(self.party)
+        choices = self.game.current_event.get_choices(self.game.party)
         for i, choice in enumerate(choices):
-            button_func = partial(self.update,
-                                  self.event.make_choice(choice))
+            button_func = partial(self.update_current_event,
+                                  self.game.current_event.make_choice(choice))
             choice = Button(
                 (5*view.SCALE, displacement), True,
                 self.text_style, self.button_style,
@@ -95,10 +97,14 @@ class EventMenu(RenderGroup):
                 on_pressed=self.close_event,
                 text="Next"))
 
+    def update_current_event(self, event):
+        self.game.current_event = event
+
     def close_event(self):
-        self.delete()
-        if self.event.action:
-            self.handle_action(self.event.action)
+        if self.game.current_event.action:
+            self.handle_action(self.game.current_event.action)
+        self.game.current_event = None
+        self.render_info.display_event = False
 
     def handle_action(self, action):
         key = action.split(" ")[0]

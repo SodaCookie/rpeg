@@ -37,8 +37,7 @@ def render():
 
     _screen.fill((0, 0, 0))
     for obj in Renderable.renderables:
-        if obj.visible:
-            obj.draw(_screen)
+        obj.draw(_screen)
 
     display.flip()
 
@@ -66,6 +65,9 @@ class Renderable(object):
 
     def hide(self):
         self.visible = False
+
+    def show(self):
+        self.visible = True
 
     def move(self, pos):
         self.pos = pos

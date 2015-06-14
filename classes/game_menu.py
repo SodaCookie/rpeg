@@ -5,11 +5,11 @@ import pygame
 import classes.rendering.view as view
 from classes.party_menu import PartyMenu
 from classes.event_menu import EventMenu
+from classes.option_menu import OptionMenu
 from classes.travel_menu import TravelMenu
 from classes.battle_info_menu import BattleInfoMenu
 from classes.loot_menu import LootMenu
 from classes.monster_menu import MonsterMenu
-from classes.sidebar import SideBar
 from classes.bars import Bars
 from classes.image_cache import ImageCache
 from classes.rendering.dragable import Dragable
@@ -39,7 +39,7 @@ class GameRenderInfo(object):
         self.display_event = True
         self.display_alter = False
         self.display_info = False
-        self.display_options = True
+        self.display_option = True
         self.display_background = True
         self.current_menu = None
         self.background = "images/ui/background.png"
@@ -63,17 +63,33 @@ class GameMenu(BattleController):
         self.background.display()
 
         self.party_menu = PartyMenu(self.game, self.render_info)
-        self.event_menu = None
-        self.travel_menu = None
+        self.event_menu = EventMenu(self.game, self.render_info)
+        self.option_menu = OptionMenu(self.game, self.render_info)
+        self.travel_menu = TravelMenu(self.game, self.render_info)
         self.battle_info_menu = None
         self.bars = None
         self.shop_menu = None
         self.loot_menu = None
         self.alter_menu = None
         self.monster_menu = None
-        self.sidebar = None
+
+        self.generate_dungeon()
 
         self.party_menu.display()
+        self.event_menu.display()
+        self.option_menu.display()
+        self.travel_menu.display()
+
+    def generate_dungeon(self, level_type=None, power=None, **kwargs):
+        if level_type == None:
+            level_type = random.choice(Game.DUNGEON_TYPES)
+        if power == None:
+            power = self.game.level * Game.POWER_PER_LEVEL
+        self.game.dungeon = Dungeon(level_type, power,
+            self.game.difficulty, **kwargs)
+        self.game.current_location = self.game.dungeon.start
+        self.game.current_location.generate()
+        self.game.current_event = self.game.current_location.get_event()
 
     def create_alter(self):
         pass
@@ -113,10 +129,6 @@ class GameMenu(BattleController):
         if move.targeting == "single":
             pygame.mouse.set_cursor(*pygame.cursors.broken_x)
         return None
-
-    def travel(self, location):
-        """Returns given location"""
-        self.current_location = location
 
     def handle_battle(self, delta):
         self.bars.update()

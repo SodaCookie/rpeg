@@ -11,8 +11,10 @@ class Game(object):
         super(Game, self).__init__()
         self.difficulty = "normal"
         self.power = Game.POWER_PER_LEVEL
-        self.level_type = ""
+        self.level = 1 # the floor level
+        self.level_type = "" # the type of floor
         self.party = party
+        self.current_event = None
         self.current_location = None
         self.current_character = None # used for user info
         self.current_selection = None # used for battle

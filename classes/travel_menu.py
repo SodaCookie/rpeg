@@ -3,22 +3,19 @@ from functools import partial
 
 from pygame.transform import scale
 
-from classes.rendering.render_group import RenderGroup
+from classes.rendering.menu import Menu
 from classes.rendering.button import Button, ButtonInfo
 from classes.rendering.image import Image
 from classes.rendering.text import Text, TextInfo
 from classes.image_cache import ImageCache
 import classes.rendering.view as view
 
-class TravelMenu(RenderGroup):
+class TravelMenu(Menu):
 
-    def __init__(self, location, travel):
-        super().__init__("event", (6*view.SCALE, 10*view.SCALE))
-        self.event_bg = [ImageCache.add("images/ui/text_back1.png", True)]
-        self.location = location
-        self.travel = travel
-        self.event = location.get_event()
-
+    def __init__(self, game, render_info):
+        super().__init__("travel", (6*view.SCALE, 10*view.SCALE), game, render_info)
+        self.event_bg = ImageCache.add("images/ui/text_back1.png", True)
+        self.current = None
         self.title_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=30,
                                    alignment=-1,
@@ -41,18 +38,29 @@ class TravelMenu(RenderGroup):
                                    p_text_color=(0, 128, 0),
                                    d_text_color=(0, 0, 0))
 
-        self.render(self.event)
+    def draw_before(self, screen):
+        if not self.render_info.display_travel:
+            self.hide()
+            return Menu.BREAK
+        self.show()
 
-    def update(self, event):
-        self.delete()
-        self.render(event)
+        if self.current != self.game.current_location:
+            self.render()
+            self.current = self.game.current_location
 
-    def render(self, dialog):
+    def travel(self, location):
+        """Returns given location"""
+        self.game.current_location = location
+        self.game.current_location.generate()
+        self.game.current_event = self.game.current_location.get_event()
+        self.render_info.display_event = True
+
+    def render(self):
+        self.clear()
         # Create new back
-        chosen_back = random.choice(self.event_bg)
-        position = (0, 0)
+        chosen_back = self.event_bg
         self.add(Image(
-            position,
+            (0, 0),
             surface = scale(chosen_back, tuple([z * view.SCALE for z in chosen_back.get_size()])),
             h_anchor = 1,
             v_anchor = 1,
@@ -60,14 +68,14 @@ class TravelMenu(RenderGroup):
 
         # Create new dialog
         self.add(Text((0, 0),
-                               t_info=self.title_style,
-                               text="Travel"))
+                 t_info=self.title_style,
+                 text="Travel"))
         body = Text((5*view.SCALE, 5*view.SCALE),
                      t_info=self.text_style,
                      text="You are traveling...")
         self.add(body)
         displacement = body.get_size()[1]+9*view.SCALE
-        choices = self.location.get_neighbours()
+        choices = self.game.current_location.get_neighbours()
         for i, choice in enumerate(choices):
             button_func = partial(self.travel, choice)
             choice = Button(

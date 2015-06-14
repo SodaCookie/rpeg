@@ -10,8 +10,9 @@ import classes.game.location as location
 class Dungeon(object):
   """Dungeon object holds all the possible routes as well as in charge of moving"""
 
-  def __init__(self, level, difficulty, **kwargs):
-    self.level = level
+  def __init__(self, level_type, power, difficulty, **kwargs):
+    self.level = level_type
+    self.power = power
     self.difficulty = difficulty
     self.depth = 10
     self.min_width = 2
@@ -53,13 +54,13 @@ class Dungeon(object):
       elif key == "item_distribution": self.item_distribution = kwargs[key]
       elif key == "mon_distribution": self.mon_distribution = kwargs[key]
 
-    self.start = location.Location("monster", level)
-    self.stop = location.Location("exit", level)
+    self.start = location.Location("entrance", self.level)
+    self.stop = location.Location("exit", self.level)
 
     # create the inbetween nodes
     frame = {}
     for i in range(self.depth):
-      frame[i] = [location.Location("event", level) for i in range(randint(self.min_width, self.max_width))]
+      frame[i] = [location.Location("event", self.level) for i in range(randint(self.min_width, self.max_width))]
 
     for loc in frame[0]:
       self.start.set_neighbour(loc) # attach start to nodes

@@ -2,6 +2,7 @@ from copy import copy
 
 from pygame import font
 
+import classes.rendering.view as view
 from classes.rendering.view import Renderable
 
 """
@@ -52,12 +53,20 @@ class Text(Renderable):
     def text(self):
         return self.text_info.text
 
+    @text.setter
+    def text(self, text):
+        self.text_info.text = text
+        self.lines = self.text.split('\n')
+        if self.text_info.wrap:
+            self._wrap_text()
+
     def delete(self):
         super().delete()
 
     def draw(self, surface):
         f_surf = self.font.render(self.text, True, self.text_info.fontcolor)
 
+        pos = view.get_abs_pos(self)
         # Star out sensitive information
         # (this is currently broken when used with text wrapping)
         if self.text_info.sensitive:
@@ -97,8 +106,8 @@ class Text(Renderable):
             elif self.text_info.alignment == 0:
                 align = (max_width - self.font.size(self.lines[i])[0]) / 2
             surface.blit(self.font.render(self.lines[i], True, self.text_info.fontcolor),
-                            (x_offset + self.pos[0] + align,
-                             y_offset + self.pos[1] + self.text_info.fontsize * i))
+                            (x_offset + pos[0] + align,
+                             y_offset + pos[1] + self.text_info.fontsize * i))
 
     def get_size(self):
         max_width = 0
