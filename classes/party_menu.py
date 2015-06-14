@@ -60,11 +60,12 @@ class PlayerMenu(Menu, controller.MouseController):
             return Menu.BREAK
 
         portrait = ImageCache.add(player.portrait, True)
-        if self.state == PlayerMenu.HOVERED:
+        if self.state == PlayerMenu.HOVERED and \
+                not self.render_info.display_event:
             back = self.player_hover_bg.copy()
         elif self.state == PlayerMenu.NEUTRAL:
             back = self.player_bg.copy()
-        elif self.state == PlayerMenu.PRESSED:
+        else:
             back = self.player_bg.copy()
 
         back.blit(portrait, (0, 0))
@@ -92,19 +93,35 @@ class PlayerMenu(Menu, controller.MouseController):
                 self.state = PlayerMenu.NEUTRAL
 
     def mouse_button_down(self, button, pos):
-        if not self.visible:
+        if not self.visible or self.game.party[self.index] == None:
             return
 
         if self.state == PlayerMenu.HOVERED:
             self.state = PlayerMenu.PRESSED
-            self.game.current_character = self.game.party[self.index]
+            if self.game.current_character == self.game.party[self.index]:
+                self.game.current_character = None
+            else:
+                self.game.current_character = self.game.party[self.index]
+            self.display_info()
 
     def mouse_button_up(self, button, pos):
-        if not self.visible:
+        if not self.visible or self.game.party[self.index] == None:
             return
 
         if self.state == PlayerMenu.PRESSED:
             self.state = PlayerMenu.HOVERED
+
+    def display_info(self):
+        if self.render_info.display_travel:
+            self.render_info.display_travel = False
+        if self.render_info.display_loot:
+            self.render_info.display_loot = False
+        if self.render_info.display_shop:
+            self.render_info.display_shop = False
+            return
+        if self.render_info.display_alter:
+            self.render_info.display_alter = False
+        self.render_info.display_info = True
 
 
 class PartyMenu(Menu):

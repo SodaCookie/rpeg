@@ -105,6 +105,7 @@ class EventMenu(Menu):
             self.handle_action(self.game.current_event.action)
         self.game.current_event = None
         self.render_info.display_event = False
+        self.game.current_character = None
 
     def handle_action(self, action):
         key = action.split(" ")[0]

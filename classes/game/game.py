@@ -16,6 +16,7 @@ class Game(object):
         self.party = party
         self.current_event = None
         self.current_location = None
+        self.current_spell = None
         self.current_character = None # used for user info
         self.current_selection = None # used for battle
         self.monsters = []

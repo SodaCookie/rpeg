@@ -66,7 +66,7 @@ class GameMenu(BattleController):
         self.event_menu = EventMenu(self.game, self.render_info)
         self.option_menu = OptionMenu(self.game, self.render_info)
         self.travel_menu = TravelMenu(self.game, self.render_info)
-        self.battle_info_menu = None
+        self.battle_info_menu = BattleInfoMenu(self.game, self.render_info)
         self.bars = None
         self.shop_menu = None
         self.loot_menu = None
@@ -79,6 +79,7 @@ class GameMenu(BattleController):
         self.event_menu.display()
         self.option_menu.display()
         self.travel_menu.display()
+        self.battle_info_menu.display()
 
     def generate_dungeon(self, level_type=None, power=None, **kwargs):
         if level_type == None:

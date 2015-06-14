@@ -86,6 +86,8 @@ class OptionMenu(Menu):
             self.render_info.display_shop = False
         if self.render_info.display_alter:
             self.render_info.display_alter = False
+        if self.render_info.display_info:
+            self.render_info.display_info = False
         self.render_info.display_travel = True
 
     def display_loot(self):
@@ -98,6 +100,8 @@ class OptionMenu(Menu):
             self.render_info.display_shop = False
         if self.render_info.display_alter:
             self.render_info.display_alter = False
+        if self.render_info.display_info:
+            self.render_info.display_info = False
         self.render_info.display_travel = True
 
     def display_shop(self):
@@ -111,6 +115,8 @@ class OptionMenu(Menu):
             return
         if self.render_info.display_alter:
             self.render_info.display_alter = False
+        if self.render_info.display_info:
+            self.render_info.display_info = False
         self.render_info.display_travel = True
 
     def display_alter(self):
@@ -124,4 +130,6 @@ class OptionMenu(Menu):
         if self.render_info.display_alter:
             self.render_info.display_alter = False
             return
+        if self.render_info.display_info:
+            self.render_info.display_info = False
         self.render_info.display_travel = True

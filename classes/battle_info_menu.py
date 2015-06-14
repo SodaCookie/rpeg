@@ -5,61 +5,16 @@ from pygame import Surface, SRCALPHA
 import pygame
 
 import classes.game.player as player
-from classes.rendering.render_group import RenderGroup
+from classes.controller import MouseController
+from classes.rendering.menu import Menu
 from classes.rendering.button import Button, ButtonInfo
 from classes.rendering.image import Image
 from classes.rendering.text import Text, TextInfo
 from classes.image_cache import ImageCache
 import classes.rendering.view as view
 
-class StatBars(RenderGroup):
 
-    def __init__(self, character):
-        super().__init__("bars", (0, 0))
-
-        self.text_style = TextInfo(fontcolor=(255,255,255),
-                                   fontsize=16,
-                                   alignment=-1,
-                                   h_anchor=1,
-                                   v_anchor=1,
-                                   wrap=True,
-                                   width=149*view.SCALE)
-
-        self.character = character
-        self.render()
-
-    def render(self):
-        # hardcoded to save space (width*SCALE, height*SCALE)
-        health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
-        speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
-        if self.character:
-            self.add(Image((4*view.SCALE, 11*view.SCALE),
-                surface = health,
-                width = round(health.get_width()*
-                    self.character.current_health/
-                    self.character.health),
-                h_anchor = 1,
-                v_anchor = 1))
-
-            self.add(Text((4*view.SCALE, 13*view.SCALE+2),
-                         t_info = self.text_style,
-                         v_anchor = 1,
-                         text = "Health: %d/%d" % (self.character.get_cur_health(), self.character.get_max_health())))
-
-            self.add(Image((4*view.SCALE, 19*view.SCALE),
-                surface = speed,
-                width = round(speed.get_width()*self.character.action/
-                    self.character.action_max),
-                h_anchor = 1,
-                v_anchor = 1))
-
-            self.add(Text((4*view.SCALE, 21*view.SCALE+2),
-                         t_info = self.text_style,
-                         v_anchor = 1,
-                         text = "Action: %d/%d" % (self.character.action, self.character.action_max)))
-
-
-class Icons(RenderGroup):
+class Icons(Menu):
 
     def __init__(self, character, cast_func):
         super().__init__("icons", (0, 0))
@@ -98,10 +53,11 @@ class Icons(RenderGroup):
                     hover_img = scale(ImageCache.add(move.surface), (64, 64))))
 
 
-class BattleInfoMenu(RenderGroup):
+class BattleInfoMenu(Menu, MouseController):
 
-    def __init__(self, character, cast_func, battle=False, limited=False):
-        super().__init__("battle_info", (6*view.SCALE, 5*view.SCALE))
+    def __init__(self, game, render_info):
+        Menu.__init__(self, "battle_info", (6*view.SCALE, 5*view.SCALE), game, render_info)
+        MouseController.__init__(self)
 
         self.title_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=30,
@@ -111,16 +67,29 @@ class BattleInfoMenu(RenderGroup):
                                    wrap=True,
                                    width=149*view.SCALE)
 
-        self.character = character
-        self.battle = battle
-        self.limited = limited
-        self.bars = StatBars(character)
-        self.icons = Icons(character, cast_func)
-        self.render()
+        self.text_style = TextInfo(fontcolor=(255,255,255),
+                                   fontsize=16,
+                                   alignment=-1,
+                                   h_anchor=1,
+                                   v_anchor=1,
+                                   wrap=True,
+                                   width=149*view.SCALE)
 
-    def render(self):
+        self.health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
+        self.speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
 
-        if self.battle:
+    def draw_before(self, screen):
+        if self.render_info.display_event or \
+                not self.render_info.display_info or \
+                not self.game.battle and not self.game.current_character:
+            self.hide()
+            return Menu.BREAK
+        self.show()
+        self.clear()
+
+        pos = view.get_abs_pos(self)
+
+        if self.game.battle:
             # display smaller verison
             bg = ImageCache.add("images/ui/battle_info.png", True)
             bg = scale(bg, tuple((view.SCALE*z for z in bg.get_size())))
@@ -129,18 +98,13 @@ class BattleInfoMenu(RenderGroup):
             bg = ImageCache.add("images/ui/battle_info.png", True)
             bg = scale(bg, tuple((view.SCALE*z for z in bg.get_size())))
 
-        self.add(Image(
-            (0, 0),
-            surface=bg,
-            h_anchor=1,
-            v_anchor=1,
-            alpha=True))
+        screen.blit(bg, pos)
 
-        if self.character:
+        if self.game.current_character:
             abilities = ImageCache.add("images/ui/abilities.png", True)
             abilities = scale(abilities, (abilities.get_width()*view.SCALE,
                 abilities.get_height()*view.SCALE))
-            portrait = ImageCache.add(self.character.portrait, True)
+            portrait = ImageCache.add(self.game.current_character.portrait, True)
             portrait = scale(portrait, (portrait.get_width()*view.SCALE,
                 portrait.get_height()*view.SCALE))
 
@@ -158,12 +122,35 @@ class BattleInfoMenu(RenderGroup):
             self.add(Text((3*view.SCALE, view.SCALE),
                          t_info = self.title_style,
                          v_anchor = 1,
-                         text = self.character.name))
+                         text = self.game.current_character.name))
 
             self.add(Text((3*view.SCALE, 50*view.SCALE),
                          t_info = self.title_style,
                          v_anchor = 1,
                          text = "Skills"))
 
-            self.add(self.bars)
-            self.add(self.icons)
+            self.add(Image((4*view.SCALE, 11*view.SCALE),
+                surface = self.health,
+                width = round(self.health.get_width()*
+                    self.game.current_character.current_health/
+                    self.game.current_character.health),
+                h_anchor = 1,
+                v_anchor = 1))
+
+            self.add(Text((4*view.SCALE, 13*view.SCALE+2),
+                         t_info = self.text_style,
+                         v_anchor = 1,
+                         text = "Health: %d/%d" % (self.game.current_character.get_cur_health(), self.game.current_character.get_max_health())))
+
+            self.add(Image((4*view.SCALE, 19*view.SCALE),
+                surface = self.speed,
+                width = round(self.speed.get_width()*self.game.current_character.action/
+                    self.game.current_character.action_max),
+                h_anchor = 1,
+                v_anchor = 1))
+
+            self.add(Text((4*view.SCALE, 21*view.SCALE+2),
+                         t_info = self.text_style,
+                         v_anchor = 1,
+                         text = "Action: %d/%d" % (self.game.current_character.action, self.game.current_character.action_max)))
+            # self.add(self.icons)
