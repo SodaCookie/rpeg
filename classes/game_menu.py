@@ -18,74 +18,62 @@ from classes.rendering.text import Text, TextInfo
 from classes.rendering.button import Button, ButtonInfo
 from classes.controller import BattleController
 
-import classes.game.dungeon as dungeon
-import classes.game.party as party
-import classes.game.player as player
-import classes.game.monster as monster
-import classes.game.shop as shop
-import classes.game.battle as battle
-import classes.game.moves as moves
+from classes.game.game import Game
+from classes.game.dungeon import Dungeon
+from classes.game.party import Party
+from classes.game.player import Player
+from classes.game.monster import Monster
+from classes.game.shop import Shop
+from classes.game.battle import Battle
+from classes.game.moves import Move
+
+class GameRenderInfo(object):
+    """docstring for GameRenderInfo"""
+
+    def __init__(self):
+        self.display_travel = False
+        self.display_shop = False
+        self.display_loot = True
+        self.display_monster = False
+        self.display_party = True
+        self.display_event = True
+        self.display_alter = False
+        self.display_info = False
+        self.display_options = True
+        self.display_background = True
+        self.current_menu = None
+        self.background = "images/ui/background.png"
 
 
 class GameMenu(BattleController):
-
-    POWER_PER_LEVEL = 100
+    """View and controller of game"""
 
     def __init__(self):
         super().__init__()
+        # TMP
+        players = [Player("Test Player") for i in range(4)]
+        self.game = Game(players)
+        self.render_info = GameRenderInfo()
 
-        players = [player.Player("Test Player") for i in range(4)]
-        self.level = 1
-        self.power = self.level*GameMenu.POWER_PER_LEVEL
-        self.dungeon = dungeon.Dungeon(self.level)
-        self.party = party.Party(players)
-        self.resolution = view.get_resolution()
-        self.current_location = self.dungeon.start
-        self.current_location.generate()
-        self.current_menu = None
-        self.battle = None
-        self.current_target = None
-        self.current_char = None
-        self.updated_icons = False
-
-        self.background = Image((0,0), filename="images/ui/background.png", h_anchor=1, v_anchor=1)
+        self.background = Image(
+            (0,0),
+            filename = self.render_info.background,
+            h_anchor = 1,
+            v_anchor = 1)
         self.background.display()
 
-        self.party_menu = PartyMenu(self.party, self.set_character)
-        self.event_menu = EventMenu(self.current_location, self.party, self)
-        self.travel_menu = TravelMenu(self.current_location, self.travel)
+        self.party_menu = PartyMenu(self.game, self.render_info)
+        self.event_menu = None
+        self.travel_menu = None
         self.battle_info_menu = None
-        self.bars = Bars()
-        self.bars.add(self.party_menu.bars)
+        self.bars = None
         self.shop_menu = None
         self.loot_menu = None
         self.alter_menu = None
         self.monster_menu = None
-        self.sidebar = SideBar(self)
+        self.sidebar = None
 
         self.party_menu.display()
-        self.event_menu.display()
-        self.sidebar.travel.display()
-
-        self.current_menu = self.event_menu
-
-    def display_travel(self):
-        if self.current_menu == self.travel_menu:
-            self.travel_menu.hide()
-        else:
-            self.travel_menu.display()
-
-    def display_shop(self):
-        self.shop_menu.display()
-
-    def display_loot(self):
-        self.loot_menu.display()
-
-    def display_alter(self):
-        self.alter_menu.display()
-
-    def display_monster(self):
-        self.monster_menu.display()
 
     def create_alter(self):
         pass

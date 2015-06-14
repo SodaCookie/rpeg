@@ -3,51 +3,33 @@ from functools import partial
 
 from pygame.transform import scale
 
-from classes.rendering.render_group import RenderGroup
+from classes import controller
+from classes.rendering.menu import Menu
 from classes.rendering.button import Button, ButtonInfo
 from classes.rendering.image import Image
 from classes.rendering.text import Text, TextInfo
 from classes.image_cache import ImageCache
 import classes.rendering.view as view
 
-class StatBars(RenderGroup):
 
-    def __init__(self, party):
-        super().__init__("party-bars", (0, 0))
-        self.party = party
-        self.render()
+class PlayerMenu(Menu, controller.MouseController):
+    """Is anchored in the bottom left corner"""
 
-    def render(self):
-        # hardcoded to save space (width*SCALE, height*SCALE)
-        health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
-        speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
+    NEUTRAL=0
+    HOVERED=1
+    PRESSED=2
 
-        for i, member in enumerate(self.party.players):
-            self.add(Image((i*78*view.SCALE+43*view.SCALE, -42*view.SCALE),
-                surface = health,
-                width = round(health.get_width()*
-                    member.current_health/
-                    member.health),
-                h_anchor = 1,
-                v_anchor = 1))
+    def __init__(self, pos, index, game, render_info):
+        Menu.__init__(self, "player", pos, game, render_info)
+        controller.MouseController.__init__(self)
 
-            self.add(Image((i*78*view.SCALE+43*view.SCALE, -37*view.SCALE),
-                surface = speed,
-                width = round(speed.get_width()*member.action/
-                    member.action_max),
-                h_anchor = 1,
-                v_anchor = 1))
-
-
-class PartyMenu(RenderGroup):
-
-    def __init__(self, party, set_char):
-        super().__init__("party", (0, view.get_resolution()[1]))
-        self.party = party
-        self.player_bg = [ImageCache.add("images/ui/player_back1.png", True)]
-        self.current_character = None
-        self.bars = StatBars(self.party)
-        self.set_char = set_char
+        self.player_bg = random.choice([ImageCache.add("images/ui/player_back1.png", True)])
+        self.health_img = scale(ImageCache.add("images/ui/health.png"), (128, 8))
+        self.speed_img = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
+        self.width, self.height = self.player_bg.get_size()
+        self.width, self.height = self.width*view.SCALE, self.height*view.SCALE
+        self.index = index
+        self.state = PlayerMenu.NEUTRAL
 
         self.text_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=16,
@@ -56,36 +38,75 @@ class PartyMenu(RenderGroup):
                                    v_anchor=1,
                                    wrap=True,
                                    width=149*view.SCALE)
-        self.render()
 
-    def render(self):
+        self.health = self.add(Image((43*view.SCALE, -42*view.SCALE),
+            surface = self.health_img,
+            h_anchor = 1,
+            v_anchor = 1))
 
-        # Create new ui for the players
-        for i, member in enumerate(self.party.players):
-            portrait = ImageCache.add(member.portrait, True)
-            chosen_back = random.choice(self.player_bg).copy()
-            chosen_back.blit(portrait, (0, 0))
-            hover_back = ImageCache.add("images/ui/hover_player_back1.png", True).copy()
-            hover_back.blit(portrait, (0, 0))
-            hover_back = scale(hover_back, tuple([z*view.SCALE for z in
-                                hover_back.get_size()]))
-            chosen_back = scale(chosen_back, tuple([z*view.SCALE for z in
-                                chosen_back.get_size()]))
-            button_func = partial(self.set_char, member)
+        self.speed = self.add(Image((43*view.SCALE, -37*view.SCALE),
+            surface = self.speed_img,
+            h_anchor = 1,
+            v_anchor = 1))
 
-            self.add(Button(
-                pos = (6*view.SCALE+i*(chosen_back.get_width()+5*view.SCALE)+chosen_back.get_width()//2, -5*view.SCALE-chosen_back.get_height()//2),
-                img = chosen_back,
-                hovered_img = hover_back,
-                pressed_img = hover_back,
-                disabled_img = chosen_back,
-                on_pressed = button_func,
-                h_anchor = 0,
-                v_anchor = 0,
-                alpha = True))
+    def draw_before(self, screen):
+        posx, posy = view.get_abs_pos(self)
+        player = self.game.party[self.index]
 
-            self.add(Text((
-                6*view.SCALE+i*chosen_back.get_width()+i*5*view.SCALE, -chosen_back.get_height()-10*view.SCALE), self.text_style,
-                text=member.name))
+        if player == None:
+            return Menu.BREAK
 
-        self.add(self.bars)
+        portrait = ImageCache.add(player.portrait, True)
+        back = self.player_bg.copy()
+        back.blit(portrait, (0, 0))
+        back = scale(back, (self.width, self.height))
+        screen.blit(back, (posx, posy-self.height))
+
+        self.health.width = round(self.health_img.get_width()*
+                player.get_cur_health()/player.get_max_health())
+        self.speed.width = round(self.speed_img.get_width()*player.action/
+                player.action_max)
+
+    def mouse_motion(self, buttons, pos, rel):
+        pposx, pposy = view.get_abs_pos(self)
+        mposx, mposy = pos
+        if pposx <= mposx <= pposx+self.width and\
+                pposy <= mposy <= pposy-self.height:
+            if self.state == Button.NEUTRAL:
+                self.state = Button.HOVERED
+        else:
+            if self.state == Button.HOVERED:
+                self.state = Button.NEUTRAL
+
+            if self.state == Button.PRESSED:
+                self.state = Button.NEUTRAL
+
+    def mouse_button_down(self, button, pos):
+        if not self.visible:
+            return
+
+        if self.state == Button.DISABLED:
+            return
+
+        if self.state == Button.HOVERED:
+            self.state = Button.PRESSED
+            print(self.game.party[self.index])
+            self.game.current_character = self.game.party[self.index]
+
+    def mouse_button_up(self, button, pos):
+        if not self.visible:
+            return
+
+        if self.state == Button.PRESSED:
+            self.state = Button.HOVERED
+
+
+class PartyMenu(Menu):
+
+    def __init__(self, game, render_info):
+        super().__init__("party", (0, view.get_resolution()[1]),
+                                   game, render_info)
+        res = view.get_resolution()
+        for i in range(len(game.party)):
+            self.add(PlayerMenu((6*view.SCALE+i*78*view.SCALE, -5*view.SCALE),
+                i, game, render_info))

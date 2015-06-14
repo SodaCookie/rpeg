@@ -1,3 +1,5 @@
+#! python3.2
+
 import pygame
 from pygame import time, event
 

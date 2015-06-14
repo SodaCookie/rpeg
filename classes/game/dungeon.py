@@ -10,8 +10,9 @@ import classes.game.location as location
 class Dungeon(object):
   """Dungeon object holds all the possible routes as well as in charge of moving"""
 
-  def __init__(self, level, **kwargs):
+  def __init__(self, level, difficulty, **kwargs):
     self.level = level
+    self.difficulty = difficulty
     self.depth = 10
     self.min_width = 2
     self.max_width = 5

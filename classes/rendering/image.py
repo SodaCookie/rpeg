@@ -1,5 +1,5 @@
 from classes.image_cache import ImageCache
-from classes.rendering.view import Renderable
+from classes.rendering.view import Renderable, get_abs_pos
 
 class Image(Renderable):
     # Getting close to warrenting its own ImageInfo
@@ -23,6 +23,7 @@ class Image(Renderable):
         self.v_anchor = v_anchor
 
     def draw(self, surface):
+        pos = get_abs_pos(self)
         size = self.img.get_size()
 
         if self.h_anchor < 0:
@@ -41,6 +42,6 @@ class Image(Renderable):
 
         if self.width != None and self.height != None:
             # This is a bad way to do this since you can only clip in two directions
-            surface.blit(self.img, (self.pos[0] + x_offset, self.pos[1] + y_offset), (0, 0, self.width, self.height))
+            surface.blit(self.img, (pos[0] + x_offset, pos[1] + y_offset), (0, 0, self.width, self.height))
         else:
-            surface.blit(self.img, (self.pos[0] + x_offset, self.pos[1] + y_offset))
+            surface.blit(self.img, (pos[0] + x_offset, pos[1] + y_offset))

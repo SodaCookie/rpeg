@@ -21,12 +21,15 @@ def init_pygame():
     pygame.init()
     _screen = display.set_mode(_resolution)
 
-
+def get_abs_pos(renderable):
+    if renderable.master:
+        pos = get_abs_pos(renderable.master)
+        return pos[0]+renderable.pos[0], pos[1]+renderable.pos[1]
+    return renderable.pos
 
 def quit():
     display.quit()
     pygame.quit()
-
 
 
 def render():
@@ -44,8 +47,9 @@ def render():
 class Renderable(object):
     renderables = []
 
-    def __init__(self, pos):
+    def __init__(self, pos, master=None):
         self.pos = pos
+        self.master = None
         self.visible = False
 
     def display(self):
