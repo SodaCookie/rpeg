@@ -1,4 +1,5 @@
 import classes.rendering.view as view
+from classes.game.party import Party
 
 class Game(object):
     """Game object used to hold all the data required for
@@ -13,7 +14,7 @@ class Game(object):
         self.power = Game.POWER_PER_LEVEL
         self.level = 1 # the floor level
         self.level_type = "" # the type of floor
-        self.party = party
+        self.party = Party(party)
         self.current_event = None
         self.current_location = None
         self.current_spell = None

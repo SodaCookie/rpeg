@@ -54,6 +54,7 @@ class TravelMenu(Menu):
         self.game.current_location.generate()
         self.game.current_event = self.game.current_location.get_event()
         self.render_info.display_event = True
+        self.render_info.display_travel = False
 
     def render(self):
         self.clear()
@@ -76,6 +77,7 @@ class TravelMenu(Menu):
         self.add(body)
         displacement = body.get_size()[1]+9*view.SCALE
         choices = self.game.current_location.get_neighbours()
+
         for i, choice in enumerate(choices):
             button_func = partial(self.travel, choice)
             choice = Button(

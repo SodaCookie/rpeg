@@ -33,11 +33,15 @@ class Menu(Renderable):
 
     def clear(self):
         """Just delete everything that belongs to it"""
+        for r in self.rendering:
+            r.delete()
         self.rendering = []
 
     def delete(self):
         """Delete itself and everything that belongs to it"""
         super().delete()
+        for r in self.rendering:
+            r.delete()
         self.rendering = []
 
     def draw(self, screen):

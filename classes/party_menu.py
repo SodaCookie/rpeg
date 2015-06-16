@@ -54,7 +54,7 @@ class PlayerMenu(Menu, controller.MouseController):
 
     def draw_before(self, screen):
         posx, posy = view.get_abs_pos(self)
-        player = self.game.party[self.index]
+        player = self.game.party.players[self.index]
 
         if player == None:
             return Menu.BREAK
@@ -93,19 +93,19 @@ class PlayerMenu(Menu, controller.MouseController):
                 self.state = PlayerMenu.NEUTRAL
 
     def mouse_button_down(self, button, pos):
-        if not self.visible or self.game.party[self.index] == None:
+        if not self.visible or self.game.party.players[self.index] == None:
             return
 
         if self.state == PlayerMenu.HOVERED:
             self.state = PlayerMenu.PRESSED
-            if self.game.current_character == self.game.party[self.index]:
+            if self.game.current_character == self.game.party.players[self.index]:
                 self.game.current_character = None
             else:
-                self.game.current_character = self.game.party[self.index]
+                self.game.current_character = self.game.party.players[self.index]
             self.display_info()
 
     def mouse_button_up(self, button, pos):
-        if not self.visible or self.game.party[self.index] == None:
+        if not self.visible or self.game.party.players[self.index] == None:
             return
 
         if self.state == PlayerMenu.PRESSED:
@@ -130,7 +130,7 @@ class PartyMenu(Menu):
         super().__init__("party", (0, view.get_resolution()[1]),
                                    game, render_info)
         res = view.get_resolution()
-        for i in range(len(game.party)):
+        for i in range(len(game.party.players)):
             self.add(PlayerMenu((6*view.SCALE+i*78*view.SCALE, -5*view.SCALE),
                 i, game, render_info))
 
