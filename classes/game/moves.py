@@ -22,7 +22,7 @@ class MoveBase(object):
             self.name = name.name
             self.prev = name
 
-        self.targeting = "none"
+        self.cast_type = "none"
         self.caster = None
         self.accuracy = 100
         self.critical = 0
@@ -110,10 +110,10 @@ class Move(MoveBase):
     """Wrapper class that added critical chance and accuracy,
     implements a basic get_target method and crit method"""
 
-    def __init__(self, accuracy, crit, surface, targeting, name):
+    def __init__(self, accuracy, crit, surface, cast_type, name):
         super().__init__(name)
 
-        self.targeting = targeting
+        self.cast_type = cast_type
         self.accuracy = accuracy
         self.crit = crit
         self.surface = surface

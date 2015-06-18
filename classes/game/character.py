@@ -1,6 +1,7 @@
 import pickle
 import math
 import random
+import copy
 
 from classes.builtin_moves import skills
 from classes.controller import BattleController
@@ -21,6 +22,7 @@ class Character(BattleController):
         self.effects = []
         self.moves = []
         self.add_move(skills["attack"])
+        self.add_move(skills["slam"])
         self.add_move(skills["magic-bolt"])
         self.fallen = False
         self.drop = None
@@ -72,6 +74,11 @@ class Character(BattleController):
             else:
                 self.current_health = 1
 
+    def is_enemy(self, character):
+        if type(self) != type(character):
+            return True
+        return False
+
     def kill(self):
         for effect in self.effects:
             if effect.active:
@@ -79,10 +86,10 @@ class Character(BattleController):
                     return False
         return True
 
-    def cast(self, move, battle):
-        if move in self.moves:
+    def cast(self, battle, move):
+        if move.name in [m.name for m in self.moves] and self.ready:
             move.run(battle)
-        self.action = 0
+            self.action = 0
 
     def start_turn(self):
         for effect in self.effects:
@@ -104,7 +111,8 @@ class Character(BattleController):
 
     def build_action(self, action):
         for effect in self.effects:
-            action = effect.on_build_action(action)
+            if effect.active:
+                action = effect.on_build_action(action)
         self.action += action
         if self.action < 0:
             self.action = 0
@@ -113,7 +121,8 @@ class Character(BattleController):
 
     def deal_damage(self, source, damage, damage_type):
         for effect in self.effects:
-            damage = effect.on_damage(source, damage, damage_type)
+            if effect.active:
+                damage = effect.on_damage(source, damage, damage_type)
         damage = int(damage - self.get_defense() * (random.randint(100-Character.DAMAGE_VARIATION, 100+Character.DAMAGE_VARIATION)/100))
         if damage <= 0:
             damage = 1
@@ -206,6 +215,7 @@ class Character(BattleController):
         return False
 
     def add_move(self, move):
+        move = copy.deepcopy(move)
         self.moves.append(move)
         move.set_caster(self)
 

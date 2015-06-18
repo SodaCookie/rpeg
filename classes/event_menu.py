@@ -5,6 +5,8 @@ from pygame.transform import scale
 from pygame import USEREVENT
 import pygame
 
+from classes.game.monster import Monster
+from classes.game.battle import Battle
 from classes.rendering.menu import Menu
 from classes.rendering.button import Button, ButtonInfo
 from classes.rendering.image import Image
@@ -114,12 +116,11 @@ class EventMenu(Menu):
             args = action.split(" ")[1:]
 
         if key == "battle":
-            if args:
-                pass
-            pygame.event.post(pygame.event.Event(controller.BATTLEEVENT))
+            pygame.event.post(pygame.event.Event(controller.BATTLESTART))
             pygame.time.set_timer(controller.BATTLETICK, 30)
-            self.game_menu.create_monster()
-            self.game_menu.display_monster()
+            self.game.monsters = self.create_monsters(*args)
+            self.game.battle = Battle(self.game.party, self.game.monsters)
+            self.display_monsters()
         elif key == "addgold":
             pass
         elif key == "takegold":
@@ -127,10 +128,67 @@ class EventMenu(Menu):
         elif key == "reward":
             gold = int(args[0])
             items = list(args[1])
-            self.game_menu.create_loot(gold, items)
-            self.game_menu.display_loot()
         elif key == "shop":
             self.game_menu.create_shop()
             self.game_menu.display_shop()
         elif key == "alter":
             pass
+
+    def display_monsters(self):
+        self.render_info.display_monster = True
+        self.render_info.display_party = True
+        self.render_info.display_info = True
+
+        self.render_info.display_travel = False
+        self.render_info.display_shop = False
+        self.render_info.display_loot = False
+        self.render_info.display_event = False
+        self.render_info.display_alter = False
+        self.render_info.display_option = False
+
+    def create_alter(self):
+        pass
+
+    def create_loot(self, gold, items):
+        self.loot_menu = LootMenu(self.party, gold, items)
+        self.sidebar.loot.display()
+
+    def create_monsters(self, count=3, mtypes="", names="",
+                        difficulties=Monster.COMMON, monsters=[]):
+        if not monsters:
+            for i in range(count):
+                if mtypes and type(mtypes) == str:
+                    mtype = mtypes
+                elif mtypes and type(mtypes) == list:
+                    mtype = mtypes[i]
+                else:
+                    mtype = ""
+
+                if names and type(names) == str:
+                    name = names
+                elif names and type(names) == list:
+                    name = names[i]
+                else:
+                    name = "Monster"
+
+                if difficulties and type(difficulties) == int:
+                    difficulty = difficulties
+                elif difficulties and type(difficulties) == list:
+                    difficulty = difficulties[i]
+                else:
+                    roll = random.random()
+                    if roll > 0.9:
+                        difficulty = Monster.BOSS
+                    elif roll > 0.6:
+                        difficulty = Monster.ELITE
+                    else:
+                        difficulty = Monster.COMMON
+
+                monsters.append(Monster(self.game.power, difficulty, mtype, name))
+        return monsters
+
+    def create_battle(self):
+        pass
+
+    def create_shop(self):
+        pass

@@ -17,7 +17,7 @@ class Game(object):
         self.party = Party(party)
         self.current_event = None
         self.current_location = None
-        self.current_spell = None
+        self.current_move = None
         self.current_character = None # used for user info
         self.current_selection = None # used for battle
         self.monsters = []
@@ -28,4 +28,4 @@ class Game(object):
         self.battle = None
         self.is_battle = None
         self.resolution = view.get_resolution()
-        self.cast_type = ""
+        self.hover_character = None

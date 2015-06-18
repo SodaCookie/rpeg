@@ -13,51 +13,85 @@ from classes.rendering.text import Text, TextInfo
 from classes.image_cache import ImageCache
 import classes.rendering.view as view
 
+class Icon(view.Renderable, MouseController):
 
-class Icons(Menu):
+    NEUTRAL = 0
+    HOVERED = 1
+    PRESSED = 2
+    DISABLED = 3
 
-    def __init__(self, character, cast_func):
-        super().__init__("icons", (0, 0))
-        self.character = character
-        self.cast_func = cast_func
-        self.render()
+    def __init__(self, pos, move, game, render_info):
+        view.Renderable.__init__(self, pos)
+        MouseController.__init__(self)
+        self.state = Icon.NEUTRAL
+        self.move = move
+        self.game = game
+        self.player_move = move
+        self.width = ImageCache.add(move.surface).get_width() * view.SCALE
+        self.height = ImageCache.add(move.surface).get_height() * view.SCALE
+        self.render_info = render_info
 
-    def update(self, enable):
-        for r in self.rendering:
-            r.toggle(enable)
+    def delete(self):
+        view.Renderable.delete(self)
+        MouseController.delete(self)
 
-    def render(self):
-        for i, move in enumerate(self.character.moves):
-            if isinstance(self.character, player.Player):
-                img = ImageCache.add(move.surface)
-                h_img = img.copy()
-                pygame.draw.rect(h_img, ((255, 255, 0)), h_img.get_rect(), 1)
-                p_img = img.copy()
-                pygame.draw.rect(p_img, (0, 128, 0), h_img.get_rect(), 1)
-                d_img = img.copy()
-                d_img.set_alpha(100)
-                enable = True if self.character.ready else False
-                button_func = partial(self.cast_func, move)
+    def mouse_motion(self, buttons, pos, rel):
+        if not self.game.current_character.ready:
+            return
 
-                self.add(Button(
-                    (4*view.SCALE+i%3*20*view.SCALE,
-                        60*view.SCALE+i//3*20*view.SCALE),
-                    enabled = enable,
-                    on_pressed = button_func,
-                    h_anchor = 1,
-                    v_anchor = 1,
-                    img = scale(img, (64, 64)),
-                    hovered_img = scale(h_img, (64, 64)),
-                    pressed_img = scale(p_img, (64, 64)),
-                    disabled_img = scale(d_img, (64, 64)),
-                    hover_img = scale(ImageCache.add(move.surface), (64, 64))))
+        pposx, pposy = view.get_abs_pos(self)
+        mposx, mposy = pos
+
+        if pposx <= mposx <= pposx+self.width and\
+                pposy <= mposy <= pposy+self.height:
+            if self.state == Icon.NEUTRAL:
+                self.state = Icon.HOVERED
+        else:
+            if self.state == Icon.HOVERED:
+                self.state = Icon.NEUTRAL
+
+            if self.state == Icon.PRESSED:
+                self.state = Icon.NEUTRAL
+
+    def mouse_button_down(self, button, pos):
+        if not self.visible and not self.game.current_character.ready:
+            return
+
+        if self.state == Icon.HOVERED:
+            self.state = Icon.PRESSED
+            self.cast()
+
+    def mouse_button_up(self, button, pos):
+        if not self.visible and not self.game.current_character.ready:
+            return
+
+        if self.state == Icon.PRESSED:
+            self.state = Icon.HOVERED
+
+    def draw(self, screen):
+        pos = view.get_abs_pos(self)
+        img = ImageCache.add(self.player_move.surface).copy()
+
+        if not self.game.current_character.ready:
+            img.set_alpha(100)
+        elif self.state == Icon.HOVERED:
+            pygame.draw.rect(img, ((255, 255, 0)), img.get_rect(), 1)
+        elif self.state == Icon.PRESSED:
+            pygame.draw.rect(img, (0, 128, 0), img.get_rect(), 1)
+
+        img = scale(img, (img.get_width()*view.SCALE,
+            img.get_height()*view.SCALE))
+
+        screen.blit(img, pos)
+
+    def cast(self):
+        self.game.current_move = self.move
 
 
-class BattleInfoMenu(Menu, MouseController):
+class BattleInfoMenu(Menu):
 
     def __init__(self, game, render_info):
         Menu.__init__(self, "battle_info", (6*view.SCALE, 5*view.SCALE), game, render_info)
-        MouseController.__init__(self)
 
         self.title_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=30,
@@ -75,30 +109,16 @@ class BattleInfoMenu(Menu, MouseController):
                                    wrap=True,
                                    width=149*view.SCALE)
 
-        self.health = scale(ImageCache.add("images/ui/health.png"), (128, 8))
-        self.speed = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
+        self.health_img = scale(ImageCache.add("images/ui/health.png"), (128, 8))
+        self.speed_img = scale(ImageCache.add("images/ui/speed.png"), (128, 8))
+        self.current = None
+        self.health = None
+        self.health_text = None
+        self.speed = None
+        self.speed_text = None
 
-    def draw_before(self, screen):
-        if self.render_info.display_event or \
-                not self.render_info.display_info or \
-                not self.game.battle and not self.game.current_character:
-            self.hide()
-            return Menu.BREAK
-        self.show()
+    def render(self):
         self.clear()
-
-        pos = view.get_abs_pos(self)
-
-        if self.game.battle:
-            # display smaller verison
-            bg = ImageCache.add("images/ui/battle_info.png", True)
-            bg = scale(bg, tuple((view.SCALE*z for z in bg.get_size())))
-        else:
-            # display larger version
-            bg = ImageCache.add("images/ui/battle_info.png", True)
-            bg = scale(bg, tuple((view.SCALE*z for z in bg.get_size())))
-
-        screen.blit(bg, pos)
 
         if self.game.current_character:
             abilities = ImageCache.add("images/ui/abilities.png", True)
@@ -129,28 +149,65 @@ class BattleInfoMenu(Menu, MouseController):
                          v_anchor = 1,
                          text = "Skills"))
 
-            self.add(Image((4*view.SCALE, 11*view.SCALE),
-                surface = self.health,
-                width = round(self.health.get_width()*
+            self.health = self.add(Image((4*view.SCALE, 11*view.SCALE),
+                surface = self.health_img,
+                width = round(self.health_img.get_width()*
                     self.game.current_character.current_health/
                     self.game.current_character.health),
                 h_anchor = 1,
                 v_anchor = 1))
 
-            self.add(Text((4*view.SCALE, 13*view.SCALE+2),
+            self.health_text = self.add(Text((4*view.SCALE, 13*view.SCALE+2),
                          t_info = self.text_style,
                          v_anchor = 1,
                          text = "Health: %d/%d" % (self.game.current_character.get_cur_health(), self.game.current_character.get_max_health())))
 
-            self.add(Image((4*view.SCALE, 19*view.SCALE),
-                surface = self.speed,
-                width = round(self.speed.get_width()*self.game.current_character.action/
+            self.speed = self.add(Image((4*view.SCALE, 19*view.SCALE),
+                surface = self.speed_img,
+                width = round(self.speed_img.get_width()*self.game.current_character.action/
                     self.game.current_character.action_max),
                 h_anchor = 1,
                 v_anchor = 1))
 
-            self.add(Text((4*view.SCALE, 21*view.SCALE+2),
+            self.speed_text = self.add(Text((4*view.SCALE, 21*view.SCALE+2),
                          t_info = self.text_style,
                          v_anchor = 1,
                          text = "Action: %d/%d" % (self.game.current_character.action, self.game.current_character.action_max)))
-            # self.add(self.icons)
+            for i, move in enumerate(self.game.current_character.moves):
+                x, y = i%3, i//3
+                self.add(Icon((4*view.SCALE+view.SCALE*20*x, 60*view.SCALE+view.SCALE*20*y),
+                    move, self.game, self.render_info))
+
+    def draw_before(self, screen):
+        if self.render_info.display_event or \
+                not self.render_info.display_info or \
+                not self.game.battle and not self.game.current_character:
+            self.hide()
+            return Menu.BREAK
+        self.show()
+
+        pos = view.get_abs_pos(self)
+
+        if self.game.battle:
+            # display smaller verison
+            bg = ImageCache.add("images/ui/battle_info.png", True)
+            bg = scale(bg, tuple((view.SCALE*z for z in bg.get_size())))
+        else:
+            # display larger version
+            bg = ImageCache.add("images/ui/battle_info.png", True)
+            bg = scale(bg, tuple((view.SCALE*z for z in bg.get_size())))
+        screen.blit(bg, pos)
+
+        if self.current != self.game.current_character:
+            self.render()
+            self.current = self.game.current_character
+
+        if self.game.current_character:
+            self.health.width = round(self.health_img.get_width()*
+                        self.game.current_character.current_health/
+                        self.game.current_character.health)
+            self.speed.width = round(self.speed_img.get_width()*
+                        self.game.current_character.action/
+                        self.game.current_character.action_max)
+            self.health_text.text = "Health: %d/%d" % (self.game.current_character.get_cur_health(), self.game.current_character.get_max_health())
+            self.speed_text.text = "Action: %d/%d" % (self.game.current_character.action, self.game.current_character.action_max)

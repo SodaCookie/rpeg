@@ -31,6 +31,9 @@
     <mask>
       <slime>images/monster/slime_mask.png</slime>
     </mask>
+    <hover>
+      <slime>images/monster/slime_hover.png</slime>
+    </hover>
     <overlay>
       <ice>images/monster/water_overlay.png</ice>
       <fire>images/monster/fire_overlay.png</fire>

@@ -16,7 +16,7 @@ from classes.rendering.dragable import Dragable
 from classes.rendering.image import Image
 from classes.rendering.text import Text, TextInfo
 from classes.rendering.button import Button, ButtonInfo
-from classes.controller import BattleController
+from classes.controller import BattleController, MouseController
 
 from classes.game.game import Game
 from classes.game.dungeon import Dungeon
@@ -41,45 +41,45 @@ class GameRenderInfo(object):
         self.display_info = False
         self.display_option = True
         self.display_background = True
-        self.current_menu = None
         self.background = "images/ui/background.png"
 
 
-class GameMenu(BattleController):
+class GameMenu(BattleController, MouseController, view.Renderable):
     """View and controller of game"""
 
     def __init__(self):
-        super().__init__()
+        MouseController.__init__(self)
+        BattleController.__init__(self)
+        view.Renderable.__init__(self, (0, 0))
         # TMP
         players = [Player("Test Player") for i in range(4)]
         self.game = Game(players)
         self.render_info = GameRenderInfo()
-
-        self.background = Image(
-            (0,0),
-            filename = self.render_info.background,
-            h_anchor = 1,
-            v_anchor = 1)
-        self.background.display()
 
         self.party_menu = PartyMenu(self.game, self.render_info)
         self.event_menu = EventMenu(self.game, self.render_info)
         self.option_menu = OptionMenu(self.game, self.render_info)
         self.travel_menu = TravelMenu(self.game, self.render_info)
         self.battle_info_menu = BattleInfoMenu(self.game, self.render_info)
-        self.bars = None
+        self.monster_menu = MonsterMenu(self.game, self.render_info)
         self.shop_menu = None
         self.loot_menu = None
         self.alter_menu = None
-        self.monster_menu = None
 
         self.generate_dungeon()
 
+        self.display()  # for background
         self.party_menu.display()
         self.event_menu.display()
         self.option_menu.display()
         self.travel_menu.display()
         self.battle_info_menu.display()
+        self.monster_menu.display()
+
+    def delete(self):
+        MouseController.delete(self)
+        BattleController.delete(self)
+        view.Renderable.delete(self)
 
     def generate_dungeon(self, level_type=None, power=None, **kwargs):
         if level_type == None:
@@ -92,63 +92,31 @@ class GameMenu(BattleController):
         self.game.current_location.generate()
         self.game.current_event = self.game.current_location.get_event()
 
-    def create_alter(self):
-        pass
-
-    def create_loot(self, gold, items):
-        self.loot_menu = LootMenu(self.party, gold, items)
-        self.sidebar.loot.display()
-
-    def create_monster(self):
-        monsters = [monster.Monster(100, random.randint(0,2)) for i in range(3)]
-        self.battle = battle.Battle(self.party.players, monsters)
-        self.monster_menu = MonsterMenu(monsters)
-        self.sidebar.hide()
-        self.bars.add(self.monster_menu.bars)
-
-    def create_shop(self):
-        pass
-
-    def set_character(self, character):
-        self.current_char = character
-        is_battle = bool(self.battle)
-        is_limited = False
-        if self.battle_info_menu:
-            self.bars.remove(self.battle_info_menu.bars)
-            self.battle_info_menu.delete()
-        self.battle_info_menu = BattleInfoMenu(character, self.cast,
-            is_battle, is_limited)
-        self.bars.add(self.battle_info_menu.bars)
-        self.battle_info_menu.display()
-
-    def cast(self, move):
-        target = self.get_target(move)
-        move.caster.target = target
-        move.caster.cast(move, self.battle)
-
-    def get_target(self, move):
-        if move.targeting == "single":
-            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
-        return None
-
     def handle_battle(self, delta):
-        self.bars.update()
+        pass
 
-        if self.current_char:
-            if self.current_char.ready and not self.updated_icons:
-                self.battle_info_menu.icons.update(self.current_char.ready)
-                self.updated_icons = True
-            elif not self.current_char.ready and self.updated_icons:
-                self.battle_info_menu.icons.update(self.current_char.ready)
-                self.updated_icons = False
+    def draw(self, screen):
+        screen.blit(ImageCache.add(self.render_info.background), (0, 0))
 
-        if all(m.fallen for m in self.battle.monsters):
-            print(True)
+        if self.game.current_move:
+            # Have a move that requires mouse
+            if self.game.current_move.cast_type in ["single", "group"]:
+                pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        else:
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
 
-        for monster in self.battle.monsters:
-            if monster.ready:
-                monster.cast("hello", self.battle)
-
-    def set_current_character(self, character):
-        self.current_char = character
-        self.render_battle_info()
+    def mouse_button_down(self, button, pos):
+        """In charge of actual move casting"""
+        if self.game.current_move:
+            if button == 3: # RIGHT CLICK
+                self.game.current_move = None
+            elif button == 1:
+                if self.game.hover_character:
+                    if self.game.current_move.cast_type in ["single"]:
+                        self.game.current_move.caster.target = self.game.hover_character
+                        print(self.game.current_move.caster)
+                        self.game.current_move.caster.cast(self.game.battle, self.game.current_move)
+                    elif self.game.current_move.cast_type in ["group"]:
+                        self.game.current_move.caster.target = self.game.hover_character
+                        self.game.current_move.caster.cast(self.game.battle, self.game.current_move)
+                    self.game.current_move = None

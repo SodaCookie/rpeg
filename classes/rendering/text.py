@@ -64,8 +64,6 @@ class Text(Renderable):
         super().delete()
 
     def draw(self, surface):
-        f_surf = self.font.render(self.text, True, self.text_info.fontcolor)
-
         pos = view.get_abs_pos(self)
         # Star out sensitive information
         # (this is currently broken when used with text wrapping)

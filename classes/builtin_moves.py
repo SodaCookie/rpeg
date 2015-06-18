@@ -15,7 +15,7 @@ class AllEnemyTarget(MoveBase):
     def get_target(self, battle):
         return battle.monsters
 
-class Damage(AllEnemyTarget, MoveBase):
+class Damage(SingleTarget, MoveBase):
     """Base damage class will only scale of user's attack stat.
     Implemented a basic critical (x2 damage) and damage method
     all moves extending damage should override damage"""
@@ -33,6 +33,10 @@ class Damage(AllEnemyTarget, MoveBase):
 
     def damage(self):
         return self.caster.get_attack()*self.base
+
+
+class AOEDamage(AllEnemyTarget, Damage):
+    pass
 
 
 class ScaleDamage(Damage):
@@ -76,14 +80,18 @@ skill_tree = {}
 skills = {}
 
 skills["attack"] = \
-    Move(80, 10, "images/icon/attack_icon.png", "enemy",
-        Damage(0.5, "physical", "attack"))
+    Move(80, 10, "images/icon/attack_icon.png", "single",
+        Damage(0.8, "physical", "attack"))
+
+skills["slam"] = \
+    Move(80, 10, "images/icon/attack_icon.png", "group",
+        AOEDamage(0.5, "physical", "attack"))
 
 skills["flurry"] = \
-    Move(80, 10, "images/icon/attack_icon.png", "enemy",
+    Move(80, 10, "images/icon/attack_icon.png", "single",
         Repeat(3,
             Damage(0.3, "physical", "flurry")))
 
 skills["magic-bolt"] = \
-    Move(90, 5, "images/icon/magic_bolt_icon.png", "enemy",
-        ScaleDamage(1, "magic", 0.5, "magic", "magic-bolt"))
+    Move(90, 5, "images/icon/magic_bolt_icon.png", "single",
+        ScaleDamage(1, "magic", 1, "magic", "magic-bolt"))

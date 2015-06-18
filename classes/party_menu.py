@@ -85,6 +85,7 @@ class PlayerMenu(Menu, controller.MouseController):
                 pposy-self.height <= mposy <= pposy:
             if self.state == PlayerMenu.NEUTRAL:
                 self.state = PlayerMenu.HOVERED
+                self.game.hover_character = self.game.party.players[self.index]
         else:
             if self.state == PlayerMenu.HOVERED:
                 self.state = PlayerMenu.NEUTRAL
