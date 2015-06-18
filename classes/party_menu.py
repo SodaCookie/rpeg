@@ -31,6 +31,7 @@ class PlayerMenu(Menu, controller.MouseController):
         self.width, self.height = self.width*view.SCALE, self.height*view.SCALE
         self.index = index
         self.state = PlayerMenu.NEUTRAL
+        self.hover = False # used to artificially induce hovering
 
         self.text_style = TextInfo(fontcolor=(255,255,255),
                                    fontsize=16,
@@ -41,6 +42,7 @@ class PlayerMenu(Menu, controller.MouseController):
                                    width=149*view.SCALE)
 
         self.name = self.add(Text((0, -47*view.SCALE), self.text_style))
+        self.render_hover = False
 
         self.health = self.add(Image((37*view.SCALE, -37*view.SCALE),
             surface = self.health_img,
@@ -52,15 +54,22 @@ class PlayerMenu(Menu, controller.MouseController):
             h_anchor = 1,
             v_anchor = 1))
 
+    def delete(self):
+        Menu.delete(self)
+        controller.MouseController.delete(self)
+
+    def get_player(self):
+        return self.game.party.players[self.index]
+
     def draw_before(self, screen):
         posx, posy = view.get_abs_pos(self)
-        player = self.game.party.players[self.index]
+        player = self.get_player()
 
         if player == None:
             return Menu.BREAK
 
         portrait = ImageCache.add(player.portrait, True)
-        if self.state == PlayerMenu.HOVERED and \
+        if self.render_hover and \
                 not self.render_info.display_event:
             back = self.player_hover_bg.copy()
         elif self.state == PlayerMenu.NEUTRAL:
@@ -83,9 +92,9 @@ class PlayerMenu(Menu, controller.MouseController):
         mposx, mposy = pos
         if pposx <= mposx <= pposx+self.width and\
                 pposy-self.height <= mposy <= pposy:
+            self.game.hover_character = self.get_player()
             if self.state == PlayerMenu.NEUTRAL:
                 self.state = PlayerMenu.HOVERED
-                self.game.hover_character = self.game.party.players[self.index]
         else:
             if self.state == PlayerMenu.HOVERED:
                 self.state = PlayerMenu.NEUTRAL
@@ -94,19 +103,19 @@ class PlayerMenu(Menu, controller.MouseController):
                 self.state = PlayerMenu.NEUTRAL
 
     def mouse_button_down(self, button, pos):
-        if not self.visible or self.game.party.players[self.index] == None:
+        if not self.visible or self.get_player() == None:
             return
 
         if self.state == PlayerMenu.HOVERED:
             self.state = PlayerMenu.PRESSED
-            if self.game.current_character == self.game.party.players[self.index]:
+            if self.game.current_character == self.get_player():
                 self.game.current_character = None
             else:
-                self.game.current_character = self.game.party.players[self.index]
+                self.game.current_character = self.get_player()
             self.display_info()
 
     def mouse_button_up(self, button, pos):
-        if not self.visible or self.game.party.players[self.index] == None:
+        if not self.visible or self.get_player() == None:
             return
 
         if self.state == PlayerMenu.PRESSED:
@@ -125,18 +134,51 @@ class PlayerMenu(Menu, controller.MouseController):
         self.render_info.display_info = True
 
 
-class PartyMenu(Menu):
+class PartyMenu(Menu, controller.MouseController):
 
     def __init__(self, game, render_info):
-        super().__init__("party", (0, view.get_resolution()[1]),
+        Menu.__init__(self, "party", (0, view.get_resolution()[1]),
                                    game, render_info)
+        self.players = []
         res = view.get_resolution()
         for i in range(len(game.party.players)):
-            self.add(PlayerMenu((6*view.SCALE+i*78*view.SCALE, -5*view.SCALE),
-                i, game, render_info))
+            self.players.append(self.add(PlayerMenu((6*view.SCALE+i*78*view.SCALE, -5*view.SCALE),
+                i, game, render_info)))
+        controller.MouseController.__init__(self)
+
+    def delete(self):
+        Menu.delete(self)
+        controller.MouseController.delete(self)
+
+    def mouse_motion(self, buttons, pos, rel):
+        self.dehighlight_all()
+        if self.game.hover_character in [p.get_player() for p in self.players]:
+            if self.game.current_move:
+                if self.game.current_move.cast_type in ["single"]:
+                    self.highlight_player(self.game.hover_character)
+                elif self.game.current_move.cast_type in ["group"]:
+                    self.highlight_all()
+                else: # Defaults to one
+                    self.highlight_player(self.game.hover_character)
+            else:
+                self.highlight_player(self.game.hover_character)
 
     def draw_before(self, screen):
         if not self.render_info.display_party:
             self.hide()
             return Menu.BREAK
         self.show()
+
+    def dehighlight_all(self):
+        for p in self.players:
+            p.render_hover = False
+
+    def highlight_player(self, player):
+        for p in self.players:
+            if p.get_player() == player:
+                p.render_hover = True
+                break
+
+    def highlight_all(self):
+        for p in self.players:
+            p.render_hover = True

@@ -41,6 +41,7 @@ class GameRenderInfo(object):
         self.display_info = False
         self.display_option = True
         self.display_background = True
+        self.hovering_characters = [] # used to render what things are up
         self.background = "images/ui/background.png"
 
 
@@ -97,13 +98,15 @@ class GameMenu(BattleController, MouseController, view.Renderable):
 
     def draw(self, screen):
         screen.blit(ImageCache.add(self.render_info.background), (0, 0))
-
         if self.game.current_move:
             # Have a move that requires mouse
             if self.game.current_move.cast_type in ["single", "group"]:
                 pygame.mouse.set_cursor(*pygame.cursors.broken_x)
         else:
             pygame.mouse.set_cursor(*pygame.cursors.arrow)
+
+    def mouse_motion(self, buttons, pos, rel):
+        self.game.hover_character = None
 
     def mouse_button_down(self, button, pos):
         """In charge of actual move casting"""
@@ -114,7 +117,6 @@ class GameMenu(BattleController, MouseController, view.Renderable):
                 if self.game.hover_character:
                     if self.game.current_move.cast_type in ["single"]:
                         self.game.current_move.caster.target = self.game.hover_character
-                        print(self.game.current_move.caster)
                         self.game.current_move.caster.cast(self.game.battle, self.game.current_move)
                     elif self.game.current_move.cast_type in ["group"]:
                         self.game.current_move.caster.target = self.game.hover_character

@@ -15,6 +15,14 @@ class AllEnemyTarget(MoveBase):
     def get_target(self, battle):
         return battle.monsters
 
+class GroupTarget(MoveBase):
+
+    def get_target(self, battle):
+        # THIS IS A TEMP because imports arent working as intended
+        if type(self.caster.target) == type(battle.players[0]):
+            return battle.players
+        return battle.monsters
+
 class Damage(SingleTarget, MoveBase):
     """Base damage class will only scale of user's attack stat.
     Implemented a basic critical (x2 damage) and damage method
@@ -35,7 +43,7 @@ class Damage(SingleTarget, MoveBase):
         return self.caster.get_attack()*self.base
 
 
-class AOEDamage(AllEnemyTarget, Damage):
+class AOEDamage(GroupTarget, Damage):
     pass
 
 

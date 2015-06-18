@@ -18,16 +18,16 @@ class MonsterRenderInfo(object):
         self.highlight = False
         self.display = True
 
-# MIGHT BE UP FOR SOME REFACTORING LATER
+
 class MonsterImage(Image):
 
     def __init__(self, pos, monster, width=None, height=None, h_anchor=0, v_anchor=0, filename="", alpha=False):
         super().__init__(pos, width, height, h_anchor, v_anchor, monster.surface, filename, alpha)
-        self.hover = False
+        self.render_hover = False
         self.monster = monster
 
     def draw(self, screen):
-        if self.hover:
+        if self.render_hover:
             self.img = self.monster.hover_surface
         else:
             self.img = self.monster.surface
@@ -75,10 +75,8 @@ class MonsterMenu(Menu, controller.MouseController, controller.BattleController)
             width, height = m.width, m.height
             if monster_pos[0]-width//2 <= pos[0] <= monster_pos[0]+width//2 \
                     and monster_pos[1]-height <= pos[1] <= monster_pos[1]:
-                self.game.hover_character = m
+                self.game.hover_character = m.monster
                 break
-        else:
-            self.game.hover_character = None
 
     def draw_before(self, screen):
         if not self.render_info.display_monster:
@@ -92,19 +90,30 @@ class MonsterMenu(Menu, controller.MouseController, controller.BattleController)
             info.speed.width = round(self.speed.get_width()*monster.action/
                 monster.action_max)
 
-        for m in self.rendering_monsters:
-            m.hover = False
-
+        self.dehighlight_all()
         # Monster highlighting
-        if self.game.current_move and self.game.hover_character:
+        if self.game.current_move and self.game.hover_character in \
+                [m.monster for m in self.rendering_monsters]:
             if self.game.current_move.cast_type in ["single"]:
-                self.game.hover_character.hover = True
-            if self.game.current_move.cast_type in ["group"]:
-                for m in self.rendering_monsters:
-                    m.hover = True
-            else:
-                # Defaults to one
-                self.game.hover_character.hover = True
+                self.highlight_monster(self.game.hover_character)
+            elif self.game.current_move.cast_type in ["group"]:
+                self.highlight_all()
+            else: # Defaults to one
+                self.highlight_monster(self.game.hover_character)
+
+    def dehighlight_all(self):
+        for m in self.rendering_monsters:
+            m.render_hover = False
+
+    def highlight_monster(self, monster):
+        for m in self.rendering_monsters:
+            if m.monster == monster:
+                m.render_hover = True
+                break
+
+    def highlight_all(self):
+        for m in self.rendering_monsters:
+            m.render_hover = True
 
     def render(self):
         self.clear()

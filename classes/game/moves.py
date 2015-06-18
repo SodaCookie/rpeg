@@ -4,7 +4,6 @@ import pygame
 
 import classes.game.effect as effect
 
-
 class MoveBase(object):
     """Base class of all moves, implements almost nothing
     a critical roll will propagate all the way down the move list
