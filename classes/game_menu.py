@@ -10,12 +10,8 @@ from classes.travel_menu import TravelMenu
 from classes.battle_info_menu import BattleInfoMenu
 from classes.loot_menu import LootMenu
 from classes.monster_menu import MonsterMenu
-from classes.bars import Bars
 from classes.image_cache import ImageCache
-from classes.rendering.dragable import Dragable
 from classes.rendering.image import Image
-from classes.rendering.text import Text, TextInfo
-from classes.rendering.button import Button, ButtonInfo
 from classes.controller import BattleController, MouseController
 
 from classes.game.game import Game
