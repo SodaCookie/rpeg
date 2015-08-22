@@ -1,0 +1,10 @@
+<types>
+    <type name="sword">
+        <slot>hand</slot>
+        <attack>1</attack>
+        <defense>-0.8</defense>
+        <resist>-0.8</resist>
+        <health>-0.9</health>
+        <magic>-0.5</magic>
+   </type>
+</types>

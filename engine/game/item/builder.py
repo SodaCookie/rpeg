@@ -1,26 +1,43 @@
 """This module defines the Builder class"""
 
+from xml.etree import ElementTree
+
+def parse_names(filename, tag, rarity, speech):
+    """returns a list of viable names given tag, rarity and part of
+    speech"""
+    root = ElementTree.parse(filename).getroot()
+    names = root.find(tag)
+    return [node.text for node in names.findall("name[@rarity='%s'][@speech='%s']"%(rarity, speech))]
+
 class Builder(object):
     """Builder class is base class for all builders."""
 
-    def __init__(self, priority, key, value):
+    NAME = "" # Override the name to detect builder
+
+    def __init__(self, priority, value):
         """Builder takes a priority used to sort itself in the list
         of given builders, where 0 is the least important going to infinity,
         key used identify with builder should be given what value and value
         is the given value for building."""
         self.priority = priority
-        self.key = key
         self.value = value
 
-    def build_tag(self, tags):
+    def build_tags(self, tags):
         """Override if the builder defines how to build a tag"""
-        return tag
+        return tags
 
-    def build_name(self, template, tag):
+    def build_rarity(self, distribution):
+        return distribution
+
+    def build_types(self, types):
+        """Override if the builder defines how to build a type"""
+        return types
+
+    def build_name(self, template, tag, rarity):
         """Override if the builder defines how to build a name"""
         return template
 
-    def build_stats(self, stats, tag):
+    def build_stats(self, stats, tag, rarity, type):
         """Override if the builder defines how to build stats"""
         return stats
 

@@ -17,7 +17,7 @@ class Effect:
         self.owner = None
 
     def set_owner(self, owner):
-        self.owner  = owner
+        self.owner = owner
 
     def remove(self):
         """Inactivates and removes effect
