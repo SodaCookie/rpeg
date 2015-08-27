@@ -1,5 +1,7 @@
 from random import choice, randint
 import xml.etree.ElementTree as tree
+import copy
+import os
 
 from pygame import image, Surface, SRCALPHA, BLEND_RGBA_MULT
 from pygame.transform import scale
@@ -7,66 +9,65 @@ from pygame.transform import scale
 import classes.game.character as character
 from classes.rendering.view import SCALE
 
+def parse_tags(filename):
+    """Takes a filename and returns a list of all possible tags"""
+    root = tree.parse(filename).getroot()
+    return [tag.attrib["type"] for tag in root.findall("tags/tag")]
+
+def parse_types(filename):
+    """Takes a filename and returns a list of all possible monster types"""
+    root = tree.parse(filename).getroot()
+    return [tag.tag for tag in root.find("types")]
+
 class Monster(character.Character):
 
-    COMMON = 0
-    ELITE  = 1
-    BOSS = 2
+    BUILDERS = []
 
-    _XML = tree.parse("data/monster.xml")
-    TAGS = _XML.findall("tags/tag") # all tags including bad tags
+    DATAPATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
+    TAGS = parse_tags(DATAPATH+"monsters.xml")
+    TYPES = parse_types(DATAPATH+"monsters.xml")
     NAMES = _XML.find("names")
     IMAGE = _XML.find("image")
-    TYPES = _XML.findall("mtypes/mtype")
 
-    def __init__(self, power, difficulty = 0, mtype="", name="Monster"):
-        """Power is used to calculate the amount of stats the monster is
-        given. difficulty will modify a few things about the monster
-        for example 1 is a normal spawn but 2 is a elite mob and a
-        3 is a boss mob"""
+    def __init__(self, **parameters):
+        """Basic Monster constructor"""
         super().__init__("")
-        self.difficulty = difficulty
-        self.tags = []
-        self.mtype = mtype
-        self.power = power
-        self.name = name
+
+        self.builders = [] # construct builders
+        for builder in Item.BUILDERS:
+            value = parameters.get(builder.NAME)
+            self.builders.append(builder(value))
+        self.builders = sorted(self.builders, key=lambda b: b.priority)
+
+        self.tag = self._generate_tag(Monster.TAGS)
+        self.rank = None
+        self.type = None
+        self.name = None
+        self.stats = None
+        self.ablilities = None
         self.surface = None
-        self.hover_surface = None
-        self.generate_tags()
-        self.generate_name()
-        self.generate_stats()
-        self.generate_surface()
 
-    def generate_tags(self):
-        # generate tags
-        if self.difficulty == Monster.COMMON:
-          num_tags = randint(1, 2)
-        elif self.difficulty == Monster.ELITE:
-          num_tags = randint(2, 3)
-        elif self.difficulty == Monster.BOSS:
-          num_tags = max(randint(2, 3), randint(2, 3))
+    def _generate_tag(self, tags):
+        """Generates the possible tag of the item"""
+        possible_tags = list(tags) # copy
+        for builder in self.builders:
+            possible_tags = builder.build_tags(possible_tags)
+        return random.choice(possible_tags)
 
-        # roll for tags
-        tags = [choice(Monster.TAGS) for i in range(num_tags)]
-        # fix exclusions (first come first serve) will be replaced with a tag
-        # before it. Based off the first tag
-        excludes = set(tags[0].attrib.get("exclude").split(', ')) or not set()
-        for i, tag in enumerate(tags):
-          if tag.attrib["type"] in excludes:
-            tags[i] = tags[i-1]
-          else: # add more exclusions if any
-            excludes.union(set(tag.attrib.get("exclude").split(', ') or not set()))
-        self.tags = tags
-
-        # roll for monster type
-        if not self.mtype:
-            self.mtype = choice(Monster.TYPES).attrib["type"]
-
-    def generate_stats(self):
+    def _generate_stats(self):
         """Generates stats based on the power level of the players"""
         pass
 
-    def generate_name(self):
+    def _generate_type(self):
+        pass
+
+    def _generate_name(self):
+        pass
+
+    def _generate_stats(self):
+        pass
+
+    def _generate_abilities(self):
         pass
 
     def generate_surface(self):

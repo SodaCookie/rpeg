@@ -156,6 +156,7 @@ class Item(object):
         health_dist = raw_stats["health"] / s
 
         stats = {}
+        stats["points"] = round(raw_stats["points"])
         stats["attack"] = round(raw_stats["points"] * attack_dist)
         stats["defense"] = round(raw_stats["points"] * defense_dist)
         stats["magic"] = round(raw_stats["points"] * magic_dist)
@@ -168,6 +169,8 @@ class Item(object):
         """TBC"""
         return []
 
+    def __hash__(self):
+        return self.name.__hash__()
 
 
 if __name__ == "__main__":

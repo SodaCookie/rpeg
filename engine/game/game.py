@@ -1,6 +1,11 @@
 import classes.rendering.view as view
 from classes.game.party import Party
 
+
+BATTLESTART = pygame.USEREVENT
+BATTLETICK = pygame.USEREVENT + 1
+BATTLEEND = pygame.USEREVENT + 2
+
 class Game(object):
     """Game object used to hold all the data required for
     rendering and holding the important info for the game"""
@@ -29,3 +34,26 @@ class Game(object):
         self.is_battle = None
         self.resolution = view.get_resolution()
         self.hover_character = None
+
+
+def update():
+    if event.peek(pygame.MOUSEMOTION):
+        for e in event.get(pygame.MOUSEMOTION):
+            MouseController.handle_mouse_motion(e)
+
+    if event.peek(pygame.MOUSEBUTTONDOWN):
+        for e in event.get(pygame.MOUSEBUTTONDOWN):
+            MouseController.handle_mouse_button_down(e)
+
+    if event.peek(pygame.MOUSEBUTTONUP):
+        for e in event.get(pygame.MOUSEBUTTONUP):
+            MouseController.handle_mouse_button_up(e)
+
+    if event.get(BATTLESTART):
+        BattleController._start_battle()
+
+    if event.get(BATTLETICK):
+        BattleController._handle_battle()
+
+    if event.get(BATTLEEND):
+        BattleController._end_battle()

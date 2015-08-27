@@ -15,4 +15,3 @@ class Attribute(effect.Effect):
   def description(self):
     """Returns a string describing the attributes function"""
     return ""
-

@@ -1,9 +1,6 @@
 from random import choice
 
-import classes.game.character as character
-import classes.game.attribute as attribute
-import classes.game.moves as moves
-import classes.game.item as item
+import engine.game.character.character as character
 
 class Player(character.Character):
 
@@ -27,15 +24,15 @@ class Player(character.Character):
         self.race = race
         self.gender = choice(["male", "female"])
         self.equipment = {}
-        self.equipment["hand1"] = item.Item(0, "common", generate=False)
-        self.equipment["hand2"] = item.Item(0, "common", generate=False)
-        self.equipment["body"] = item.Item(0, "common", generate=False)
-        self.equipment["legs"] = item.Item(0, "common", generate=False)
-        self.equipment["feet"] = item.Item(0, "common", generate=False)
-        self.equipment["arms"] = item.Item(0, "common", generate=False)
-        self.equipment["head"] = item.Item(0, "common", generate=False)
-        self.equipment["extra1"] = item.Item(0, "common", generate=False)
-        self.equipment["extra2"] = item.Item(0, "common", generate=False)
+        self.equipment["hand1"] = None
+        self.equipment["hand2"] = None
+        self.equipment["body"] = None
+        self.equipment["legs"] = None
+        self.equipment["feet"] = None
+        self.equipment["arms"] = None
+        self.equipment["head"] = None
+        self.equipment["extra1"] = None
+        self.equipment["extra2"] = None
         if self.gender == "male":
             self.portrait = choice(Player.MALE_PORTRAITS)
         else:

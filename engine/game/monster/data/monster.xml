@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<data>
+
+  <tags>
+    <tag type="fire" attack="0.2" magic="0.2"/>
+    <tag type="ice" defense="0.2" resist="0.2" magic="0.2"/>
+    <!---
+    <tag type="nature" health="0.2" magic="0.2"/>
+    <tag type="dark" attack="0.5" defense="0.5"/>
+    <tag type="light"resist="2" magic="2"/>
+    <tag type="poison" magic="1.5"/>
+    <tag type="healing" magic="1.5"">
+    <tag type="power" attack="3" magic="3" health="-0.5"/>
+    <tag type="defense" defense="2" resist="2" health="2"/>
+    <tag type="speed" speed="2"/>
+    <tag type="magic" magic="2"/>-->
+  </tags>
+
+  <names>
+    <fire>
+      <name rank="common" speech="adj">red</name>
+    </fire>
+
+    <ice>
+      <name rank="elite" speech="adj">blizzard</name>
+    </ice>
+
+    <nature>
+      <name rank="common" speech="adj">green</name>
+    </nature>
+
+    <dark>
+      <name rank="common" speech="adj">dark</name>
+      <name rank="boss" speech="name">amduscas</name>
+    </dark>
+  </names>
+
+  <image>
+    <base>
+      <slime>images/monster/slime_base.png</slime>
+    </base>
+    <mask>
+      <slime>images/monster/slime_mask.png</slime>
+    </mask>
+    <hover>
+      <slime>images/monster/slime_hover.png</slime>
+    </hover>
+    <overlay>
+      <ice>images/monster/water_overlay.png</ice>
+      <fire>images/monster/fire_overlay.png</fire>
+    </overlay>
+    <enhance>
+      <ice>images/monster/water_enhance.png</ice>
+      <fire>images/monster/fury_enhance.png</fire>
+    </enhance>
+    <splash>
+      <ice>images/monster/water_splash.png</ice>
+      <fire>images/monster/fury_splash.png</fire>
+    </splash>
+  </image>
+
+  <moves>
+  </moves>
+
+  <types>
+    <slime></slime>
+  </types>
+
+</data>

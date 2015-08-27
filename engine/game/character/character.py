@@ -3,9 +3,7 @@ import math
 import random
 import copy
 
-from classes.builtin_moves import skills
-from classes.controller import BattleController
-import classes.game.item as item
+from engine.game.controller.battle_controller import BattleController
 
 class Character(BattleController):
 
@@ -21,21 +19,17 @@ class Character(BattleController):
         self.name = name
         self.effects = []
         self.moves = []
-        self.add_move(skills["attack"])
-        self.add_move(skills["slam"])
-        self.add_move(skills["magic-bolt"])
         self.fallen = False
-        self.drop = None
         self.target = None
         self.args = []
         self.overflow = 0
 
         self.attack = 10
         self.defense = 0
-        self.magic = 5
-        self.current_health = 100
+        self.magic = 10
         self.health = 100
         self.resist = 0
+        self.current_health = 100
          # enough to do 1 ACTION_SPEED per second
         self.speed = Character.SPEED_BASE/(Character.SPEED_CAP-1)
         self.action_max = 100
@@ -43,15 +37,8 @@ class Character(BattleController):
         self.ready = False
         self.scroll = 0
 
-        self.base_attack = 10
-        self.base_defense = 0
-        self.base_magic = 5
-        self.base_health = 100
-        self.base_speed = 5
-        self.base_resist = 0
-
     def handle_battle(self, delta):
-
+        """Handles each characters update loop"""
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
         self.overflow = (self.overflow+delta)-steps    # Used for carry over
         self.decrease_durations(steps)
@@ -80,16 +67,20 @@ class Character(BattleController):
         return False
 
     def kill(self):
+        """Kills this character returns True if success else False
+        takes into account effects"""
         for effect in self.effects:
             if effect.active:
                 if not effect.on_death():
                     return False
+        self.current_health = 0
+        self.fallen = True
         return True
 
-    def cast(self, battle, move):
-        if move.name in [m.name for m in self.moves] and self.ready:
-            move.run(battle)
-            self.action = 0
+    def hard_kill(self):
+        """Kills character without taking into account effects"""
+        self.current_health = 0
+        self.fallen = True
 
     def start_turn(self):
         for effect in self.effects:
@@ -110,6 +101,8 @@ class Character(BattleController):
             effect.on_remove()
 
     def build_action(self, action):
+        """Adds action to a character by the given amount. Takes into
+        account effects."""
         for effect in self.effects:
             if effect.active:
                 action = effect.on_build_action(action)
@@ -120,6 +113,8 @@ class Character(BattleController):
             self.action = self.action_max
 
     def deal_damage(self, source, damage, damage_type):
+        """Deals damage to character by the given amount. Takes into
+        account effects."""
         for effect in self.effects:
             if effect.active:
                 damage = effect.on_damage(source, damage, damage_type)
@@ -132,6 +127,8 @@ class Character(BattleController):
         return damage
 
     def apply_heal(self, source, heal):
+        """Heals character by the given amount. Takes into
+        account effects."""
         for effect in self.effects:
             if not effect.active:
                 continue
@@ -148,56 +145,18 @@ class Character(BattleController):
             self.current_health += heal
         return heal
 
-    def get_attack(self):
-        attack = self.attack
+    def get_stat(self, stat):
+        """Can be only used for health, attack, defense, speed,
+        resist, magic"""
+        stat = getattr(self, stat)
         for effect in self.effects:
             if not effect.active:
                 continue
-            attack = effect.on_get_stat(attack, "attack")
-        return int(attack)
-
-    def get_defense(self):
-        defense = self.defense
-        for effect in self.effects:
-            if not effect.active:
-                continue
-            defense = effect.on_get_stat(defense, "defense")
-        return int(defense)
-
-    def get_speed(self):
-        speed = self.speed
-        for effect in self.effects:
-            if not effect.active:
-                continue
-            speed = effect.on_get_stat(speed, "speed")
-        return int(speed)
-
-    def get_resist(self):
-        resist = self.resist
-        for effect in self.effects:
-            if not effect.active:
-                continue
-            resist = effect.on_get_stat(resist, "resist")
-        return int(resist)
-
-    def get_magic(self):
-        magic = self.magic
-        for effect in self.effects:
-            if not effect.active:
-                continue
-            magic = effect.on_get_stat(magic, "magic")
-        return int(magic)
+            stat = effect.on_get_stat(stat, stat)
+        return int(stat)
 
     def get_cur_health(self):
         return self.current_health
-
-    def get_max_health(self):
-        health = self.health
-        for effect in self.effects:
-            if not effect.active:
-                continue
-            health = effect.on_get_stat(health, "health")
-        return int(health)
 
     def add_effect(self, effect):
         for eff in self.effects:
@@ -209,7 +168,7 @@ class Character(BattleController):
 
     def remove_effect(self, ename):
         for eff in self.effects[:]:
-            if eff.name == ename and eff.duration != "permanent":
+            if eff.name == ename:
                 self.effects.remove(eff)
                 return True
         return False

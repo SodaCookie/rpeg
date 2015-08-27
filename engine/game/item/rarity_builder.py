@@ -33,12 +33,12 @@ class RarityBuilder(Builder):
 
     def build_stats(self, stats, tag, rarity, type):
         """Override if the builder defines how to build stats"""
-        if self.value == "common":
+        if rarity == "common":
             stats["points"] = stats["points"] * 1
-        elif self.value == "rare":
+        elif rarity == "rare":
             stats["points"] = stats["points"] * 1.2
-        elif self.value == "epic":
+        elif rarity == "epic":
             stats["points"] = stats["points"] * 1.5
-        elif self.value == "legendary":
+        elif rarity == "legendary":
             stats["points"] = stats["points"] * 2
         return stats
