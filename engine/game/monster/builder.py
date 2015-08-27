@@ -7,6 +7,7 @@ def parse_names(filename, tag, rank, speech):
     speech"""
     root = ElementTree.parse(filename).getroot()
     names = root.find("names").find(tag)
+    # print(rank, speech)
     return [node.text for node in names.findall("name[@rank='%s'][@speech='%s']"%(rank, speech))]
 
 class Builder(object):
@@ -26,22 +27,22 @@ class Builder(object):
         """Override if the builder defines how to build a tag"""
         return tags
 
-    def build_rank(self, rank): # common, elite, boss monster
+    def build_rank(self, distribution): # common, elite, boss monster
         """Override if the builder defines how to build a rank"""
-        return rank
+        return distribution
 
     def build_type(self, types): # type of monster
         """Override if the builder defines how to build a type"""
         return types
 
-    def build_name(self, template, tag, rarity):
+    def build_name(self, template, tag, rank, type):
         """Override if the builder defines how to build a name"""
         return template
 
-    def build_stats(self, stats, tag, rarity, type):
+    def build_stats(self, distribution, tag, rank, type):
         """Override if the builder defines how to build stats"""
-        return stats
+        return distribution
 
-    def build_abilities(self, abilities, tag):
+    def build_abilities(self, abilities, tag, rank, type):
         """Override if the builder defines how to build abilities"""
         return abilities

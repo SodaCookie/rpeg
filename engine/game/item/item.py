@@ -121,7 +121,7 @@ class Item(object):
         a list of strings. Then it passes to the builders to build the
         name"""
         keys = {}
-        template = template.replace("[item]", self.type[0])
+        template = template.replace("[item]", self.type[0]) # self.type is a tuple, because .items
         for match in re.finditer("\[(.+?)\]", template):
             if keys.get(match.group(1)) == None:
                 keys[match.group(1)] = 0

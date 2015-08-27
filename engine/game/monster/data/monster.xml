@@ -19,19 +19,24 @@
   <names>
     <fire>
       <name rank="common" speech="adj">red</name>
+      <name rank="elite" speech="noun">inferno</name>
     </fire>
 
     <ice>
-      <name rank="elite" speech="adj">blizzard</name>
+      <name rank="common" speech="adj">blue</name>
+      <name rank="common" speech="adj">water</name>
+      <name rank="elite" speech="noun">blizzard</name>
     </ice>
 
     <nature>
       <name rank="common" speech="adj">green</name>
+      <name rank="elite" speech="noun">mountain</name>
     </nature>
 
     <dark>
       <name rank="common" speech="adj">dark</name>
-      <name rank="boss" speech="name">amduscas</name>
+      <name rank="elite" speech="noun">night</name>
+      <name rank="boss" speech="pronoun">amduscas</name>
     </dark>
   </names>
 
@@ -64,6 +69,7 @@
 
   <types>
     <slime></slime>
+    <rat></rat>
   </types>
 
 </data>
