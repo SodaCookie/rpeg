@@ -56,7 +56,7 @@ class Character(BattleController):
             self.ready = False
 
         if self.get_cur_health() <= 0:
-            if self.kill:
+            if self.kill():
                 self.fallen = True
             else:
                 self.current_health = 1
@@ -118,7 +118,7 @@ class Character(BattleController):
         for effect in self.effects:
             if effect.active:
                 damage = effect.on_damage(source, damage, damage_type)
-        damage = int(damage - self.get_defense() * (random.randint(100-Character.DAMAGE_VARIATION, 100+Character.DAMAGE_VARIATION)/100))
+        damage = int(damage - self.get_stat("defense") * (random.randint(100-Character.DAMAGE_VARIATION, 100+Character.DAMAGE_VARIATION)/100))
         if damage <= 0:
             damage = 1
         for effect in source.effects:

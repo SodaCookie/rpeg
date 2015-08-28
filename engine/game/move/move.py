@@ -2,11 +2,15 @@ class Move(object):
 
     def __init__(self, name, components = None):
         self.name = name
+        self.caster = None
         self.animation = NotImplemented
         if components != None:
             self.components = components
         else:
             self.components = []
+
+    def set_caster(self, caster):
+        self.caster = caster
 
     def cast(self, selected, caster, players, monsters):
         """Casting the move
@@ -23,16 +27,15 @@ class Move(object):
                 targets = component_targets
         assert targets, "Move must have a target"
         # Validates targets
-        if not any(c.valid_targets(
-                selected, caster, players, monsters, targets)
-                for c in self.components:
+        if not any(c.valid_targets(selected, self.caster, players, monsters, targets) for c in self.components):
             return None
         #execute the move
         total_msg = ""
-        for component in self.components:
-            msg = component.on_cast(self, target, caster, players, monsters)
-            if msg:
-                total_msg += msg + '\n'
+        for target in targets:
+            for component in self.components:
+                msg = component.on_cast(target, caster, players, monsters)
+                if msg:
+                    total_msg += msg + '\n'
         if total_msg.endswith('\n'):
             total_msg = total_msg[:-1]
         return total_msg

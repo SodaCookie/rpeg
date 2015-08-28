@@ -27,7 +27,7 @@ class AlliesOnly(Component):
 class EnemiesOnly(Component):
     """Descriptor for targetting enemies only"""
     def valid_targets(self, selected, caster, players, monsters, targets):
-        return all([!isinstance(caster, t) for t in targets])
+        return all([not isinstance(caster, t) for t in targets])
 
 class Effect(Component):
     """Applies an effect of target(s)"""
