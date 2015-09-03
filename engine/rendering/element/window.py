@@ -11,20 +11,19 @@ class Window(Renderable):
         super(Window, self).__init__()
         self.width = width
         self.height = height
-        self.surface = None
+        self.surface = self.draw(self.width, self.height)
         self.x = x
         self.y = y
-        self.draw()
 
-    def draw(self):
+    def draw(self, width, height):
         """method for drawing the actual surface."""
         SCALE = 4 # temporary until we figure out where scale will go
         BORDERWIDTH = 1
 
-        self.surface = pygame.Surface(
-            (self.width+BORDERWIDTH*SCALE*2, self.height+BORDERWIDTH*SCALE*2),
+        surface = pygame.Surface(
+            (width+BORDERWIDTH*SCALE*2, height+BORDERWIDTH*SCALE*2),
              pygame.SRCALPHA)
-        self.surface.fill((0, 0, 0, 0))
+        surface.fill((0, 0, 0, 0))
 
         texture = pygame.image.load("image/ui/texture.png").convert()
         texture = pygame.transform.scale(texture,
@@ -34,8 +33,8 @@ class Window(Renderable):
             (border.get_width()*SCALE, border.get_height()*SCALE))
         border_vertical = pygame.transform.rotate(border, 90)
 
-        texture_w = int(math.ceil(self.width/SCALE))+1
-        texture_h = int(math.ceil(self.height/SCALE))+1
+        texture_w = int(math.ceil(width/SCALE))+1
+        texture_h = int(math.ceil(height/SCALE))+1
 
         start_x = random.randint(-texture.get_width()//SCALE, 0)
         start_y = random.randint(-texture.get_height()//SCALE, 0)
@@ -43,41 +42,47 @@ class Window(Renderable):
         # fill in texture
         for i in range(texture_w):
             for j in range(texture_h):
-                self.surface.blit(texture,
+                surface.blit(texture,
                     (start_x+BORDERWIDTH+i*texture.get_width(),
                      start_y+BORDERWIDTH+j*texture.get_height()))
 
         # add borders
         for i in range(texture_w):
-            self.surface.blit(border, (i*border.get_width(), 0))
-            self.surface.blit(border, (i*border.get_width(),
-                self.height+SCALE*BORDERWIDTH))
-        print(texture_w, texture_h)
+            surface.blit(border, (i*border.get_width(), 0))
+            surface.blit(border, (i*border.get_width(),
+                height+SCALE*BORDERWIDTH))
         for i in range(texture_h):
-            self.surface.blit(border_vertical,
+            surface.blit(border_vertical,
                 (0, i*border_vertical.get_height()))
-            self.surface.blit(border_vertical, (self.width+SCALE*BORDERWIDTH,
+            surface.blit(border_vertical, (width+SCALE*BORDERWIDTH,
                 i*border_vertical.get_height()))
 
-        # remove corners
-        self.surface.fill((0, 0, 0, 0),
-            (0, 0, SCALE*BORDERWIDTH, SCALE*BORDERWIDTH))
-        self.surface.fill((0, 0, 0, 0),
-            (0, self.height+SCALE*BORDERWIDTH,
-             SCALE*BORDERWIDTH, SCALE*BORDERWIDTH))
-        self.surface.fill((0, 0, 0, 0),
-            (self.width+SCALE*BORDERWIDTH, self.height+SCALE*BORDERWIDTH,
-             SCALE*BORDERWIDTH, SCALE*BORDERWIDTH))
-        self.surface.fill((0, 0, 0, 0),
-            (self.width+SCALE*BORDERWIDTH, 0,
-             SCALE*BORDERWIDTH, SCALE*BORDERWIDTH))
+        # fix corners
+        surface.fill((0, 0, 0, 0),
+            (0, 0, SCALE*BORDERWIDTH*2, SCALE*BORDERWIDTH*2))
+        surface.fill((0, 0, 0, 0),
+            (0, height,
+             SCALE*BORDERWIDTH*2, SCALE*BORDERWIDTH*2))
+        surface.fill((0, 0, 0, 0),
+            (width, height,
+             SCALE*BORDERWIDTH*2, SCALE*BORDERWIDTH*2))
+        surface.fill((0, 0, 0, 0),
+            (width, 0,
+             SCALE*BORDERWIDTH*2, SCALE*BORDERWIDTH*2))
+
+        # fill corner
+        # stop gauge measure until maybe i decide to use real corners...
+        surface.blit(border, (SCALE, SCALE),
+            (0, 0, SCALE, SCALE))
+        surface.blit(border, (SCALE, height),
+            (0, 0, SCALE, SCALE))
+        surface.blit(border, (width, height),
+            (0, 0, SCALE, SCALE))
+        surface.blit(border, (width, SCALE),
+            (0, 0, SCALE, SCALE))
+
+        return surface
 
     def render(self, surface, game):
-        SCALE = 4
-        BORDERWIDTH = 1
-        tmp_surface = self.surface.copy()
-        draw_surface = tmp_surface.subsurface(
-            (BORDERWIDTH*SCALE, BORDERWIDTH*SCALE,
-             self.width-BORDERWIDTH*SCALE*2, self.height-BORDERWIDTH*SCALE*2))
         surface.blit(self.surface, (self.x, self.y))
 

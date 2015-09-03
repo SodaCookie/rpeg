@@ -1,137 +1,78 @@
-from copy import copy
+import pygame
 
-from pygame import font
+from engine.rendering.core.renderable import Renderable
+from engine.rendering.element.window import Window
 
-import classes.rendering.view as view
-from classes.rendering.view import Renderable
-
-"""
-Struct for condensing text parameters
-"""
-
-class TextInfo(dict):
-    def __init__(self, t_info=None, **kwarg):
-        # h_text_color = hover, p_text_color = press, d_text_color = disable
-        super().__init__(self)
-        self["fontcolor"] = (0,0,0)
-        self["fontname"] = "fonts/VT323-Regular.ttf"
-        self["fontsize"] = 12
-        self["h_anchor"] = 1
-        self["v_anchor"] = 1
-        self["alignment"] = 1
-        self["width"] = None
-        self["height"] = None
-        self["wrap"] = False
-        self["sensitive"] = False
-        self["text"] = ""
-        if t_info: self.update(t_info)
-        self.update(kwarg)
-
-    def update(self, other):
-        other = {key: other[key] for key in self.keys() if key in other}
-        super().update(other)
-        self.__dict__ = self # magic line, beware of references ERIC
-
-
-"""
-The text class is a widget that gives you tools to render text
-"""
 class Text(Renderable):
-    def __init__(self, pos, t_info=None, **kwarg):
-        super().__init__(pos)
-        if t_info:
-            self.text_info = copy(t_info)
+
+    font_cache = {}
+    LEFT = "left"
+    RIGHT = "right"
+    CENTER = "center"
+
+    def __init__(self, text, size, x, y,
+                 colour=pygame.Color("white"), width=None, justify=LEFT):
+        self.text = text
+        self.size = size
+        self.x = x
+        self.y = y
+        self.colour = colour
+        self.width = width
+        self.justify = justify
+        self.surface = self.draw(self.text, self.size, self.colour,
+                                 self.width, self.justify)
+
+    def draw(self, text, size, colour, width, justify):
+        if not Text.font_cache.get(size):
+            with open("fonts/VT323-Regular.ttf", 'r') as file:
+                Text.font_cache[size] = pygame.font.Font(
+                    "fonts/VT323-Regular.ttf", size)
+        # text wrapping
+        if width:
+            lines = []
+            for paragraph in map(
+                    lambda line: Text._word_wrap(line[0], width, \
+                    Text.font_cache[size]), zip(text.split('\n'))):
+                lines.extend(paragraph)
+                lines.append('')
+            lines = lines[:-1] # remove the last return
+            height = sum(Text.font_cache[size].size(line)[1] for line in lines)
+            surface = pygame.Surface((width, height), pygame.SRCALPHA)
+            surface.fill((0, 0, 0, 0))
+
+            # drawing the line
+            line_height = 0
+            for line in lines:
+                tmp_line_surf = Text.font_cache[size].render(line, 1, colour)
+                if justify == Text.LEFT:
+                    surface.blit(tmp_line_surf, (0, line_height))
+                elif justify == Text.RIGHT:
+                    surface.blit(tmp_line_surf,
+                        (width-tmp_line_surf.get_width(), line_height))
+                elif justify == Text.CENTER:
+                    surface.blit(tmp_line_surf,
+                        ((width-tmp_line_surf.get_width())//2, line_height))
+                else:
+                    raise ValueError("Invalid justify argument")
+
+                line_height += Text.font_cache[size].size(line)[1]
         else:
-            self.text_info = TextInfo()
-        self.text_info.update(kwarg)
-        self.font = font.Font(self.text_info.fontname, self.text_info.fontsize)
-        self.lines = self.text.split('\n')
-        if self.text_info.wrap:
-            self._wrap_text()
+            # no wrap
+            surface = Text.font_cache[size].render(text, 1, colour)
+        return surface
 
-    @property
-    def text(self):
-        return self.text_info.text
+    def render(self, surface, game):
+        surface.blit(self.surface, (self.x, self.y))
 
-    @text.setter
-    def text(self, text):
-        self.text_info.text = text
-        self.lines = self.text.split('\n')
-        if self.text_info.wrap:
-            self._wrap_text()
-
-    def delete(self):
-        super().delete()
-
-    def draw(self, surface):
-        pos = view.get_abs_pos(self)
-        # Star out sensitive information
-        # (this is currently broken when used with text wrapping)
-        if self.text_info.sensitive:
-            for i in range(len(lines)):
-              self.lines[i] = "".join("*" for j in range(len(self.lines[i])))
-
-        # Decide on where to put each line of text. Anchors define the
-        # x_offset, y_offset variables and alignment decides the align
-        # variable.
-        max_width = 0
-        for i in range(len(self.lines)):
-            line_width = self.font.size(self.lines[i])[0]
-            if line_width > max_width:
-                max_width = line_width
-
-        if self.text_info.h_anchor < 0:
-            x_offset = -max_width
-        elif self.text_info.h_anchor > 0:
-            x_offset = 0
-        else:
-            x_offset = -max_width / 2
-
-        if self.text_info.v_anchor < 0:
-            y_offset = -self.text_info.fontsize * len(self.lines)
-        elif self.text_info.v_anchor > 0:
-            y_offset = 0
-        else:
-            y_offset = -self.text_info.fontsize * len(self.lines) / 2
-
-        if self.text_info.alignment < 0:
-            align = 0
-
-        # Iterate over the lines of text to draw them.
-        for i in range(len(self.lines)):
-            if self.text_info.alignment > 0:
-                align = max_width - self.font.size(self.lines[i])[0]
-            elif self.text_info.alignment == 0:
-                align = (max_width - self.font.size(self.lines[i])[0]) / 2
-            surface.blit(self.font.render(self.lines[i], True, self.text_info.fontcolor),
-                            (x_offset + pos[0] + align,
-                             y_offset + pos[1] + self.text_info.fontsize * i))
-
-    def get_size(self):
-        max_width = 0
-        for i in range(len(self.lines)):
-            line_width = self.font.size(self.lines[i])[0]
-            if line_width > max_width:
-                max_width = line_width
-
-        return (max_width, len(self.lines) * self.text_info.fontsize);
-
-    def _wrap_text(self):
-        if self.text_info.wrap:
-            j = 0
-            while j < len(self.lines):
-                i = 0
-                words = self.lines[j].split(' ')
-                while i < len(words):
-                    line_size = self.font.size(' '.join(words[:i + 1]))[0]
-                    if line_size > self.text_info.width:
-                        self.lines = self.lines[:j] + [' '.join(words[:i - 1])] + [' '.join(words[i - 1:])] + self.lines[j + 1:]
-                        break
-                    i += 1
-                j += 1
-
-
-
-if __name__ == "__main__":
-    font.init()
-    text = Text((0, 0), text="hello world")
+    @staticmethod
+    def _word_wrap(text, width, font):
+        words = text.split(' ')
+        lines = []
+        cur_line = [words.pop(0)]
+        while words:
+            if font.size(' '.join(cur_line))[0] > width:
+                lines.append(' '.join(cur_line[:-1]))
+                cur_line = [cur_line[-1]]
+            cur_line.append(words.pop(0))
+        lines.append(' '.join(cur_line))
+        return lines
