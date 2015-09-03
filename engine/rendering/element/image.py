@@ -1,47 +1,13 @@
-from classes.image_cache import ImageCache
-from classes.rendering.view import Renderable, get_abs_pos
+import pygame
+
+from engine.rendering.core.renderable import Renderable
 
 class Image(Renderable):
-    # Getting close to warrenting its own ImageInfo
-    def __init__(self, pos, width=None, height=None, h_anchor=0, v_anchor=0, surface=None, filename="", alpha=False):
-        super().__init__(pos)
 
-        if filename != "":
-            self.img = ImageCache.add(filename, alpha)
-        else:
-            self.img = surface
+    def __init__(self, image, x, y):
+        self.x = x
+        self.y = y
+        self.surface = image
 
-        if width != None:
-            self.width = width
-        else:
-            self.width = self.img.get_width()
-        if height != None:
-            self.height = height
-        else:
-            self.height = self.img.get_height()
-        self.h_anchor = h_anchor
-        self.v_anchor = v_anchor
-
-    def draw(self, surface):
-        pos = get_abs_pos(self)
-        size = self.img.get_size()
-
-        if self.h_anchor < 0:
-            x_offset = -size[0]
-        elif self.h_anchor > 0:
-            x_offset = 0
-        else:
-            x_offset = -size[0] / 2
-
-        if self.v_anchor < 0:
-            y_offset = -size[1]
-        elif self.v_anchor > 0:
-            y_offset = 0
-        else:
-            y_offset = -size[1] / 2
-
-        if self.width != None and self.height != None:
-            # This is a bad way to do this since you can only clip in two directions
-            surface.blit(self.img, (pos[0] + x_offset, pos[1] + y_offset), (0, 0, self.width, self.height))
-        else:
-            surface.blit(self.img, (pos[0] + x_offset, pos[1] + y_offset))
+    def render(self, surface, game):
+        surface.blit(self.surface, (self.x, self.y))

@@ -1,7 +1,6 @@
 import pygame
 
 from engine.rendering.core.renderable import Renderable
-from engine.rendering.element.window import Window
 
 class Text(Renderable):
 
