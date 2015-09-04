@@ -15,6 +15,7 @@ class Window(Renderable):
         self.x = x
         self.y = y
 
+    @classmethod
     def draw(self, width, height):
         """method for drawing the actual surface."""
         SCALE = 4 # temporary until we figure out where scale will go

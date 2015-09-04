@@ -21,6 +21,7 @@ class Text(Renderable):
         self.surface = self.draw(self.text, self.size, self.colour,
                                  self.width, self.justify)
 
+    @classmethod
     def draw(self, text, size, colour, width, justify):
         if not Text.font_cache.get(size):
             with open("fonts/VT323-Regular.ttf", 'r') as file:

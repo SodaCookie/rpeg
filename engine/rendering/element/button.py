@@ -24,7 +24,7 @@ class Button(Renderable):
         if windowed:
             bg = Window.draw(text.get_width()+SCALE*2,
                 text.get_height()+SCALE*2)
-            bg.blit(surface, (SCALE*2, SCALE*2))
+            bg.blit(text, (SCALE*2, SCALE*2))
             return bg
         return text
 
@@ -47,20 +47,20 @@ class Button(Renderable):
                 (bg.get_width()-SCALE*2, 0, SCALE*2, SCALE*2))
             bg.fill((0, 0, 0, 0),
                 (bg.get_width()-SCALE*2, bg.get_height()-SCALE*2, SCALE*2, SCALE*2))
-            bg.fill((255, 255, 0), (SCALE*2, SCALE*2, SCALE, SCALE))
+            bg.fill((255, 255, 0), (SCALE, SCALE, SCALE, SCALE))
             bg.fill((255, 255, 0),
-                (SCALE*2, bg.get_height()-SCALE*2, SCALE, SCALE))
+                (SCALE, bg.get_height()-SCALE*2, SCALE, SCALE))
             bg.fill((255, 255, 0),
-                (bg.get_width()-SCALE*2, 0, SCALE, SCALE))
+                (bg.get_width()-SCALE*2, SCALE, SCALE, SCALE))
             bg.fill((255, 255, 0),
                 (bg.get_width()-SCALE*2, bg.get_height()-SCALE*2, SCALE, SCALE))
-            bg.blit(surface, (SCALE*2, SCALE*2))
+            bg.blit(text, (SCALE*2, SCALE*2))
             return bg
         return text
 
     def draw_click(self, text, size, windowed):
         SCALE = 4
-        text = Text.draw(text, size, (255, 255, 255), None, Text.LEFT)
+        text = Text.draw(text, size, (0, 255, 0), None, Text.LEFT)
         if windowed:
             bg = Window.draw(text.get_width()+SCALE*2,
                 text.get_height()+SCALE*2)
@@ -77,16 +77,23 @@ class Button(Renderable):
                 (bg.get_width()-SCALE*2, 0, SCALE*2, SCALE*2))
             bg.fill((0, 0, 0, 0),
                 (bg.get_width()-SCALE*2, bg.get_height()-SCALE*2, SCALE*2, SCALE*2))
-            bg.fill((0, 255, 0), (SCALE*2, SCALE*2, SCALE, SCALE))
+            bg.fill((0, 255, 0), (SCALE, SCALE, SCALE, SCALE))
             bg.fill((0, 255, 0),
-                (SCALE*2, bg.get_height()-SCALE*2, SCALE, SCALE))
+                (SCALE, bg.get_height()-SCALE*2, SCALE, SCALE))
             bg.fill((0, 255, 0),
-                (bg.get_width()-SCALE*2, 0, SCALE, SCALE))
+                (bg.get_width()-SCALE*2, SCALE, SCALE, SCALE))
             bg.fill((0, 255, 0),
                 (bg.get_width()-SCALE*2, bg.get_height()-SCALE*2, SCALE, SCALE))
-            bg.blit(surface, (SCALE*2, SCALE*2))
+            bg.blit(text, (SCALE*2, SCALE*2))
             return bg
         return text
 
     def render(self, surface, game):
-        surface.blit(self.surface, (self.x, self.y))
+        if self.x <= game.mouse_x <= self.x + self.surface.get_width() and \
+                self.y <= game.mouse_y <= self.y + self.surface.get_height():
+            if game.mouse_button[0]:
+                surface.blit(self.click, (self.x, self.y))
+            else:
+                surface.blit(self.hover, (self.x, self.y))
+        else:
+            surface.blit(self.surface, (self.x, self.y))
