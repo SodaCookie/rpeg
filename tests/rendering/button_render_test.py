@@ -10,7 +10,7 @@ class MockGameObject:
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
-button = Button("Hello World", 20, 100, 100, None, True)
+button = Button("m", 20, 100, 100, None, True)
 m = MockGameObject()
 
 running = True
