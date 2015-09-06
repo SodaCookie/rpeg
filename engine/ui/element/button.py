@@ -2,9 +2,9 @@ from copy import copy
 
 import pygame
 
-from engine.rendering.core.renderable import Renderable
-from engine.rendering.element.window import Window
-from engine.rendering.element.text import Text
+from engine.ui.core.renderable import Renderable
+from engine.ui.element.window import Window
+from engine.ui.element.text import Text
 
 class Button(Renderable):
 

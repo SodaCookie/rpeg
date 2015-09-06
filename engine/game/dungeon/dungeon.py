@@ -2,10 +2,10 @@ import logging as logging
 from random import randint, sample
 from functools import reduce
 
-import classes.game.monster as monster
-import classes.game.item as item
-import classes.game.player as player
-import classes.game.location as location
+import engine.game.monster.monster as monster
+import engine.game.item.item as item
+import engine.game.player.player as player
+import engine.game.location.location as location
 
 class Dungeon(object):
   """Dungeon object holds all the possible routes as well as in charge of moving"""

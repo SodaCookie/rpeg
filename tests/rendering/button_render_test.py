@@ -1,6 +1,6 @@
 import pygame
 
-from engine.rendering.element.button import Button
+from engine.ui.element.button import Button
 
 class MockGameObject:
     mouse_x = 0
@@ -10,7 +10,7 @@ class MockGameObject:
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
-button = Button("m", 20, 100, 100, None, True)
+button = Button("Hello World", 20, 100, 100, None, True)
 m = MockGameObject()
 
 running = True

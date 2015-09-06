@@ -1,6 +1,6 @@
 import pygame
 
-from engine.rendering.core.renderable import Renderable
+from engine.ui.core.renderable import Renderable
 
 class Bar(Renderable):
 

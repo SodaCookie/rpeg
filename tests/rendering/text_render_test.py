@@ -1,6 +1,6 @@
 import pygame
 
-from engine.rendering.element.text import Text
+from engine.ui.element.text import Text
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
