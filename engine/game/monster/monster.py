@@ -48,7 +48,6 @@ class Monster(character.Character):
     def __init__(self, **parameters):
         """Basic Monster constructor"""
         super().__init__("")
-
         self.builders = [] # construct builders
         for builder in Monster.BUILDERS:
             value = parameters.get(builder.NAME)
@@ -62,6 +61,7 @@ class Monster(character.Character):
         self.stats = self._generate_stats(Monster.DEFAULT_STATS, self.tag, self.rank, self.type)
         self.abilities = self._generate_abilities(self.tag, self.rank, self.type)
         self.surface = self._generate_surface()
+        self.surface = "image/monster/slime2_base.png"
 
     def _generate_tag(self, tags):
         """Generates the possible tag of the monster"""
