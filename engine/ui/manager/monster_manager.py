@@ -18,13 +18,19 @@ class MonsterManager(Manager):
         self.neutral = self.monster.surface# this is super hacky I DONT LIKE
 
         # monster image
-        image = pygame.image.load(monster.surface).convert_alpha()
-        image = pygame.transform.scale(image,
-            (image.get_width()*SCALE, image.get_height()*SCALE))
-        self.renderables.append((element.Image(image, x-image.get_width()//2, y-image.get_height())))
+        self.image = pygame.image.load(monster.surface).convert_alpha()
+        self.image = pygame.transform.scale(self.image,
+            (self.image.get_width()*SCALE, self.image.get_height()*SCALE))
+        self.monster_image = element.Image(self.image, x-self.image.get_width()//2, y-self.image.get_height())
+        self.renderables.append(self.monster_image)
+        self.neutral_image = self.monster_image.surface
+
+        self.hover_image = pygame.image.load(self.monster.hover).convert_alpha()
+        self.hover_image = pygame.transform.scale(self.hover_image,
+            (self.hover_image.get_width()*SCALE, self.hover_image.get_height()*SCALE))
 
         # name
-        self.name = element.Text(monster.name.title(), 20, x, y-image.get_height()-50)
+        self.name = element.Text(monster.name.title(), 20, x, y-self.image.get_height()-75)
         self.name.x = x - self.name.surface.get_width()//2
         self.renderables.append(self.name)
         self.hover_name = element.Text.draw(monster.name.title(), 20, (255, 255, 0),
@@ -32,10 +38,10 @@ class MonsterManager(Manager):
         self.neutral_name = self.name.surface
 
         # bars
-        self.health = element.Bar(32*SCALE, 2*SCALE, (116, 154, 104), x-16*SCALE , y-image.get_height()-20)
-        self.action = element.Bar(32*SCALE, 2*SCALE, (212, 196, 148), x-16*SCALE, y-image.get_height()-5)
-        health_missing = element.Bar(32*SCALE, 2*SCALE, (30, 30, 30), x-16*SCALE,  y-image.get_height()-20)
-        action_missing = element.Bar(32*SCALE, 2*SCALE, (30, 30, 30), x-16*SCALE,  y-image.get_height()-5)
+        self.health = element.Bar(32*SCALE, 2*SCALE, (116, 154, 104), x-16*SCALE , y-self.image.get_height()-40)
+        self.action = element.Bar(32*SCALE, 2*SCALE, (212, 196, 148), x-16*SCALE, y-self.image.get_height()-25)
+        health_missing = element.Bar(32*SCALE, 2*SCALE, (30, 30, 30), x-16*SCALE,  y-self.image.get_height()-40)
+        action_missing = element.Bar(32*SCALE, 2*SCALE, (30, 30, 30), x-16*SCALE,  y-self.image.get_height()-25)
         self.renderables.append(health_missing)
         self.renderables.append(action_missing)
         self.renderables.append(self.health)
@@ -54,8 +60,10 @@ class MonsterManager(Manager):
     def render(self, surface, game):
         if self.highlight:
             self.name.surface = self.hover_name
+            self.monster_image.surface = self.hover_image
         else:
             self.name.surface = self.neutral_name
+            self.monster_image.surface = self.neutral_image
         super().render(surface, game)
 
     def __hash__(self):

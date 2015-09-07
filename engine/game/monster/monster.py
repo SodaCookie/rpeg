@@ -61,7 +61,8 @@ class Monster(character.Character):
         self.stats = self._generate_stats(Monster.DEFAULT_STATS, self.tag, self.rank, self.type)
         self.abilities = self._generate_abilities(self.tag, self.rank, self.type)
         self.surface = self._generate_surface()
-        self.surface = "image/monster/slime2_base.png"
+        self.surface = "image/monster/slime1_base.png"
+        self.hover = "image/monster/slime1_highlight.png"
 
     def _generate_tag(self, tags):
         """Generates the possible tag of the monster"""
