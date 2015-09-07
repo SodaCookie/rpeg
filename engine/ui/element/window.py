@@ -2,21 +2,47 @@ import pygame
 import random
 import math
 
-from engine.rendering.core.renderable import Renderable
+from engine.ui.core.renderable import Renderable
 
 class Window(Renderable):
     """docstring for Window"""
 
-    def __init__(self, width, height, x, y):
+    def __init__(self, width, height, x, y, highlight=None):
         super(Window, self).__init__()
         self.width = width
         self.height = height
-        self.surface = self.draw(self.width, self.height)
+        self.surface = self.draw(self.width, self.height, highlight)
         self.x = x
         self.y = y
 
     @classmethod
-    def draw(self, width, height):
+    def highlight_window(self, window, highlight):
+        SCALE = 4
+        window = window.copy()
+        window.fill(highlight, (0, 0, SCALE, window.get_height()))
+        window.fill(highlight, (0, 0, window.get_width(), SCALE))
+        window.fill(highlight,
+            (window.get_width()-SCALE, 0, SCALE, window.get_height()))
+        window.fill(highlight,
+            (0, window.get_height()-SCALE, window.get_width(), SCALE))
+        window.fill((0, 0, 0, 0), (0, 0, SCALE*2, SCALE*2))
+        window.fill((0, 0, 0, 0),
+            (0, window.get_height()-SCALE*2, SCALE*2, SCALE*2))
+        window.fill((0, 0, 0, 0),
+            (window.get_width()-SCALE*2, 0, SCALE*2, SCALE*2))
+        window.fill((0, 0, 0, 0),
+            (window.get_width()-SCALE*2, window.get_height()-SCALE*2, SCALE*2, SCALE*2))
+        window.fill(highlight, (SCALE, SCALE, SCALE, SCALE))
+        window.fill(highlight,
+            (SCALE, window.get_height()-SCALE*2, SCALE, SCALE))
+        window.fill(highlight,
+            (window.get_width()-SCALE*2, SCALE, SCALE, SCALE))
+        window.fill(highlight,
+            (window.get_width()-SCALE*2, window.get_height()-SCALE*2, SCALE, SCALE))
+        return window
+
+    @classmethod
+    def draw(self, width, height, highlight):
         """method for drawing the actual surface."""
         SCALE = 4 # temporary until we figure out where scale will go
         BORDERWIDTH = 1
@@ -81,6 +107,9 @@ class Window(Renderable):
             (0, 0, SCALE, SCALE))
         surface.blit(border, (width, SCALE),
             (0, 0, SCALE, SCALE))
+
+        if highlight:
+            return self.highlight_window(surface, highlight)
 
         return surface
 

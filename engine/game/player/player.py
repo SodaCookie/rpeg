@@ -6,14 +6,14 @@ class Player(character.Character):
 
     MAX_LEVEL = 15
     POINTS_PER_LEVEL = 10
-    FEMALE_PORTRAITS = ["images/player/female1.png",
-                        "images/player/female2.png",
-                        "images/player/female3.png",
-                        "images/player/female4.png"]
-    MALE_PORTRAITS = ["images/player/male1.png",
-                      "images/player/male2.png",
-                      "images/player/male3.png",
-                      "images/player/male4.png"]
+    FEMALE_PORTRAITS = ["image/player/female1.png",
+                        "image/player/female2.png",
+                        "image/player/female3.png",
+                        "image/player/female4.png"]
+    MALE_PORTRAITS = ["image/player/male1.png",
+                      "image/player/male2.png",
+                      "image/player/male3.png",
+                      "image/player/male4.png"]
 
     def __init__(self, name, race="human"):
         super().__init__(name)

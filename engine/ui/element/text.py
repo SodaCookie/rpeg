@@ -1,6 +1,6 @@
 import pygame
 
-from engine.rendering.core.renderable import Renderable
+from engine.ui.core.renderable import Renderable
 
 class Text(Renderable):
 
@@ -11,6 +11,7 @@ class Text(Renderable):
 
     def __init__(self, text, size, x, y,
                  colour=pygame.Color("white"), width=None, justify=LEFT):
+        super().__init__()
         self.text = text
         self.size = size
         self.x = x

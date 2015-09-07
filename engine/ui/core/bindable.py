@@ -6,6 +6,7 @@ class Bindable(object):
     and adds a attribute called bound"""
 
     def __init__(self):
+        super().__init__()
         self.bound = None
 
     def bind(self, zone):

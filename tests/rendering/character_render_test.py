@@ -1,7 +1,7 @@
 import pygame
 
-from engine.ui.element.button import Button
-from engine.ui.core.zone import Zone
+from engine.game.player.player import Player
+from engine.ui.manager.character_manager import CharacterManager
 
 class MockGameObject:
     mouse_x = 0
@@ -20,11 +20,9 @@ def ghosts(game):
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
-button = Button("Hello World", 20, 100, 100, None, True)
-button2 = Button("Print Hello World", 20, 100, 200, None, True)
-zone = Zone((0, 0, 100, 100), hello_world, spooky, ghosts)
-button2.bind(zone)
 m = MockGameObject()
+p = Player("Player the Awesome")
+cm = CharacterManager(p, 100, 100)
 
 running = True
 
@@ -32,13 +30,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            cm.highlight = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            cm.highlight = False
+    if p.action < 100:
+        p.action += 1
     pygame.display.flip()
     m.mouse_x, m.mouse_y = pygame.mouse.get_pos()
     m.mouse_button = pygame.mouse.get_pressed()
     screen.fill((0, 0, 0))
-    button.render(screen, m)
-    button2.render(screen, m)
-    zone.update(m)
+    cm.update(m)
+    cm.render(screen, m)
     clock.tick(60)
 
 pygame.quit()
