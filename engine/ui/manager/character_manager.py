@@ -50,7 +50,10 @@ class CharacterManager(Manager):
             self.character.action_max
 
     def on_click(self, game):
-        game.selected_player = self.character
+        if game.selected_move:
+            game.selected_target = self.character
+        else:
+            game.selected_player = self.character
 
     def render(self, surface, game):
         if self.highlight:

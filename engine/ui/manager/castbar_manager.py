@@ -39,6 +39,7 @@ class CastBarManager(Manager):
         if game.selected_player is not self.character:
             self.swap_charactor(game.selected_player)
             self.character = game.selected_player
+            game.selected_move = None
 
     def swap_charactor(self, character):
         SCALE = 4
@@ -53,3 +54,6 @@ class CastBarManager(Manager):
                 self.skills[i].surface = element.MoveIcon.draw(None)
                 self.skills[i].hover = element.MoveIcon.draw_highlight(None)
 
+    def render(self, surface, game):
+        if game.selected_player:
+            super().render(surface, game)

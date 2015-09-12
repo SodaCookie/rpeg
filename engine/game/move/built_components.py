@@ -1,11 +1,7 @@
 from engine.game.move.component import Component
-# from engine.game.monster.monster import Monster
-# from engine.game.player.player import Player
+from engine.game.monster.monster import Monster
+from engine.game.player.player import Player
 
-# Temp
-class Character: pass
-class Monster(Character): pass
-class Player(Character): pass
 
 class SingleTarget(Component):
     """Defines Single Targetting for a move"""
@@ -57,19 +53,7 @@ class ScaleDamage(Damage):
         self.stype = stype
 
     def on_cast(self, target, caster, players, monsters):
-        if self.stype == "attack":
-            scale = caster.get_attack()
-        elif self.stype == "defense":
-            scale = caster.get_defense()
-        elif self.stype == "health":
-            scale = caster.get_max_defense()
-        elif self.stype == "magic":
-            scale = caster.get_magic()
-        elif self.stype == "resist":
-            scale = caster.get_resist()
-        elif self.stype == "speed":
-            scale = caster.get_speed()
-        scaled_damage = self.damage + self.scaling * scale
+        scaled_damage = self.damage + self.scaling * caster.get_stat(self.stype)
         damage = target.deal_damage(caster, scaled_damage, self.dtype)
         return "%s dealt %d %s damage to %s" % \
             (caster.name, damage, self.dtype, target.name)

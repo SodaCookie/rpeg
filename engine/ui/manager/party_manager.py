@@ -17,6 +17,8 @@ class PartyManager(Manager):
 
     def update(self, game):
         super().update(game)
+        for manager in self.char_managers:
+            manager.update(game)
 
         game_set = set(game.party)
         cur_set = set(c.character for c in self.char_managers)

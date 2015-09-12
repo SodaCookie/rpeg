@@ -18,6 +18,8 @@ class EncounterManager(Manager):
     def update(self, game):
         """Overrides zones update to dictionary for removing"""
         super().update(game)
+        for manager in self.monster_managers:
+            manager.update(game)
 
         game_set = set(game.encounter)
         cur_set = set(m.monster for m in self.monster_managers)
@@ -27,7 +29,7 @@ class EncounterManager(Manager):
             self.zones = []
             for i, char in enumerate(game_set):
                 x = pygame.display.get_surface().get_width()//len(game_set)*(i+1)-pygame.display.get_surface().get_width()//len(game_set)//2
-                y = pygame.display.get_surface().get_height()-246
+                y = pygame.display.get_surface().get_height()-400
                 mm = MonsterManager(char, x, y)
                 self.monster_managers.append(mm)
                 # create a new zone for that manager
