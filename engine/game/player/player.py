@@ -23,6 +23,7 @@ class Player(character.Character):
         self.target = None
         self.race = race
         self.gender = choice(["male", "female"])
+        self.castbar = [None for i in range(10)]
         self.equipment = {}
         self.equipment["hand1"] = None
         self.equipment["hand2"] = None

@@ -1,8 +1,9 @@
 class Move(object):
 
-    def __init__(self, name, components = None):
+    def __init__(self, name, icon=None, components=None):
         self.name = name
         self.caster = None
+        self.icon = icon
         self.animation = NotImplemented
         if components != None:
             self.components = components

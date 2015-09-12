@@ -19,7 +19,7 @@ class Game(object):
         self.floor_type = ""
 
         self.party = []
-        self.enemies = []
+        self.encounter = []
         self.current_move = None
         self.current_target = None
 
@@ -32,3 +32,7 @@ class Game(object):
         self.mouse_x = 0
         self.mouse_y = 0
         self.resolution = (0, 0)
+
+        self.selected_move = None
+        self.selected_target = None
+        self.selected_player = None
