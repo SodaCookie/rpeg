@@ -17,16 +17,18 @@ class Game(object):
         self.difficulty = "normal"
         self.floor_level = 1
         self.floor_type = ""
+        self.current_location = None
+        self.current_dialog = None
 
         self.party = []
         self.encounter = []
         self.current_move = None
         self.current_target = None
+        self.current_dialog = None
 
         self.shop = None
         self.alter = None
         self.loot = []
-        self.event = None
 
         self.mouse_button = (0, 0, 0)
         self.mouse_x = 0

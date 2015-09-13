@@ -10,10 +10,9 @@ from engine.ui.element.text import Text
 
 class Button(Renderable, Bindable):
 
-    def __init__(self, text, size, x, y, on_click=None, windowed=False):
+    def __init__(self, text, size, x, y, windowed=False):
         super().__init__()
         self.text = text
-        self.on_click = on_click
         self.size = size
         self.x = x
         self.y = y

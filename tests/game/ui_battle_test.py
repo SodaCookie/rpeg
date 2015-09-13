@@ -19,7 +19,7 @@ class MockGame():
 
 # Initialize game and managers
 pygame.init()
-screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 
 mock = MockGame()
