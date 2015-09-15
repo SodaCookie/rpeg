@@ -5,14 +5,14 @@ from functools import reduce
 import engine.game.monster.monster as monster
 import engine.game.item.item as item
 import engine.game.player.player as player
-import engine.game.location.location as location
+import engine.game.dungeon.location as location
 
 class Dungeon(object):
   """Dungeon object holds all the possible routes as well as in charge of moving"""
 
-  def __init__(self, level_type, power, difficulty, **kwargs):
+  def __init__(self, level_type, difficulty, **kwargs):
     self.level = level_type
-    self.power = power
+    #self.power = power
     self.difficulty = difficulty
     self.depth = 10
     self.min_width = 2
@@ -175,13 +175,16 @@ class Dungeon(object):
     for node in sample(nodes, items):
       node.set_type("item")
       nodes.remove(node)
+    for loc in frame.values():
+      print(loc)
 
     #print(*["Depth %d: [%s]"%(i, ", ".join(loc.loc_type for loc in locs)) for i, locs in frame.items()], sep="\n")
 
 
+# Test
 if __name__ == "__main__":
 
-  d = Dungeon("prison", depth=5)
+  d = Dungeon("prison", "normal", depth=5)
 
   def add_name(loc):
     v = set()

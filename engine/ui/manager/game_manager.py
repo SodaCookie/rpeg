@@ -11,8 +11,9 @@ class GameManager(Manager):
     def __init__(self):
         super(GameManager, self).__init__()
         self.managers = [
-            manager.EventManager()
+            manager.EventManager(),
             manager.PartyManager(),
             manager.EncounterManager(),
             manager.CastBarManager(),
+            manager.MouseHoverManager()
         ]

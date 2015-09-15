@@ -88,6 +88,8 @@ class Location(object):
       text = text.replace(match.group(0), replacement) # fill in the gaps
     self.description = text
 
+  def __repr__(self):
+    return self.loc_type
 
 
 if __name__ == "__main__":

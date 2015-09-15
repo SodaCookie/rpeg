@@ -1,6 +1,6 @@
 import pygame
 
-from engine.ui.manager.event_manager import EventManager
+from engine.ui.manager.scenario_manager import ScenarioManager
 from engine.game.player.player import Player
 from engine.game.dungeon.location import Location
 
@@ -19,7 +19,7 @@ location = Location("entrance", 1)
 m = MockGameObject()
 m.current_location = location
 m.party = [Player("Player") for i in range(3)]
-event_manager = EventManager(100, 100)
+scenario_manager = ScenarioManager(100, 100)
 
 running = True
 
@@ -31,8 +31,8 @@ while running:
     m.mouse_x, m.mouse_y = pygame.mouse.get_pos()
     m.mouse_button = pygame.mouse.get_pressed()
     screen.fill((0, 0, 0))
-    event_manager.update(m)
-    event_manager.render(screen, m)
+    scenario_manager.update(m)
+    scenario_manager.render(screen, m)
     clock.tick(60)
 
 pygame.quit()

@@ -38,3 +38,7 @@ class Game(object):
         self.selected_move = None
         self.selected_target = None
         self.selected_player = None
+
+        self.current_hover = None
+        self.hover_x = 0
+        self.hover_y = 0

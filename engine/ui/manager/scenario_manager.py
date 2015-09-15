@@ -7,11 +7,11 @@ from engine.ui.core.manager import Manager
 from engine.ui.core.zone import Zone
 import engine.ui.element as element
 
-class EventManager(Manager):
-    """EventManager handles the event dialogs that happen"""
+class ScenarioManager(Manager):
+    """ScenarioManager handles the event dialogs that happen"""
 
     def __init__(self, x, y):
-        super(EventManager, self).__init__()
+        super(ScenarioManager, self).__init__()
         SCALE = 4
         self.x = x
         self.y = y

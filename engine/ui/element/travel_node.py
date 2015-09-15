@@ -1,0 +1,4 @@
+
+
+class TravelNode(Renderable, Bindable):
+    """
