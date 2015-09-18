@@ -176,7 +176,11 @@ class Dungeon(object):
       node.set_type("item")
       nodes.remove(node)
     for loc in frame.values():
-      print(loc)
+      #print(loc)
+      pass
+
+    self.frame = [[self.start]]+[value for value in frame.values()]+ \
+        [[self.stop]]
 
     #print(*["Depth %d: [%s]"%(i, ", ".join(loc.loc_type for loc in locs)) for i, locs in frame.items()], sep="\n")
 
