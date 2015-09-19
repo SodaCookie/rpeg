@@ -48,9 +48,10 @@ class Dialog(object):
 
   def get_choices(self, party):
     """get the available choices based on the party"""
-    return [choice for choice, d in self.choices.items()
-            if Dialog.CONDITIONS[d.condition.split(' ')[0]](party,
-            *d.condition.split(' ')[1:])]
+    return [choice for choice, d in self.choices.items()]
+    # return [choice for choice, d in self.choices.items()
+    #         if Dialog.CONDITIONS[d.condition.split(' ')[0]](party,
+    #         *d.condition.split(' ')[1:])]
 
   def make_choice(self, choice):
     """Returns the dialogue that was chosen, if every roll fails it will default to returning the last roll"""

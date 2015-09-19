@@ -4,3 +4,6 @@ from engine.ui.manager.encounter_manager import EncounterManager
 from engine.ui.manager.scenario_manager import ScenarioManager
 from engine.ui.manager.monster_manager import MonsterManager
 from engine.ui.manager.party_manager import PartyManager
+from engine.ui.manager.travel_manager import TravelManager
+from engine.ui.manager.mouse_hover_manager import MouseHoverManager
+from engine.ui.manager.sidebar_manager import SidebarManager

@@ -9,7 +9,7 @@ text1 =  Text("Hello World!", 14, 100, 100)
 text2 =  Text("Hello World!", 20, 100, 200)
 text3 =  Text("Hello World!", 14, 100, 300, (255, 0, 0))
 text4 =  Text("Hello World! Word Wrapping with long sentences and some numbers (123) and some symbols ($%^&*)", 14, 100, 400, (255, 255, 255), 200)
-text6 =  Text("Hello World! Word Wrapping with long sentences and some numbers (123) and some symbols ($%^&*)\nHello\nMore text and what not. Just get some more words on the screen", 14, 300, 200, (255, 255, 255), 200, Text.CENTER)
+text6 =  Text("Hello World! Word Wrapping with long sentences and some numbers (123) and some symbols ($%^&*)\nHello\n\nMore text and what not. Just get some more words on the screen", 14, 300, 200, (255, 255, 255), 200, Text.CENTER)
 text5 =  Text("Hello World! Word Wrapping with long sentences and some numbers (123) and some symbols ($%^&*)", 14, 300, 100, (255, 255, 255), 200, Text.RIGHT)
 
 running = True

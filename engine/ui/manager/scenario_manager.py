@@ -78,3 +78,5 @@ class ScenarioManager(Manager):
     def on_no_choice_click(dialog, game):
         """We are done so we will exit also will execute some action"""
         game.current_dialog = None
+        game.focus_window = None
+        game.selected_player = None

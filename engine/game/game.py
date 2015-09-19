@@ -1,10 +1,4 @@
-import classes.rendering.view as view
-from classes.game.party import Party
-
-
-BATTLESTART = pygame.USEREVENT
-BATTLETICK = pygame.USEREVENT + 1
-BATTLEEND = pygame.USEREVENT + 2
+"""Define Game object"""
 
 class Game(object):
     """Game object used to hold all the data required for
@@ -25,6 +19,7 @@ class Game(object):
         self.current_move = None
         self.current_target = None
         self.current_dialog = None
+        self.focus_window = None
 
         self.shop = None
         self.alter = None
@@ -42,3 +37,5 @@ class Game(object):
         self.current_hover = None
         self.hover_x = 0
         self.hover_y = 0
+
+        self.render_travel = False

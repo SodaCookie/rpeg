@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from random import choice
 
 import engine.game.character.character as character
@@ -24,13 +25,12 @@ class Player(character.Character):
         self.race = race
         self.gender = choice(["male", "female"])
         self.castbar = [None for i in range(10)]
-        self.equipment = {}
+        self.equipment = OrderedDict()
         self.equipment["hand1"] = None
         self.equipment["hand2"] = None
         self.equipment["body"] = None
         self.equipment["legs"] = None
         self.equipment["feet"] = None
-        self.equipment["arms"] = None
         self.equipment["head"] = None
         self.equipment["extra1"] = None
         self.equipment["extra2"] = None

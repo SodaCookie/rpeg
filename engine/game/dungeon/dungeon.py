@@ -14,7 +14,7 @@ class Dungeon(object):
     self.level = level_type
     #self.power = power
     self.difficulty = difficulty
-    self.depth = 10
+    self.depth = 7
     self.min_width = 2
     self.max_width = 5
     self.min_branch = 1
@@ -116,68 +116,68 @@ class Dungeon(object):
       node.set_type("monster")
       nodes.remove(node)
 
-    # populate shops
-    # get shop distributions
-    if self.shop_distribution == "normal":
-      sdist = lambda x, y: randint(x, y)
-    elif self.shop_distribution == "low":
-      sdist = lambda x, y: min(randint(x, y), randint(x, y))
-    elif self.shop_distribution == "high":
-      sdist = lambda x, y: max(randint(x, y), randint(x, y))
-    elif self.shop_distribution == "bell":
-      sdist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
+    # # populate shops
+    # # get shop distributions
+    # if self.shop_distribution == "normal":
+    #   sdist = lambda x, y: randint(x, y)
+    # elif self.shop_distribution == "low":
+    #   sdist = lambda x, y: min(randint(x, y), randint(x, y))
+    # elif self.shop_distribution == "high":
+    #   sdist = lambda x, y: max(randint(x, y), randint(x, y))
+    # elif self.shop_distribution == "bell":
+    #   sdist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
 
-    shops = sdist(self.min_shops, self.max_shops)
-    if shops > len(nodes): # check for overflow means that if there is no space certain
-                                        # nodes cannot be added
-      logging.warning("All nodes are full only creating %d shops from %d shops"%(len(nodes), shops))
-      shops = len(nodes)
-    for node in sample(nodes, shops):
-      node.set_type("shop")
-      nodes.remove(node)
+    # shops = sdist(self.min_shops, self.max_shops)
+    # if shops > len(nodes): # check for overflow means that if there is no space certain
+    #                                     # nodes cannot be added
+    #   logging.warning("All nodes are full only creating %d shops from %d shops"%(len(nodes), shops))
+    #   shops = len(nodes)
+    # for node in sample(nodes, shops):
+    #   node.set_type("shop")
+    #   nodes.remove(node)
 
-    # populate alters
-    # get shop distributions
-    if self.alter_distribution == "normal":
-      adist = lambda x, y: randint(x, y)
-    elif self.alter_distribution == "low":
-      adist = lambda x, y: min(randint(x, y), randint(x, y))
-    elif self.alter_distribution == "high":
-      adist = lambda x, y: max(randint(x, y), randint(x, y))
-    elif self.alter_distribution == "bell":
-      adist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
+    # # populate alters
+    # # get shop distributions
+    # if self.alter_distribution == "normal":
+    #   adist = lambda x, y: randint(x, y)
+    # elif self.alter_distribution == "low":
+    #   adist = lambda x, y: min(randint(x, y), randint(x, y))
+    # elif self.alter_distribution == "high":
+    #   adist = lambda x, y: max(randint(x, y), randint(x, y))
+    # elif self.alter_distribution == "bell":
+    #   adist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
 
-    alters = adist(self.min_alters, self.max_alters)
-    if alters > len(nodes): # check for overflow means that if there is no space certain
-                                        # nodes cannot be added
-      logging.warning("All nodes are full only creating %d alters from %d alters"%(len(nodes), alters))
-      alters = len(nodes)
-    for node in sample(nodes, alters):
-      node.set_type("alter")
-      nodes.remove(node)
+    # alters = adist(self.min_alters, self.max_alters)
+    # if alters > len(nodes): # check for overflow means that if there is no space certain
+    #                                     # nodes cannot be added
+    #   logging.warning("All nodes are full only creating %d alters from %d alters"%(len(nodes), alters))
+    #   alters = len(nodes)
+    # for node in sample(nodes, alters):
+    #   node.set_type("alter")
+    #   nodes.remove(node)
 
-    # populate items
-    # get shop distributions
-    if self.item_distribution == "normal":
-      idist = lambda x, y: randint(x, y)
-    elif self.item_distribution == "low":
-      idist = lambda x, y: min(randint(x, y), randint(x, y))
-    elif self.item_distribution == "high":
-      idist = lambda x, y: max(randint(x, y), randint(x, y))
-    elif self.item_distribution == "bell":
-      idist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
+    # # populate items
+    # # get shop distributions
+    # if self.item_distribution == "normal":
+    #   idist = lambda x, y: randint(x, y)
+    # elif self.item_distribution == "low":
+    #   idist = lambda x, y: min(randint(x, y), randint(x, y))
+    # elif self.item_distribution == "high":
+    #   idist = lambda x, y: max(randint(x, y), randint(x, y))
+    # elif self.item_distribution == "bell":
+    #   idist = lambda x, y: sorted([randint(x, y), randint(x, y), randint(x, y)])[1]
 
-    items = idist(self.min_items, self.max_items)
-    if items > len(nodes): # check for overflow means that if there is no space certain
-                                        # nodes cannot be added
-      logging.warning("All nodes are full only creating %d items from %d items"%(len(nodes), items))
-      items = len(nodes)
-    for node in sample(nodes, items):
-      node.set_type("item")
-      nodes.remove(node)
-    for loc in frame.values():
-      #print(loc)
-      pass
+    # items = idist(self.min_items, self.max_items)
+    # if items > len(nodes): # check for overflow means that if there is no space certain
+    #                                     # nodes cannot be added
+    #   logging.warning("All nodes are full only creating %d items from %d items"%(len(nodes), items))
+    #   items = len(nodes)
+    # for node in sample(nodes, items):
+    #   node.set_type("item")
+    #   nodes.remove(node)
+    # for loc in frame.values():
+    #   #print(loc)
+    #   pass
 
     self.frame = [[self.start]]+[value for value in frame.values()]+ \
         [[self.stop]]

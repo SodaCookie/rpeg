@@ -1,39 +1,26 @@
 #! python3.2
-
 import pygame
-from pygame import time, event
 
-import classes.rendering.view as view
-import classes.controller as controller
-from classes.main_menu import MainMenu
-from classes.game_menu import GameMenu
+from engine.game.game import Game
+from engine.game.event_handler import EventHandler
+from engine.ui.manager.game_manager import GameManager
 
-# So we can just define all our transitions like this...
-# This kinda makes menus singletons anyways. Ideally we have
-# some sort of menu stack and transitions are attached to
-# events which are triggered by buttons.
-def singleplayer():
-    global _main_menu, _game_menu
-    _main_menu.delete()
-    _main_menu = None
-    _game_menu = GameMenu()
+pygame.init()
 
-if __name__ == "__main__":
+screen = pygame.display.set_mode((1280, 720))
+game = Game()
+manager = GameManager()
+manager.init(game, "normal")
+event = EventHandler()
+clock = pygame.time.Clock()
+running = True
 
-    view.init_pygame()
+while running:
+    running = event.update(game)
+    manager.update(game)
+    screen.fill((0, 0, 0))
+    manager.render(screen, game)
+    pygame.display.flip()
+    clock.tick(60)
 
-    _main_menu = MainMenu(singleplayer)
-    _main_menu.display()
-
-    running = True
-    while running:
-        event.pump()    # le hideous break condition
-        if event.peek(pygame.QUIT):
-            running = False
-
-        controller.update()
-
-        view.render()
-        time.wait(30)
-
-    view.quit()
+pygame.quit()

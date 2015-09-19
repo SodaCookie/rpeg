@@ -117,3 +117,4 @@ class TravelManager(Manager):
     @staticmethod
     def on_click(location, game):
         game.current_location = location
+        game.focus_window = "scenario"

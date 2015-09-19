@@ -55,5 +55,5 @@ class CastBarManager(Manager):
                 self.skills[i].hover = element.MoveIcon.draw_highlight(None)
 
     def render(self, surface, game):
-        if game.selected_player:
+        if game.selected_player and not game.focus_window:
             super().render(surface, game)
