@@ -44,3 +44,6 @@ class Builder(object):
     def build_abilities(self, abilities, tag):
         """Override if the builder defines how to build abilities"""
         return abilities
+
+    def build_attributes(self, attributes, tag, rarity, type):
+        return attributes

@@ -1,6 +1,6 @@
 import pygame
 
-from engine.ui.element.button import Button
+from engine.ui.element.travel_node import TravelNode
 from engine.ui.core.zone import Zone
 
 class MockGameObject:
@@ -9,24 +9,15 @@ class MockGameObject:
     mouse_button = (0, 0, 0)
 
 def hello_world(game):
-    print("Hello World!")
-
-def spooky(game):
-    print("Spooky!")
-
-def ghosts(game):
-    print("Ghosts!")
-
-def lift(game):
-    print("Lift")
+    print("Jello World!")
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
-button = Button("Hello World", 20, 100, 100)
-button2 = Button("Print Hello World", 20, 100, 200, True)
-zone = Zone((0, 0, 100, 100), hello_world, spooky, ghosts, lift)
-button2.bind(zone)
+node1 = TravelNode("unknown", 100, 100, True)
+node2 = TravelNode("visited", 200, 100)
+zone = Zone((100, 100, 27, 27), hello_world)
+node1.bind(zone)
 m = MockGameObject()
 
 running = True
@@ -39,8 +30,8 @@ while running:
     m.mouse_x, m.mouse_y = pygame.mouse.get_pos()
     m.mouse_button = pygame.mouse.get_pressed()
     screen.fill((0, 0, 0))
-    button.render(screen, m)
-    button2.render(screen, m)
+    node1.render(screen, m)
+    node2.render(screen, m)
     zone.update(m)
     clock.tick(60)
 

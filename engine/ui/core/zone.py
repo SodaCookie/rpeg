@@ -10,7 +10,8 @@ class Zone(object):
     HOVERED = 1
     CLICKED = 2
 
-    def __init__(self, rect, on_click, on_hover=None, off_hover=None):
+    def __init__(self, rect, on_click=None, on_hover=None, off_hover=None,
+                 off_click=None):
         """Takes a pygame rect or any tuple equivalents and a on_click
         the rect describes where the zone is on the screen, and the on_click
         is the function that is given a game object on click.
@@ -20,6 +21,7 @@ class Zone(object):
         self.on_click = on_click
         self.on_hover = on_hover
         self.off_hover = off_hover
+        self.off_click = off_click
         self.state = Zone.NEUTRAL
 
     def update(self, game):
@@ -27,16 +29,19 @@ class Zone(object):
         # if previously clicked and button is no longer clicked we call
         # on click
         if self.rect.collidepoint(game.mouse_x, game.mouse_y):
+            if self.state == Zone.CLICKED and not game.mouse_button[0]:
+                if self.off_click:
+                    self.off_click(game)
             if self.state == Zone.NEUTRAL:
                 if self.on_hover:
                     self.on_hover(game) # the casts on hovered
-            state = Zone.HOVERED
-            if game.mouse_button[0]: # FIX:
-                                     # hovered with clicked makes clicked...
-                state = Zone.CLICKED
-            elif self.state == Zone.CLICKED:
+            if self.state == Zone.HOVERED and game.mouse_button[0]:
                 # this is where we run the on_click
-                self.on_click(game)
+                if self.on_click:
+                    self.on_click(game)
+            state = Zone.HOVERED
+            if game.mouse_button[0]:
+                state = Zone.CLICKED
         else:
             if self.state != Zone.NEUTRAL:
                 if self.off_hover: # off hover
