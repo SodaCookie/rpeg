@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import pickle
 import math
 import random
@@ -24,11 +25,12 @@ class Character(BattleController):
         self.args = []
         self.overflow = 0
 
-        self.attack = 10
-        self.defense = 0
-        self.magic = 10
-        self.health = 100
-        self.resist = 0
+        self.stats = OrderedDict()
+        self.stats["attack"] = 10
+        self.stats["defense"] = 0
+        self.stats["magic"] = 10
+        self.stats["health"] = 100
+        self.stats["resist"] = 0
         self.current_health = 100
          # enough to do 1 ACTION_SPEED per second
         self.speed = Character.SPEED_BASE/(Character.SPEED_CAP-1)
@@ -148,7 +150,7 @@ class Character(BattleController):
     def get_stat(self, stat):
         """Can be only used for health, attack, defense, speed,
         resist, magic"""
-        stat = getattr(self, stat)
+        stat = self.stats[stat]
         for effect in self.effects:
             if not effect.active:
                 continue

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from random import choice
 
 import engine.game.character.character as character
@@ -24,35 +25,35 @@ class Player(character.Character):
         self.race = race
         self.gender = choice(["male", "female"])
         self.castbar = [None for i in range(10)]
-        self.equipment = {}
+        self.equipment = OrderedDict()
         self.equipment["hand1"] = None
         self.equipment["hand2"] = None
         self.equipment["body"] = None
         self.equipment["legs"] = None
         self.equipment["feet"] = None
-        self.equipment["arms"] = None
         self.equipment["head"] = None
         self.equipment["extra1"] = None
         self.equipment["extra2"] = None
+        self.inventory = [None, None, None, None]
         if self.gender == "male":
             self.portrait = choice(Player.MALE_PORTRAITS)
         else:
             self.portrait = choice(Player.FEMALE_PORTRAITS)
 
     def update(self):
-        self.attack = self.base_attack
-        self.defense = self.base_defense
-        self.health = self.base_health
-        self.speed = self.base_speed
-        self.magic = self.base_magic
-        self.resist = self.base_resist
+        self.stats["attack"] = self.base_attack
+        self.stats["defense"] = self.base_defense
+        self.stats["health"] = self.base_health
+        self.stats["speed"] = self.base_speed
+        self.stats["magic"] = self.base_magic
+        self.stats["resist"] = self.base_resist
         for item in self.equipment.values():
-            self.attack += item.attack
-            self.defense += item.defense
-            self.health += item.health
-            self.speed += item.speed
-            self.magic += item.magic
-            self.resist += item.resist
+            self.stats["attack"] += item.attack
+            self.stats["defense"] += item.defense
+            self.stats["health"] += item.health
+            self.stats["speed"] += item.speed
+            self.stats["magic"] += item.magic
+            self.stats["resist"] += item.resist
 
     def config_for_new_battle(self):
         self.update()

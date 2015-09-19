@@ -35,7 +35,6 @@ class Text(Renderable):
                     lambda line: Text._word_wrap(line[0], width, \
                     Text.font_cache[size]), zip(text.split('\n'))):
                 lines.extend(paragraph)
-                lines.append('')
             lines = lines[:-1] # remove the last return
             height = sum(Text.font_cache[size].size(line)[1] for line in lines)
             surface = pygame.Surface((width, height), pygame.SRCALPHA)
