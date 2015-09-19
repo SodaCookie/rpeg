@@ -83,6 +83,8 @@ class Item(object):
         self.stats = self._generate_stats(Item.DEFAULT_STATS, self.tag, self.rarity, self.type)
         self.abilities = self._generate_abilities() # to be completed when the abilities are good
         self.attributes = self._generate_attributes(self, self.tag, self.rarity, self.type)
+        self.icon = None #"image/item/test_icon.png" # testing, needs to be expanded
+
 
     def _generate_tag(self, tags):
         """Generates the possible tag of the item"""
