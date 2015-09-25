@@ -37,7 +37,7 @@ class Monster(character.Character):
     }
 
     DEFAULT_STATS = {
-        "points": 10,
+        "points": 100,
         "attack": 1,
         "defense": 1,
         "magic": 1,
@@ -59,6 +59,7 @@ class Monster(character.Character):
         self.type = self._generate_type(Monster.TYPES)
         self.name = self._generate_name(self.tag, self.rank, self.type)
         self.stats = self._generate_stats(Monster.DEFAULT_STATS, self.tag, self.rank, self.type)
+        self.current_health = self.stats["health"]
         self.abilities = self._generate_abilities(self.tag, self.rank, self.type)
         self.surface = self._generate_surface()
         self.surface = "image/monster/slime1_base.png"

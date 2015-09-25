@@ -59,6 +59,8 @@ class MonsterManager(Manager):
             game.selected_target = self.monster
 
     def render(self, surface, game):
+        if self.monster.fallen:
+            return
         if self.highlight:
             self.name.surface = self.hover_name
             self.monster_image.surface = self.hover_image

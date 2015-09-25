@@ -47,10 +47,6 @@ class Location(object):
   def get_neighbours(self):
     return self.neighbours
 
-  def traverse(self, index, tags=[]):
-    self.neighbours[index].tags.extend(tags)
-    return self.neighbours[index]
-
   def generate(self):
     """Method is used to generate event and description based off the situation of the node"""
     etree = Location.EVENTS

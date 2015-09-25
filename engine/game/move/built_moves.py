@@ -24,7 +24,7 @@ slash = Move("slash",
     [
     SingleTarget(),
     EnemiesOnly(),
-    ScaleDamage(50, "physical", 1.0, "attack")
+    ScaleDamage(30, "physical", 1.0, "attack")
     ])
 
 magic_bolt = Move("magic-bolt",

@@ -31,7 +31,7 @@ class Character(BattleController):
         self.stats["magic"] = 10
         self.stats["health"] = 100
         self.stats["resist"] = 0
-        self.current_health = 100
+        self.current_health = self.stats["health"]
          # enough to do 1 ACTION_SPEED per second
         self.speed = Character.SPEED_BASE/(Character.SPEED_CAP-1)
         self.action_max = 100
@@ -176,7 +176,6 @@ class Character(BattleController):
         return False
 
     def add_move(self, move):
-        move = copy.deepcopy(move)
         self.moves.append(move)
         move.set_caster(self)
 

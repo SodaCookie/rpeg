@@ -5,6 +5,7 @@ class EventHandler(object):
 
     def __init__(self):
         super(EventHandler, self).__init__()
+        self.time = pygame.time.get_ticks() # ms
 
     def update(self, game):
         """Update is responsible for updating the game loop.
@@ -12,6 +13,10 @@ class EventHandler(object):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+        self.time = pygame.time.get_ticks() # ms
         game.mouse_x, game.mouse_y = pygame.mouse.get_pos()
         game.mouse_button = pygame.mouse.get_pressed()
         return True
+
+
+

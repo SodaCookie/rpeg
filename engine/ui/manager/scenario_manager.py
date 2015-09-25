@@ -1,11 +1,34 @@
 """Defines the character renderer."""
 from functools import partial
+import random
 
 import pygame
 
+from engine.game.monster.monster import Monster
 from engine.ui.core.manager import Manager
 from engine.ui.core.zone import Zone
 import engine.ui.element as element
+
+__all__ = ["ScenarioManager"]
+
+def action_nothing(game):
+    """Does nothing"""
+    pass
+
+def action_battle(game, **kwargs):
+    """Implements a battle"""
+    defaults = {
+        "number" : str(random.randint(1, 4))
+    }
+    # May need to add additional features in the future
+    defaults.update(kwargs)
+    monsters = [Monster(**defaults) for i in range(int(defaults["number"]))]
+    game.encounter = monsters
+
+ACTIONS = {
+    "" : action_nothing,
+    "battle" : action_battle
+}
 
 class ScenarioManager(Manager):
     """ScenarioManager handles the event dialogs that happen"""
@@ -80,3 +103,11 @@ class ScenarioManager(Manager):
         game.current_dialog = None
         game.focus_window = None
         game.selected_player = None
+        # Parse action
+        action_data = dialog.action.split(" ")
+        action_type = action_data[0]
+        kwargs = {}
+        if len(action_data) > 1:
+            kwargs = {action.split(":")[0]: action.split(":")[0] \
+                for action in action_data[1:]}
+        ACTIONS[dialog.action](game, **kwargs)

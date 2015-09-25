@@ -16,8 +16,6 @@ class Game(object):
 
         self.party = []
         self.encounter = []
-        self.current_move = None
-        self.current_target = None
         self.current_dialog = None
         self.focus_window = None
 

@@ -58,6 +58,29 @@ class ScaleDamage(Damage):
         return "%s dealt %d %s damage to %s" % \
             (caster.name, damage, self.dtype, target.name)
 
+
+class ScaleMiss(Component):
+
+    def __init__(self, scaling, stype):
+        super().__init__()
+        self.scaling = scaling
+        self.stype = stype
+
+    def get_miss(self, miss, selected, caster, players, monsters):
+        return miss + self.scaling * caster.get_stat(self.stype)
+
+
+class ScaleCrit(Component):
+
+    def __init__(self, scaling, stype):
+        super().__init__()
+        self.scaling = scaling
+        self.stype = stype
+
+    def get_crit(self, crit, selected, caster, players, monsters):
+        return crit + self.scaling * caster.get_stat(self.stype)
+
+
 class Heal(Component):
     """Deals flat healing to given targets"""
     def __init__(self, heal):
@@ -67,6 +90,7 @@ class Heal(Component):
         heal = target.apply_heal(caster, self.heal)
         return "%s healed %s for %d health" % \
             (caster.name, target.name, heal)
+
 
 class ScaleHeal(Heal):
     """Deals scaling healing to given targets"""

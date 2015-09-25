@@ -44,9 +44,10 @@ class EncounterManager(Manager):
                 self.zones.append(z)
 
     def render(self, surface, game):
-        super().render(surface, game)
-        for c in self.monster_managers:
-            c.render(surface, game)
+        if game.encounter:
+            super().render(surface, game)
+            for c in self.monster_managers:
+                c.render(surface, game)
 
     @staticmethod
     def on_hover(manager, game):

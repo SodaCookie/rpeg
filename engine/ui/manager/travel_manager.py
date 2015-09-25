@@ -33,7 +33,7 @@ class TravelManager(Manager):
         self.close = element.Button("CLOSE", 32, 0, y+height+16, True)
         self.close.x = x+width//2-self.close.surface.get_width()//2
         self.close_zone = Zone(((x+width//2-self.close.surface.get_width()//2,
-            y+height+16), self.close.surface.get_size()))
+            y+height+16), self.close.surface.get_size()), self.close_on_click)
         self.close.bind(self.close_zone)
         self.zones.append(self.close_zone)
         self.renderables.append(self.close)
@@ -48,6 +48,9 @@ class TravelManager(Manager):
             self.update_window(self.path)
 
         super().update(game)
+
+    def close_on_click(self, game):
+        game.focus_window = None
 
     def update_window(self, path):
         depth = self.dungeon.depth+3
