@@ -55,6 +55,7 @@ while running:
     pm.update(mock)
     cbm.update(mock)
     em.update(mock)
+    if mock.selected_move: print(mock.selected_move)
     #once action executed, deselect target and move
     if mock.selected_player and mock.selected_move and mock.selected_target:
         mock.selected_move.cast(mock.selected_target, mock.selected_player, mock.party, mock.encounter)

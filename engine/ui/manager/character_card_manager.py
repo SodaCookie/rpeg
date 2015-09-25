@@ -1,3 +1,9 @@
+# When we grab an item from the slot, we literally need
+# to make a new slot because of how rendering works
+# on_click could redraw the slot?
+
+from functools import partial
+
 import pygame
 
 from engine.ui.core.manager import Manager
@@ -9,8 +15,10 @@ from engine.ui.element.window import Window
 from engine.ui.element.text import Text
 from engine.ui.element.image import Image
 from engine.ui.element.bar import Bar
-from engine.ui.element.item_icon import ItemIcon
-from engine.ui.element.move_icon import MoveIcon
+from engine.ui.element.slot import Slot
+
+from engine.game.item.item import Item
+from engine.game.move.move import Move
 
 class CharacterCardManager(Manager):
     """Manages the rendering of the character card ui and all
@@ -32,7 +40,6 @@ class CharacterCardManager(Manager):
         self.ply_mv = []
         self.ply_inv = []
         # Ensure code doesn't try to render None or will crash
-
 
     def update(self, game):
         # add another condition so doesn't update unnecessarily
@@ -63,20 +70,20 @@ class CharacterCardManager(Manager):
             i=0
             # makes a grid, need to add header elements for each slot
             for itm in self.cur_plyr.equipment.values():
-                self.plyr_eqp.append(ItemIcon(itm, self.x+(64*(i%4))+150, self.y+(100*(i//4))+15))
+                self.plyr_eqp.append(Slot(itm, Item, self.x+(64*(i%4))+150, self.y+(100*(i//4))+15))
                 i+=1
             # limited to 4 moves only at the moment, need to extend
             self.plyr_mv = []
             for i in range(0,4):
                 if i < len(self.cur_plyr.moves):
-                    self.plyr_mv.append(MoveIcon(self.cur_plyr.moves[i], self.x+(64*i)+15, self.y+200))
+                    self.plyr_mv.append(Slot(self.cur_plyr.moves[i], Move, self.x+(64*i)+15, self.y+200))
                 else:
-                    self.plyr_mv.append(MoveIcon(None, self.x+(64*i)+148, self.y+220))
+                    self.plyr_mv.append(Slot(None, Move, self.x+(64*i)+148, self.y+220))
             # update inventory
             self.plyr_inv = []
             i=0
             for itm in self.cur_plyr.inventory:
-                self.plyr_eqp.append(ItemIcon(itm, self.x+(64*i)+148, self.y+300))
+                self.plyr_eqp.append(Slot(itm, Item, self.x+(64*i)+148, self.y+300))
                 i+=1
             # create new renderables list
             self.renderables = []
@@ -87,7 +94,16 @@ class CharacterCardManager(Manager):
             self.renderables.append(self.plyr_hlth)
             self.renderables.extend(self.plyr_eqp)
             self.renderables.extend(self.plyr_mv)
-
+            # Bind all slots to zones
+            self.zones = []
+            for slot in self.plyr_eqp:
+                on_click = partial(slot.on_click, slot)
+                off_click = partial(slot.off_click, slot)
+                zone = Zone((slot.x, slot.y, slot.surface.get_width(), slot.surface.get_height()), on_click, None, None, off_click)
+                slot.bind(zone)
+                self.zones.append(zone)
+        # Need to run update functions of the zones
+        super().update(game)
 
     def render(self, surface, game):
         # add conditions so that only renders outside of battles
