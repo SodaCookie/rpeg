@@ -26,7 +26,7 @@ class GameManager(Manager):
         self.travel = manager.TravelManager(800, 300, 1280//2-800//2, 100)
         self.battle = manager.BattleManager()
         self.shop = None
-        self.character = None
+        self.character = manager.CharacterCardManager(20, 20)
         self.item = None
 
     def init(self, game, difficulty):
@@ -48,6 +48,7 @@ class GameManager(Manager):
         self.sidebar.render(surface, game)
         self.encounter.render(surface, game)
         self.party.render(surface, game)
+        self.character.render(surface, game)
         # self.character.render(surface, game)
         self.castbar.render(surface, game)
         if game.focus_window == "travel":
@@ -66,6 +67,7 @@ class GameManager(Manager):
         self.battle.update(game)
         self.sidebar.update(game)
         self.party.update(game)
+        self.character.update(game)
         self.encounter.update(game)
         # self.character.update(game)
         if game.focus_window == "travel":

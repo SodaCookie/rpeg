@@ -8,3 +8,4 @@ from engine.ui.manager.travel_manager import TravelManager
 from engine.ui.manager.mouse_hover_manager import MouseHoverManager
 from engine.ui.manager.sidebar_manager import SidebarManager
 from engine.ui.manager.battle_manager import BattleManager
+from engine.ui.manager.character_card_manager import CharacterCardManager

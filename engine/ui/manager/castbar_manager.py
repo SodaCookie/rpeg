@@ -33,7 +33,8 @@ class CastBarManager(Manager):
 
     @staticmethod
     def on_click(slot, game):
-        game.selected_move = slot.value
+        if game.selected_player.ready:
+            game.selected_move = slot.value
 
     def update(self, game):
         super().update(game)

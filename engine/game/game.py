@@ -33,7 +33,7 @@ class Game(object):
         self.selected_player = None
 
         self.current_hover = None
-        sel.current_object = None
+        self.current_object = None
         self.current_slot = None # Used for click and drag
         self.hover_x = 0
         self.hover_y = 0

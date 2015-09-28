@@ -28,11 +28,17 @@ class BattleManager(Manager):
         # Cast move is any
         if game.selected_player and game.selected_move and \
                 game.selected_target:
-            game.selected_move.cast(game.selected_target,
+            status = game.selected_move.cast(game.selected_target,
                 game.selected_player, game.party, game.encounter)
-            game.selected_move = None
-            game.selected_player = None
-            game.selected_target = None
+            if status == None:
+                # Bad target Error
+                game.selected_target = None
+            else:
+                # Move executed correctly
+                game.selected_player.action = 0 # empty action
+                game.selected_move = None
+                game.selected_player = None
+                game.selected_target = None
         # Update player
         for player in game.party:
             player.handle_battle(delta_time)

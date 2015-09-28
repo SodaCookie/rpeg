@@ -55,7 +55,7 @@ class MonsterManager(Manager):
             self.monster.action_max
 
     def on_click(self, game):
-        if game.selected_move:
+        if game.selected_move and not self.monster.fallen:
             game.selected_target = self.monster
 
     def render(self, surface, game):

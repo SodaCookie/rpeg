@@ -12,7 +12,7 @@ class Slot(Renderable, Bindable):
     HIGHLIGHTIMAGE = "image/ui/slot_highlight.png"
     DEFAULTICON = "image/icon/blank.png"
 
-    def __init__(self, value, type_, x, y):
+    def __init__(self, value, type_, x, y, container=None, key=None):
         # check if value is of the same type as type
 
         super().__init__()
@@ -23,7 +23,8 @@ class Slot(Renderable, Bindable):
         self.surface = self.draw(value)
         self.hover = self.draw_highlight(value)
         self.highlight = False
-
+        self.container = container # reference to the container bound to it
+        self.key = key # the key to the container
 
     @classmethod
     def draw(self, value):
@@ -66,11 +67,14 @@ class Slot(Renderable, Bindable):
             slot.surface = slot.draw(slot.value)
             slot.hover = slot.draw_highlight(slot.value)
 
-
     @staticmethod
     def off_click(slot, game):
         if (type(game.current_object) is slot.type) and not slot.value:
-            slot.value = game.current_object
+            game.current_slot.container[game.current_slot.key], slot.container[slot.key] = \
+                slot.container[slot.key], game.current_slot.container[game.current_slot.key]
+            game.current_slot.value, slot.value = slot.value, \
+                game.current_object
+
             game.current_hover = None
             game.current_object = None
             game.current_slot = None

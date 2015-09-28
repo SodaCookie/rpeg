@@ -1,7 +1,9 @@
+import random
+
 class Move(object):
 
     def __init__(self, name, icon=None, components=None, miss_bound=0,
-                 miss_comp=None, crit_bound=100, crit_comp=None):
+                 miss_components=None, crit_bound=100, crit_components=None):
         self.name = name
         self.caster = None
         self.icon = icon
@@ -13,15 +15,15 @@ class Move(object):
             self.components = []
         self.miss_bound = miss_bound
         # Miss Move
-        if miss_comp != None:
-            self.miss_comp = miss_comp
+        if miss_components != None:
+            self.miss_components = miss_components
         else:
-            self.miss_comp = []
+            self.miss_components = []
         # Critical Move
-        if crit_comp != None:
-            self.crit_comp = crit_comp
+        if crit_components != None:
+            self.crit_components = crit_components
         else:
-            self.crit_comp = []
+            self.crit_components = []
 
         self.miss_bound = miss_bound
         self.crit_bound = crit_bound
@@ -46,10 +48,26 @@ class Move(object):
         # Validates targets
         if not any(c.valid_targets(selected, self.caster, players, monsters, targets) for c in self.components):
             return None
-        #execute the move
+        # execute the move
+        # roll for the miss, normal or crit
+        miss_bound = self.miss_bound
+        crit_bound = self.crit_bound
+        for component in self.components:
+            miss_bound = component.get_miss(miss_bound, selected,
+                caster, players, monsters)
+            crit_bound = component.get_crit(crit_bound, selected,
+                caster, players, monsters)
+        roll = random.randint(0, 99)
+        if roll < miss_bound:
+            move = self.miss_components
+        elif miss_bound <= roll < crit_bound:
+            move = self.components
+        else:
+            move = self.crit_components
+
         total_msg = ""
         for target in targets:
-            for component in self.components:
+            for component in move:
                 msg = component.on_cast(target, caster, players, monsters)
                 if msg:
                     total_msg += msg + '\n'
