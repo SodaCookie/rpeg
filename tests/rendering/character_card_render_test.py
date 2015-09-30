@@ -5,6 +5,7 @@ from engine.ui.manager.character_card_manager import CharacterCardManager
 from engine.game.player.player import Player
 from engine.ui.manager.party_manager import PartyManager
 from engine.game.item.item import Item
+from engine.game.move.built_moves import *
 from engine.game.move.move import Move
 
 class MockGame():
@@ -17,6 +18,9 @@ class MockGame():
     hover_y = -25
     mouse_button = (0, 0, 0)
     party = []
+    encounter = []
+    current_dialog = None
+    focus_window = None
 
     # mhm
     current_hover = None
@@ -37,6 +41,7 @@ ccm = CharacterCardManager(20, 15)
 mock.party = [Player("Michael"), Player("Eric"), Player("Peter"), Player("Russel")]
 
 mock.party[0].equipment["hand1"] = Item(rarity="legendary", floor=5)
+mock.party[0].add_move(punch)
 mock.party[1].equipment["body"] = Item(rarity="legendary", floor=5)
 
 running = True

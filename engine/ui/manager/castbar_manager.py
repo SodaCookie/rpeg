@@ -26,22 +26,34 @@ class CastBarManager(Manager):
             self.renderables.append(skill)
             self.renderables.append(element.Text(str(i)[-1], 16, 50+window_x+(i-1)*56, y+40))
             on_click = partial(self.on_click, skill)
+            off_click = partial(element.Slot.off_click, skill,
+                self.drop_validator, True)
             zone = Zone(((8+window_x+(i-1)*56, y+7),
-                skill.surface.get_size()), on_click)
+                skill.surface.get_size()), on_click, off_click=off_click)
             skill.bind(zone)
             self.zones.append(zone)
 
     @staticmethod
     def on_click(slot, game):
-        if game.selected_player.ready:
+        element.Slot.on_click(slot, CastBarManager.drag_validator, True, game)
+        if game.selected_player.ready and game.encounter:
             game.selected_move = slot.value
 
+    @staticmethod
+    def drag_validator(slot, game):
+        return False
+
+    @staticmethod
+    def drop_validator(slot, game):
+        return not game.encounter
+
     def update(self, game):
-        super().update(game)
-        if game.selected_player is not self.character:
-            self.swap_character(game.selected_player)
-            self.character = game.selected_player
-            game.selected_move = None
+        if game.selected_player:
+            super().update(game)
+            if game.selected_player is not self.character:
+                self.swap_character(game.selected_player)
+                self.character = game.selected_player
+                game.selected_move = None
 
     def swap_character(self, character):
         SCALE = 4
@@ -50,11 +62,15 @@ class CastBarManager(Manager):
                 self.skills[i].value = move
                 self.skills[i].surface = element.Slot.draw(move)
                 self.skills[i].hover = element.Slot.draw_highlight(move)
+                self.skills[i].container = character.castbar
+                self.skills[i].key = i
         else:
             for i in range(10):
                 self.skills[i].move = None
                 self.skills[i].surface = element.Slot.draw(None)
                 self.skills[i].hover = element.Slot.draw_highlight(None)
+                self.skills[i].container = None
+                self.skills[i].key = None
 
     def render(self, surface, game):
         if game.selected_player and not game.focus_window:

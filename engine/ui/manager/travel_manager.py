@@ -121,3 +121,4 @@ class TravelManager(Manager):
     def on_click(location, game):
         game.current_location = location
         game.focus_window = "scenario"
+        game.selected_player = None

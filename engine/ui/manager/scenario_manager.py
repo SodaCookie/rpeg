@@ -76,7 +76,7 @@ class ScenarioManager(Manager):
             on_click = partial(self.on_choice_click, next_dialog)
             button = element.Button(choice, 16, self.x+10,
                 self.y+height_counter)
-            zone = Zone(((self.x+5, self.y+height_counter),
+            zone = Zone(((self.x+10, self.y+height_counter),
                 button.surface.get_size()), on_click)
             button.bind(zone)
             self.zones.append(zone)

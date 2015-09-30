@@ -31,7 +31,7 @@ class CharacterCardManager(Manager):
         self.y = y
         self.scale = 3
         self.cur_plyr = None
-        self.win = Window(400, 400, self.x, self.y)
+        self.win = Window(408, 390, self.x, self.y)
         self.plyr_img = None
         self.plyr_name = None
         self.plyr_hlth = None
@@ -45,6 +45,9 @@ class CharacterCardManager(Manager):
         # add another condition so doesn't update unnecessarily
         # like during battles
         # only updates renderables when selected player changed
+        if not game.selected_player:
+            return
+
         if game.selected_player != self.cur_plyr and not game.encounter and \
                 not game.current_dialog and game.focus_window != "travel":
             # update player
@@ -84,31 +87,37 @@ class CharacterCardManager(Manager):
                 self.y+164, width=100, justify=Text.RIGHT)
 
             # update equipment
+            equipment = Text("Equipment", 22, self.x+150, self.y+10)
             self.plyr_eqp = []
-            i=0
+            i = 0
+            equipment_text = []
             # makes a grid, need to add header elements for each slot
             for key, itm in self.cur_plyr.equipment.items():
-                self.plyr_eqp.append(Slot(itm, Item, self.x+(64*(i%4))+150, self.y+(100*(i//4))+15, self.cur_plyr.equipment, key))
-                i+=1
+                self.plyr_eqp.append(Slot(itm, Item, self.x+(56*(i%4))+150, self.y+(76*(i//4))+40, self.cur_plyr.equipment, key))
+                text = Text(key, 16, self.x+(56*(i%4))+150, self.y+(76*(i//4))+92)
+                equipment_text.append(text)
+                i += 1
             # limited to 4 moves only at the moment, need to extend
+            skill_text = Text("Skills", 22, self.x+150, self.y+192)
             self.plyr_mv = []
-            for i in range(0,4):
+            for i in range(0,12):
                 if i < len(self.cur_plyr.moves):
-                    self.plyr_mv.append(Slot(self.cur_plyr.moves[i], Move,
-                        self.x+(64*i)+148, self.y+220, self.cur_plyr.moves, i))
+                    move = self.cur_plyr.moves[i]
                 else:
-                    self.plyr_mv.append(Slot(None, Move, self.x+(64*i)+148, self.y+220))
+                    move = None
+                self.plyr_mv.append(Slot(move, Move, self.x+(56*(i%4))+148, self.y+(56*(i//4)+220), self.cur_plyr.moves, i)) # Can't move moves to this one
             # update inventory
-            self.plyr_inv = []
-            i=0
-            for i, itm in enumerate(self.cur_plyr.inventory):
-                self.plyr_eqp.append(Slot(itm, Item, self.x+(64*i)+148,
-                    self.y+300, self.cur_plyr.inventory, i))
-                i+=1
+            # self.plyr_inv = []
+            # i=0
+            # for i, itm in enumerate(self.cur_plyr.inventory):
+            #     self.plyr_eqp.append(Slot(itm, Item, self.x+(64*i)+148,
+            #         self.y+300, self.cur_plyr.inventory, i))
+            #     i+=1
             # create new renderables list
             self.renderables = []
             self.renderables.append(self.win)
             self.renderables.append(self.plyr_img)
+            self.renderables.append(equipment)
             self.renderables.append(self.plyr_name)
             self.renderables.append(self.plyr_stat_types)
             self.renderables.append(self.plyr_stat_values)
@@ -116,6 +125,8 @@ class CharacterCardManager(Manager):
             self.renderables.append(self.plyr_action)
             self.renderables.extend(self.plyr_eqp)
             self.renderables.extend(self.plyr_mv)
+            self.renderables.append(skill_text)
+            self.renderables.extend(equipment_text)
             # Bind all slots to zones
             self.zones = []
             for slot in self.plyr_eqp:
@@ -124,8 +135,26 @@ class CharacterCardManager(Manager):
                 zone = Zone((slot.x, slot.y, slot.surface.get_width(), slot.surface.get_height()), on_click, None, None, off_click)
                 slot.bind(zone)
                 self.zones.append(zone)
+
+            for slot in self.plyr_mv:
+                on_click = partial(slot.on_click, slot,
+                    self.move_drag_validator, True)
+                off_click = partial(slot.off_click, slot,
+                    self.move_drop_validator, False)
+                zone = Zone((slot.x, slot.y, slot.surface.get_width(), slot.surface.get_height()), on_click, None, None, off_click)
+                slot.bind(zone)
+                self.zones.append(zone)
         # Need to run update functions of the zones
-        super().update(game)
+        if game.selected_player:
+            super().update(game)
+
+    @staticmethod
+    def move_drag_validator(slot, game):
+        return not game.encounter
+
+    @staticmethod
+    def move_drop_validator(slot, game):
+        return False # I dont wanna deal with you...
 
     def render(self, surface, game):
         # add conditions so that only renders outside of battles

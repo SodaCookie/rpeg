@@ -57,24 +57,32 @@ class Slot(Renderable, Bindable):
         return surface
 
     @staticmethod
-    def on_click(slot, game):
-        if slot.value:
+    def on_click(slot, validator, copy, game):
+        if slot.value and validator(slot, game):
             game.current_object = slot.value
             game.current_hover = slot.surface
             game.current_slot = slot
+            game.hover_x = slot.x - game.mouse_x
+            game.hover_y = slot.y - game.mouse_y
 
-            slot.value = None
-            slot.surface = slot.draw(slot.value)
-            slot.hover = slot.draw_highlight(slot.value)
+            if not copy:
+                slot.value = None
+                slot.surface = slot.draw(slot.value)
+                slot.hover = slot.draw_highlight(slot.value)
 
     @staticmethod
-    def off_click(slot, game):
-        if (type(game.current_object) is slot.type) and not slot.value:
-            game.current_slot.container[game.current_slot.key], slot.container[slot.key] = \
-                slot.container[slot.key], game.current_slot.container[game.current_slot.key]
-            game.current_slot.value, slot.value = slot.value, \
-                game.current_object
-
+    def off_click(slot, validator, copy, game):
+        """This off_click needs to be validated by the validator the the
+        object will be dropped off"""
+        if (type(game.current_object) is slot.type) and validator(slot, game):
+            if copy:
+                slot.container[slot.key] = game.current_slot.container[game.current_slot.key]
+                slot.value = game.current_object
+            else:
+                game.current_slot.container[game.current_slot.key], slot.container[slot.key] = \
+                    slot.container[slot.key], game.current_slot.container[game.current_slot.key]
+                game.current_slot.value, slot.value = slot.value, \
+                    game.current_object
             game.current_hover = None
             game.current_object = None
             game.current_slot = None

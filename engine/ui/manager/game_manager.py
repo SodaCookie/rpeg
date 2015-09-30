@@ -44,7 +44,6 @@ class GameManager(Manager):
 
     def render(self, surface, game):
         super().render(surface, game)
-        self.hover.render(surface, game)
         self.sidebar.render(surface, game)
         self.encounter.render(surface, game)
         self.party.render(surface, game)
@@ -59,15 +58,16 @@ class GameManager(Manager):
             pass
         elif game.focus_window == "scenario":
             self.scenario.render(surface, game)
+        self.hover.render(surface, game)
         # self.item.render(surface, game)
 
     def update(self, game):
         super().update(game)
-        self.hover.update(game)
         self.battle.update(game)
         self.sidebar.update(game)
         self.party.update(game)
         self.character.update(game)
+        self.castbar.update(game)
         self.encounter.update(game)
         # self.character.update(game)
         if game.focus_window == "travel":
@@ -78,5 +78,5 @@ class GameManager(Manager):
             pass
         if game.focus_window == "scenario":
             self.scenario.update(game)
-        self.castbar.update(game)
+        self.hover.update(game)
         # self.item.update(game)
