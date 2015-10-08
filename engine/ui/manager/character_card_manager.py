@@ -130,8 +130,10 @@ class CharacterCardManager(Manager):
             # Bind all slots to zones
             self.zones = []
             for slot in self.plyr_eqp:
-                on_click = partial(slot.on_click, slot)
-                off_click = partial(slot.off_click, slot)
+                on_click = partial(slot.on_click, slot,
+                    self.equip_drag_validator, False)
+                off_click = partial(slot.off_click, slot,
+                    self.equip_drop_validator, False)
                 zone = Zone((slot.x, slot.y, slot.surface.get_width(), slot.surface.get_height()), on_click, None, None, off_click)
                 slot.bind(zone)
                 self.zones.append(zone)
@@ -147,6 +149,14 @@ class CharacterCardManager(Manager):
         # Need to run update functions of the zones
         if game.selected_player:
             super().update(game)
+
+    @staticmethod
+    def equip_drag_validator(slot, game):
+        return True
+
+    @staticmethod
+    def equip_drop_validator(slot, game):
+        return True
 
     @staticmethod
     def move_drag_validator(slot, game):

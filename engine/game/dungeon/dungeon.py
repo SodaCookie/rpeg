@@ -1,4 +1,4 @@
-import logging as logging
+import logging
 from random import randint, sample
 from functools import reduce
 
@@ -54,7 +54,7 @@ class Dungeon(object):
       elif key == "item_distribution": self.item_distribution = kwargs[key]
       elif key == "mon_distribution": self.mon_distribution = kwargs[key]
 
-    self.start = location.Location("entrance", self.level)
+    self.start = location.Location("monster", self.level)
     self.stop = location.Location("exit", self.level)
 
     # create the inbetween nodes

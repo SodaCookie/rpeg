@@ -12,7 +12,8 @@ class Slot(Renderable, Bindable):
     HIGHLIGHTIMAGE = "image/ui/slot_highlight.png"
     DEFAULTICON = "image/icon/blank.png"
 
-    def __init__(self, value, type_, x, y, container=None, key=None):
+    def __init__(self, value, type_, x, y, container=None,
+                 key=None, remove=False):
         # check if value is of the same type as type
 
         super().__init__()
@@ -25,6 +26,7 @@ class Slot(Renderable, Bindable):
         self.highlight = False
         self.container = container # reference to the container bound to it
         self.key = key # the key to the container
+        self.remove = remove # marker for hover manager
 
     @classmethod
     def draw(self, value):

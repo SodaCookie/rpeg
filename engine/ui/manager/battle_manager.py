@@ -1,6 +1,7 @@
 """Defines the BattleManager"""
 import pygame
 
+from engine.game.item.item import Item
 from engine.ui.core.manager import Manager
 
 class BattleManager(Manager):
@@ -49,4 +50,12 @@ class BattleManager(Manager):
         if all(player.fallen for player in game.party):
             print("LOST")
         if all(monster.fallen for monster in game.encounter):
+            # Create loot
+            difficulty = sum(m.stats["points"] for m in game.encounter)
+            # constant for the difficulty of fight
+            gold = round(difficulty*0.5)
+            items = [Item() for i in range(len(game.encounter))]
+            game.loot = (gold, items)
+            game.focus_window = "loot"
+            # Remove the encounter
             game.encounter = []

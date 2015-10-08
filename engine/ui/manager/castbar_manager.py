@@ -21,7 +21,9 @@ class CastBarManager(Manager):
         self.renderables.append(element.Window(window_width, 60, window_x, y))
         self.skills = [None for i in range(10)]
         for i in range(1, 11):
-            skill = element.Slot(None, Move, 8+window_x+(i-1)*56, y+7)
+            # Removable
+            skill = element.Slot(None, Move, 8+window_x+(i-1)*56, y+7, None,
+                                 None, True)
             self.skills[i-1] = skill
             self.renderables.append(skill)
             self.renderables.append(element.Text(str(i)[-1], 16, 50+window_x+(i-1)*56, y+40))
@@ -41,7 +43,7 @@ class CastBarManager(Manager):
 
     @staticmethod
     def drag_validator(slot, game):
-        return False
+        return not game.encounter
 
     @staticmethod
     def drop_validator(slot, game):
@@ -73,5 +75,5 @@ class CastBarManager(Manager):
                 self.skills[i].key = None
 
     def render(self, surface, game):
-        if game.selected_player and not game.focus_window:
+        if game.selected_player and game.focus_window != "travel":
             super().render(surface, game)

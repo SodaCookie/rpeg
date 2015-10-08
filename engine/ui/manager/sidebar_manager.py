@@ -31,9 +31,8 @@ class SidebarManager(Manager):
         on_hover = partial(self.on_hover, self.travel_window)
         off_hover = partial(self.off_hover, self.travel_window)
         off_click = partial(self.off_click, self.travel_window)
-        zone = Zone(((self.travel_window.x, self.travel_window.y), self.travel_window.surface.get_size()), on_click, on_hover, off_hover, off_click)
-        self.travel.bind(zone)
-        self.zones.append(zone)
+        self.travel_zone = Zone(((self.travel_window.x, self.travel_window.y), self.travel_window.surface.get_size()), on_click, on_hover, off_hover, off_click)
+        self.travel.bind(self.travel_zone)
 
         self.loot_window = element.Window(button_width, button_height,
             width-128, 75)
@@ -44,9 +43,8 @@ class SidebarManager(Manager):
         on_hover = partial(self.on_hover, self.loot_window)
         off_hover = partial(self.off_hover, self.loot_window)
         off_click = partial(self.off_click, self.loot_window)
-        zone = Zone(((self.loot_window.x, self.loot_window.y), self.loot_window.surface.get_size()), on_click, on_hover, off_hover, off_click)
-        self.loot.bind(zone)
-        self.zones.append(zone)
+        self.loot_zone = Zone(((self.loot_window.x, self.loot_window.y), self.loot_window.surface.get_size()), on_click, on_hover, off_hover, off_click)
+        self.loot.bind(self.loot_zone)
 
         self.shop_window = element.Window(button_width, button_height,
             width-128, 130)
@@ -57,9 +55,8 @@ class SidebarManager(Manager):
         on_hover = partial(self.on_hover, self.shop_window)
         off_hover = partial(self.off_hover, self.shop_window)
         off_click = partial(self.off_click, self.shop_window)
-        zone = Zone(((self.shop_window.x, self.shop_window.y), self.shop_window.surface.get_size()), on_click, on_hover, off_hover, off_click)
-        self.shop.bind(zone)
-        self.zones.append(zone)
+        self.shop_zone = Zone(((self.shop_window.x, self.shop_window.y), self.shop_window.surface.get_size()), on_click, on_hover, off_hover, off_click)
+        self.shop.bind(self.shop_zone)
 
     def render(self, surface, game):
         if not game.encounter and not game.current_dialog:
@@ -72,6 +69,14 @@ class SidebarManager(Manager):
             self.shop_window.render(surface, game)
             self.shop.render(surface, game)
 
+    def update(self, game):
+        if not game.encounter and not game.current_dialog:
+            self.travel_zone.update(game)
+        if game.loot:
+            self.loot_zone.update(game)
+        if game.shop:
+            self.shop_zone.update(game)
+
     def on_hover(self, window, game):
         window.surface = self.window_hover
 
@@ -80,7 +85,10 @@ class SidebarManager(Manager):
 
     def on_click(self, window, focus, game):
         window.surface = self.window_click
-        game.focus_window = focus
+        if game.focus_window == focus:
+            game.focus_window = None
+        else:
+            game.focus_window = focus
 
     def off_click(self, window, game):
         window.surface = self.window_hover

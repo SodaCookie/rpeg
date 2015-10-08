@@ -13,16 +13,28 @@ class MouseHoverManager(Manager):
     def __init__(self):
         super().__init__()
         self.cur = None
+        self.counter = 0 # We keep every current_object an additional frame
 
     def update(self, game):
-
         if game.current_object and not game.mouse_button[0]:
-            game.current_slot.value = game.current_object
-            game.current_slot.surface = Slot.draw(game.current_slot.value)
-            game.current_slot.hover = Slot.draw_highlight(game.current_slot.value)
-            game.current_hover = None
-            game.current_object = None
-            game.current_slot = None
+            self.counter += 1
+            if self.counter % 2 == 0:
+                if game.current_slot.remove:
+                    game.current_slot.value = None
+                    game.current_slot.container[game.current_slot.key] = None
+                else:
+                    game.current_slot.value = game.current_object
+                    game.current_slot.container[game.current_slot.key] = \
+                        game.current_object # MAYBE
+                game.current_slot.surface = Slot.draw(game.current_slot.value)
+                game.current_slot.hover = Slot.draw_highlight( \
+                    game.current_slot.value)
+                game.current_hover = None
+                game.current_object = None
+                game.current_slot = None
+                self.counter = 0
+        else:
+            self.counter = 0
 
 
     def render(self, surface, game):
