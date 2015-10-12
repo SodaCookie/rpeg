@@ -21,7 +21,7 @@ class GameManager(Manager):
         self.sidebar = manager.SidebarManager()
         self.encounter = manager.EncounterManager()
         self.castbar = manager.CastBarManager(440)
-        self.loot = manager.LootManager()
+        self.loot = manager.LootManager(450, 20, 300, 400)
         self.scenario = manager.ScenarioManager(20, 60)
         self.travel = manager.TravelManager(800, 300, 1280//2-800//2, 100)
         self.battle = manager.BattleManager()
