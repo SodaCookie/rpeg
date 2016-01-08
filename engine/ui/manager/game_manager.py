@@ -21,7 +21,7 @@ class GameManager(Manager):
         self.sidebar = manager.SidebarManager()
         self.encounter = manager.EncounterManager()
         self.castbar = manager.CastBarManager(440)
-        # self.loot = manager.LootManager()
+        self.loot = manager.LootManager(450, 20, 300, 400)
         self.scenario = manager.ScenarioManager(20, 60)
         self.travel = manager.TravelManager(800, 300, 1280//2-800//2, 100)
         self.battle = manager.BattleManager()
@@ -48,7 +48,7 @@ class GameManager(Manager):
         self.encounter.render(surface, game)
         self.party.render(surface, game)
         self.character.render(surface, game)
-        # self.character.render(surface, game)
+        self.loot.render(surface, game)
         self.castbar.render(surface, game)
         if game.focus_window == "travel":
             self.travel.render(surface, game)
@@ -69,7 +69,7 @@ class GameManager(Manager):
         self.character.update(game)
         self.castbar.update(game)
         self.encounter.update(game)
-        # self.character.update(game)
+        self.loot.update(game)
         if game.focus_window == "travel":
             self.travel.update(game)
         if game.focus_window == "shop":

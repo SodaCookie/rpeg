@@ -21,7 +21,7 @@ class Game(object):
 
         self.shop = None
         self.alter = None
-        self.loot = []
+        self.loot = None
 
         self.mouse_button = (0, 0, 0)
         self.mouse_x = 0

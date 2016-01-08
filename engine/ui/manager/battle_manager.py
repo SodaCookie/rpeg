@@ -54,8 +54,9 @@ class BattleManager(Manager):
             difficulty = sum(m.stats["points"] for m in game.encounter)
             # constant for the difficulty of fight
             gold = round(difficulty*0.5)
+            experience = round(difficulty*0.3)
             items = [Item() for i in range(len(game.encounter))]
-            game.loot = (gold, items)
+            game.loot = (gold, experience, items)
             game.focus_window = "loot"
             # Remove the encounter
             game.encounter = []
