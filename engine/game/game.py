@@ -4,7 +4,7 @@ class Game(object):
     """Game object used to hold all the data required for
     rendering and holding the important info for the game"""
 
-    DUNGEON_TYPES = ["catacomb", "caverns"]
+    DUNGEON_TYPES = ["catacomb"]
 
     def __init__(self):
         super(Game, self).__init__()
@@ -14,7 +14,7 @@ class Game(object):
         self.current_location = None
         self.current_dialog = None
 
-        self.party = []
+        self.party = None
         self.encounter = []
         self.current_dialog = None
         self.focus_window = None

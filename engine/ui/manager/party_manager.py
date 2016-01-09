@@ -20,7 +20,7 @@ class PartyManager(Manager):
         for manager in self.char_managers:
             manager.update(game)
 
-        game_set = set(game.party)
+        game_set = set(game.party.players)
         cur_set = set(c.character for c in self.char_managers)
 
         if game_set.symmetric_difference(cur_set):

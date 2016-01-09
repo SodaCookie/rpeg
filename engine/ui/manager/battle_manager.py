@@ -32,7 +32,7 @@ class BattleManager(Manager):
         if game.selected_player and game.selected_move and \
                 game.selected_target:
             status = game.selected_move.cast(game.selected_target,
-                game.selected_player, game.party, game.encounter)
+                game.selected_player, game.party.players, game.encounter)
             if status == None:
                 # Bad target Error
                 game.selected_target = None
@@ -43,22 +43,22 @@ class BattleManager(Manager):
                 game.selected_player = None
                 game.selected_target = None
         # Update player
-        for player in game.party:
+        for player in game.party.players:
             player.handle_battle(delta_time)
         # Update monster
         for monster in game.encounter:
             monster.handle_battle(delta_time)
         # Check for win or lose conditions
-        if all(player.fallen for player in game.party):
+        if all(player.fallen for player in game.party.players):
             print("LOST")
         if all(monster.fallen for monster in game.encounter):
             # Create loot
             difficulty = sum(m.stats["points"] for m in game.encounter)
             # constant for the difficulty of fight
-            gold = round(difficulty*0.5)
+            shards = round(difficulty*0.5)
             experience = round(difficulty*0.3)
             items = [Item() for i in range(len(game.encounter))]
-            game.loot = (gold, experience, items)
+            game.loot = (shards, items)
             game.focus_window = "loot"
             # Remove the encounter
             game.encounter = []

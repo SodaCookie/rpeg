@@ -24,7 +24,7 @@ class LootManager(Manager):
         if not self.loot:
             return
 
-        gold, exp, items = self.loot
+        shard, items = self.loot
         self.items = [items[j] if j < len(items) else None for j in range(5)]
         window = element.Window(self.width, self.height, self.x, self.y)
         title = element.Text("Loot", 30, 0, self.y+10)
@@ -32,18 +32,13 @@ class LootManager(Manager):
         self.renderables.append(window)
         self.renderables.append(title)
 
-        gold_text = element.Text("Gold Earned:", 20, self.x+20,
+        shard_text = element.Text("Shards Earned:", 20, self.x+20,
             self.y+50, width=self.width-40)
-        gold_amt_text = element.Text(str(gold), 20, self.x+20, self.y+50,
+        shard_amt_text = element.Text(str(shard), 20, self.x+20, self.y+50,
             width=self.width-40, justify=element.Text.RIGHT)
-        exp_text = element.Text("EXP Earned:", 20, self.x+20,
-            self.y+70, width=self.width-40)
-        exp_amt_text = element.Text(str(exp), 20, self.x+20, self.y+70,
-            width=self.width-40, justify=element.Text.RIGHT)
-        self.renderables.append(gold_text)
-        self.renderables.append(gold_amt_text)
-        self.renderables.append(exp_text)
-        self.renderables.append(exp_amt_text)
+
+        self.renderables.append(shard_text)
+        self.renderables.append(shard_amt_text)
 
         for i, item in enumerate(self.items):
             slot = element.Slot(item, "item", self.x+20, self.y+100+60*i,

@@ -82,7 +82,7 @@ class EventMenu(Menu):
         self.add(body)
 
         displacement = body.get_size()[1]+9*view.SCALE
-        choices = self.game.current_event.get_choices(self.game.party)
+        choices = self.game.current_event.get_choices(self.game.party.players)
         for i, choice in enumerate(choices):
             button_func = partial(self.update_current_event,
                                   self.game.current_event.make_choice(choice))
@@ -119,7 +119,7 @@ class EventMenu(Menu):
             pygame.event.post(pygame.event.Event(controller.BATTLESTART))
             pygame.time.set_timer(controller.BATTLETICK, 30)
             self.game.monsters = self.create_monsters(*args)
-            self.game.battle = Battle(self.game.party, self.game.monsters)
+            self.game.battle = Battle(self.game.party.players, self.game.monsters)
             self.display_monsters()
         elif key == "addgold":
             pass
