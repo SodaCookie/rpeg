@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from engine.game.dungeon.dungeon import Dungeon
 from engine.game.player.player import Player
+from engine.game.party.party import Party
 from engine.ui.core.manager import Manager
 import engine.ui.manager as manager
 
@@ -37,8 +38,8 @@ class GameManager(Manager):
         game.current_location.generate()
         game.current_dialog = game.current_location.get_event()
         game.focus_window = "scenario"
-        game.party = [Player("Player "+str(i)) for i in range(3)]
-        for player in game.party:
+        game.party = Party([Player("Player "+str(i)) for i in range(3)])
+        for player in game.party.players:
             player.add_move(mv.slash)
             player.castbar[0] = player.moves[0] # temp
 

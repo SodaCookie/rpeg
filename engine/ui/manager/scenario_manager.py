@@ -11,7 +11,7 @@ import engine.ui.element as element
 
 __all__ = ["ScenarioManager"]
 
-def action_nothing(game):
+def action_nothing(game, **kwargs):
     """Does nothing"""
     pass
 
@@ -25,9 +25,21 @@ def action_battle(game, **kwargs):
     monsters = [Monster(**defaults) for i in range(int(defaults["number"]))]
     game.encounter = monsters
 
+def action_loot(game, **kwargs):
+    shards = 0
+    items = []
+    for key in kwargs:
+        if key == "shard":
+            shards = int(kwargs[key])
+        elif key == "items":
+            pass
+    game.loot = (shards, items)
+    game.focus_window = "loot"
+
 ACTIONS = {
     "" : action_nothing,
-    "battle" : action_battle
+    "battle" : action_battle,
+    "loot" : action_loot
 }
 
 class ScenarioManager(Manager):
@@ -68,14 +80,14 @@ class ScenarioManager(Manager):
             return
         self.renderables.append(self.window)
         self.renderables.append(self.title)
-        body = element.Text(dialog.body, 16, self.x+10, self.y+10,
+        body = element.Text(dialog.body, 18, self.x+10, self.y+10,
                             (255, 255, 255), 480)
         self.renderables.append(body)
         height_counter = body.surface.get_height()+20
-        for choice in dialog.get_choices(game.party):
+        for choice in dialog.get_choices(game.party.players):
             next_dialog = dialog.make_choice(choice)
             on_click = partial(self.on_choice_click, next_dialog)
-            button = element.Button(choice, 16, self.x+10,
+            button = element.Button(choice, 18, self.x+10,
                 self.y+height_counter)
             zone = Zone(((self.x+10, self.y+height_counter),
                 button.surface.get_size()), on_click)
@@ -84,8 +96,8 @@ class ScenarioManager(Manager):
             self.renderables.append(button)
             height_counter += zone.rect.h
 
-        if not dialog.get_choices(game.party):
-            button = element.Button("Next", 16, self.x+10,
+        if not dialog.get_choices(game.party.players):
+            button = element.Button("Next", 18, self.x+10,
                 self.y+height_counter)
             on_click = partial(self.on_no_choice_click, dialog)
             zone = Zone(((self.x+5, self.y+height_counter),
@@ -109,6 +121,6 @@ class ScenarioManager(Manager):
         action_type = action_data[0]
         kwargs = {}
         if len(action_data) > 1:
-            kwargs = {action.split(":")[0]: action.split(":")[0] \
+            kwargs = {action.split(":")[0]: action.split(":")[1] \
                 for action in action_data[1:]}
-        ACTIONS[dialog.action](game, **kwargs)
+        ACTIONS[action_type](game, **kwargs)
