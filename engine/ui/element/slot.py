@@ -45,6 +45,7 @@ class Slot(Renderable, Bindable):
 
     @classmethod
     def draw_highlight(self, value):
+        """Draw method when highlighted"""
         surface = pygame.image.load(Slot.HIGHLIGHTIMAGE).convert()
         surface = pygame.transform.scale(surface, (surface.get_width()*3, surface.get_height()*3))
         if value: # we draw the image on top

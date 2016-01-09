@@ -9,6 +9,8 @@ from engine.ui.core.manager import Manager
 import engine.ui.element as element
 
 class CastBarManager(Manager):
+    """Responsible for managing the castbar of the Player characters in and out
+    of battle."""
 
     def __init__(self, y):
         super().__init__()
@@ -58,6 +60,7 @@ class CastBarManager(Manager):
                 game.selected_move = None
 
     def swap_character(self, character):
+        """Swaps the castbar menu to another character"""
         SCALE = 4
         if character:
             for i, move in enumerate(character.castbar):

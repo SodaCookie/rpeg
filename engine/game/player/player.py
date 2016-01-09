@@ -4,6 +4,9 @@ from random import choice
 import engine.game.character.character as character
 
 class Player(character.Character):
+    """The friendly characters encountered in.out of battle. The Player object
+    is responsible for holding a Players's stats as well as handling equipment,
+    experience and level"""
 
     MAX_LEVEL = 15
     POINTS_PER_LEVEL = 10
@@ -70,6 +73,7 @@ class Player(character.Character):
         return True
 
     def give_experience(self, experience):
+        """Grants experience to a player"""
         if self.level < Player.MAX_LEVEL:
             if self.level*100+experience > Player.MAX_LEVEL*100:
                 experience = (self.level*100+experience)-Player.MAX_LEVEL*100
@@ -85,6 +89,7 @@ class Player(character.Character):
         return False
 
     def level_up(self):
+        """Increases the stats of a character."""
         counter = 0
         gain_attack = 0
         gain_defense = 0

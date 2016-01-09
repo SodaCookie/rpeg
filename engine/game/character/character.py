@@ -7,6 +7,8 @@ import copy
 from engine.game.controller.battle_controller import BattleController
 
 class Character(BattleController):
+    """Character is the base class for units that interact during battles.
+    They have a collection of stats and a current status."""
 
     ACTION_SPEED = 25 # how quickly the action bar goes up
     SPEED_CAP = 5 # times the normal speed
@@ -91,6 +93,8 @@ class Character(BattleController):
         self.ready = True
 
     def decrease_durations(self, amount):
+        """Decreases the duration of effects by a given amount. Ignores
+        permanent effects."""
         for effect in self.effects:
             if effect.duration == "permanent":
                 continue
