@@ -1,21 +1,21 @@
 class Party(object):
   """Object to hold and access information about the party.
-  Party is composed of the players, gold and items in the party."""
+  Party is composed of the players, shards and items in the party."""
 
   def __init__(self, players):
     self.players = players
-    self.gold = 0
+    self.shards = 0
     self.items = [] # strings, items that the party owns like "orb"
 
-  def has_gold(self, amount):
-    """Returns True if party has enough gold"""
-    return amount >= self.gold
+  def has_shards(self, amount):
+    """Returns True if party has enough shards"""
+    return amount >= self.shards
 
-  def add_gold(self, amount):
-    self.gold += amount
+  def add_shards(self, amount):
+    self.shards += amount
 
-  def remove_gold(self, amount):
-    self.gold -= amount
+  def remove_shards(self, amount):
+    self.shards -= amount
 
   def has_item(self, item):
     """Return True if party has item"""

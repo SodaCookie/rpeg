@@ -87,7 +87,7 @@ USAGE/FOR DUMMIES <3
         <dialog name="promise">
             <body>The spirits are pleased by your promise of good will. They give your party shards to help you on your quest.
             </body>
-            <action>nothing</action>
+            <action>loot shard:100</action>
         </dialog>
     </event>
 
