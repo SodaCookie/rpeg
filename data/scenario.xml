@@ -25,8 +25,12 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
 -->
 <data>
 
+<<<<<<< Updated upstream
     <event name="Sword Event" type="event" level="any" >
         <tag>object@a sword, adj@mossy</tag>
+=======
+    <event name="the catacombs" type="event" level="catacomb">
+>>>>>>> Stashed changes
         <dialog name="main">
             <body>This is some text testing.
                 testing spacing
@@ -61,9 +65,17 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
     <event name="Claire Sucks" type="event" level="any" >
         <tag>object@a sword, adj@mossy</tag>
         <dialog name="main">
+<<<<<<< Updated upstream
             <body>This is some text testing.
                 testing spacing
                 testing spacing</body>
+=======
+            <body>You see wandering spirits ahead of your party. Shimmering in the distance you can hear them moaning and wailing.
+
+            "I can't see the light"
+
+            As they slowly drift aimlessly.</body>
+>>>>>>> Stashed changes
             <choices>
                 <choice name="picked sword">I would like to cut down a tree</choice>
                 <choice name="try">I can give it a try</choice>
@@ -75,12 +87,20 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
             <chance fail="picked sword failed">80</chance>
             <condition>hasitemtype sword</condition>
         </dialog>
+<<<<<<< Updated upstream
         <dialog name="picked sword failed">
             <body>Your sword got stuck in the tree.</body>
             <chance fail="picked sword failed failed">50</chance>
         </dialog>
         <dialog name="picked sword failed failed">
             <body>You are super unlucky</body>
+=======
+        <dialog name="leave-fail">
+            <body>Suddenly, the spirit notice you're presence. Their wails turn to screeches as they dash angrily towards your party!
+
+            "Why won't anyone help us?!?"</body>
+            <action>battle</action>
+>>>>>>> Stashed changes
         </dialog>
         <dialog name="try">
             <body>Wow you tried to cut down a tree with your own hands. Tsk tsk.</body>
@@ -103,8 +123,19 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
             <body>PETA isn`t coming.</body>
             <chance fail="peta came">50</chance>
         </dialog>
+<<<<<<< Updated upstream
         <dialog name="peta came">
             <body>PETA came to the rescue. The End.</body>
+=======
+        <dialog name="help">
+            <body>"Please, the Necromancer has sealed these catacombs, none who are dead can escape it and find peace."
+            </body>
+            <choices>
+                <choice name="promise"> - Promise to defeat the Necromancer
+                </choice>
+            </choices>
+            <chance name="help-fail">80</chance>
+>>>>>>> Stashed changes
         </dialog>
         <dialog name="leave">
             <body>You storm away. After all what kind of sick game designer would make you such horrible things.</body>
@@ -119,7 +150,118 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
         </dialog>
     </event>
 
+<<<<<<< Updated upstream
     <event name="A New Shop" type="shop" level="any">
+=======
+    <event name="the occult" type="event" level="catacomb">
+        <dialog name="main">
+            <body>Your path is blocked by cloaked figures up ahead. They confront you as you approach.
+
+            "Have you come to worship the Master? Or are you another heretic that spurns the gift he offers freely?"
+
+            The man who spoke reveals a chalice from his garb. He holds it up to you. A sweet aroma fills the room.
+
+            "Drink the Master's gift and feel his embrace."
+            </body>
+            <choices>
+                <choice name="drink"> - Drink from the cup</choice>
+                <choice name="refuse"> - Refuse the drink</choice>
+            </choices>
+        </dialog>
+        <dialog name="drink">
+            <body>The man grins as he hands your party the cup. Each member drinks deeply before returning the chalice to its owner.
+
+            "Go forward now, and find the Master. He will endow you will his eternal blessing."
+
+            They direct you forward, but as you walk, you find your vision blurred and your steps weakened. The drought has crippled your party for your next encounter.
+            </body>
+            <!-- <action>crippled</action> -->
+        </dialog>
+        <dialog name="refuse">
+            <body>The man frowns and the cloaked figures encircle your party.
+
+            "The Master doesn't offer his gift lightly. Death comes to us all, even to those who spurn it."
+
+            The men draw their weapons and assault your party
+            </body>
+            <action>battle</action>
+        </dialog>
+    </event>
+
+    <event name="boatman" type="event" level="catacomb">
+        <dialog name="main">
+            <body>As you continue your descent, you hear running water up ahead. A thin man stands next a boat on the shore of a short river that runs through the underground.
+
+            "Are you here for the ferry travelers? I can help you cross for a fee of shards."
+            </body>
+            <choices>
+                <choice name="ferry"> - Pay the boatman 100 shards to cross</choice>
+                <choice name="continue"> - Ignore the boatman</choice>
+            </choices>
+        </dialog>
+        <dialog name="ferry">
+            <body>Your party boards the vessel and the ferryman pushes off from the shore.
+
+            Upon arriving at the other side, your party encounters a dark chamber hidden from view on the other shore. They discover equipment and shards within. Your party searches through the treasures for valuables and continues.
+            </body>
+            <action>loot shard:100</action>
+            <action>loot</action>
+        </dialog>
+        <dialog name="continue">
+            <body>You refuse the ferryman's offer and continue deeper into the catacombs.
+            </body>
+        </dialog>
+    </event>
+
+    <event name="grave robbers" type="entrance" level="catacomb">
+        <dialog name="main">
+            <body>As you continue down your path, you hear hushed whispers up ahead.
+
+            "Hey Jim, come over here! This one's got some good stuff!"
+
+            Your party approaches stealthily and observes some men crouched over a tomb.
+
+            "Look at all theses shards! Haha, we'll never need to worry about money again boys!"
+
+            As you watch the men rummage through the grave, one of your party members stumbles on a nearby crack and lets out a startled exclamation
+
+            "SHHH! Did you hear that?"
+            </body>
+            <choices>
+                <choice name="confront"> - Confront the grave robbers</choice>
+                <choice name="cat"> - Meow? </choice>
+            </choices>
+        </dialog>
+        <dialog name="confront">
+            <body>Your party reveals themselves to the pillagers, weapons drawn.
+
+            "Hrmph, always trouble down in the catacombs," growls their leader.
+
+            "Guess we'll have to do this the hard way. Let's show 'em to the light boys!"
+            </body>
+            <action>battle</action>
+        </dialog>
+        <dialog name="cat-fail">
+            <body>"We know you're out there!"
+
+            The men draw their weapons and assault your party.
+            </body>
+            <action>battle</action>
+        </dialog>
+        <dialog name="cat">
+            <body>"It's nothing boss, just a cat."
+
+            The men return to their focus to the tomb as your party sneaks past.
+            </body>
+            <chance name="cat-fail">20</chance>
+        </dialog>
+    </event>
+
+<!--     <event name="the caves" type="entrance" level="cave">
+    </event>
+ -->
+    <event name="Shop Found" type="shop" level="any">
+>>>>>>> Stashed changes
         <dialog name="main">
             <body>You spot a shop.</body>
             <action>shop Cranky_Ben's</action>
@@ -132,5 +274,7 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
             <action>battle</action>
         </dialog>
     </event>
+
+
 
 </data>
