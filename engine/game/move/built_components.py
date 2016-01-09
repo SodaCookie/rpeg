@@ -1,3 +1,5 @@
+"""Compilation of the components to be combined to create moves"""
+
 from engine.game.move.component import Component
 from engine.game.monster.monster import Monster
 from engine.game.player.player import Player

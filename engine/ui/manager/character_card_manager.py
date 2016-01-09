@@ -42,6 +42,7 @@ class CharacterCardManager(Manager):
         # Ensure code doesn't try to render None or will crash
 
     def update(self, game):
+        """Updates the the character card manager to reflect changes when called."""
         # add another condition so doesn't update unnecessarily
         # like during battles
         # only updates renderables when selected player changed

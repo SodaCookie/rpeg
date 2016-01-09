@@ -1,4 +1,5 @@
 def parse_shopnames(filename):
+    """Parses possible shop names from a data file"""
     with open(filename, 'r') as file:
         names = file.read().split('\n')
     return names

@@ -1,6 +1,7 @@
 from engine.game.item.builder import Builder
 
 class RarityBuilder(Builder):
+    """Builder for the Rarity. Item stats increase with Rarity"""
 
     NAME = "rarity"
 

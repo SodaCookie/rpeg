@@ -7,6 +7,7 @@ from engine.ui.core.zone import Zone
 import engine.ui.element as element
 
 class TravelManager(Manager):
+    """Deals with the travel UI when moving through the Dungeon"""
 
     def __init__(self, width, height, x, y):
         super(TravelManager, self).__init__()

@@ -3,6 +3,7 @@ import pygame
 from engine.ui.core.renderable import Renderable
 
 class Bar(Renderable):
+    """A Bar that is filled a certain amount from 0 - 100%"""
 
     def __init__(self, width, height, colour, x, y):
         super().__init__()

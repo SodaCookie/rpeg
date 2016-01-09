@@ -44,6 +44,7 @@ class ScenarioManager(Manager):
         self.location = None
 
     def update(self, game):
+        """Updates the scenario variables when changing rooms"""
         if game.current_location != self.location: # new event every move
             game.current_location.generate() # maybe moved elsewhere
             self.update_location(game.current_location)

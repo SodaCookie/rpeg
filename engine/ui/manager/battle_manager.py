@@ -15,6 +15,7 @@ class BattleManager(Manager):
         self.time = pygame.time.get_ticks()
 
     def update(self, game):
+        """Looks for battle indicator in game object"""
         super().update(game)
         if not self.in_battle and game.encounter:
             self.in_battle = True
@@ -25,6 +26,7 @@ class BattleManager(Manager):
         self.time = pygame.time.get_ticks()
 
     def update_battle(self, game):
+        """Deals with updating the battle game loop"""
         delta_time = (pygame.time.get_ticks() - self.time)/1000
         # Cast move is any
         if game.selected_player and game.selected_move and \

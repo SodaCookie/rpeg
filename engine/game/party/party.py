@@ -1,4 +1,6 @@
 class Party(object):
+  """Object to hold and access information about the party.
+  Party is composed of the players, gold and items in the party."""
 
   def __init__(self, players):
     self.players = players

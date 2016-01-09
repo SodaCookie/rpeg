@@ -11,7 +11,7 @@ import engine.game.character.character as character
 from engine.game.monster.general_builder import GeneralBuilder
 
 def parse_tags(filename):
-    """Takes a filename and returns a list of all possible tags"""
+    """Takes a filename and returns a list of all possible tags."""
     root = tree.parse(filename).getroot()
     return [tag.attrib["type"] for tag in root.findall("tags/tag")]
 
@@ -21,6 +21,9 @@ def parse_types(filename):
     return [tag.tag for tag in root.find("types")]
 
 class Monster(character.Character):
+    """The enemy characters encountered in battle. The Monster object
+    is responsible for holding a Monster's stats as well as generating
+    itself."""
 
     BUILDERS = [GeneralBuilder]
 

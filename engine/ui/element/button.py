@@ -9,6 +9,8 @@ from engine.ui.element.window import Window
 from engine.ui.element.text import Text
 
 class Button(Renderable, Bindable):
+    """Clickable Button object. Contains actions for hovering and clicking
+    """
 
     def __init__(self, text, size, x, y, windowed=False):
         super().__init__()
@@ -31,6 +33,7 @@ class Button(Renderable, Bindable):
         return text
 
     def draw_hover(self, text, size, windowed):
+        """Draw method when hovered"""
         SCALE = 4
         text = Text.draw(text, size, (255, 255, 0), None, Text.LEFT)
         if windowed:
@@ -41,6 +44,7 @@ class Button(Renderable, Bindable):
         return text
 
     def draw_click(self, text, size, windowed):
+        """Draw method when clicked"""
         SCALE = 4
         text = Text.draw(text, size, (0, 255, 0), None, Text.LEFT)
         if windowed:

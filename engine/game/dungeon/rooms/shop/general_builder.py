@@ -6,6 +6,7 @@ from engine.game.item.item import Item
 
 
 class GeneralBuilder(Builder):
+    """The most generic shop Builder"""
 
     DATAPATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
     NAME = "_general"

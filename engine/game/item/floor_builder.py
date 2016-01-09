@@ -2,6 +2,7 @@ import random
 from engine.game.item.builder import Builder
 
 class FloorBuilder(Builder):
+    """Builder for Floor. Stats of items scale with the Floor"""
 
     NAME = "floor"
 

@@ -1,6 +1,9 @@
+"""A compilation of the attributes built for the game"""
+
 from engine.game.attribute.attribute import Attribute
 
 class RaiseStat(Attribute):
+  """Attribute that raises a stat of a player"""
 
   def __init__(self, amount, stype):
     super().__init__("raise-%s"%stype)
@@ -20,6 +23,7 @@ class RaiseStat(Attribute):
 
 
 class LowerStat(Attribute):
+  """Attribute that lowers a stat of a player"""
 
   def __init__(self, amount, stype):
     super().__init__("lower-%s"%stype)

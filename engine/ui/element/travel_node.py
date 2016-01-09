@@ -5,6 +5,7 @@ from engine.ui.core.bindable import Bindable
 from engine.ui.core.zone import Zone
 
 class TravelNode(Renderable, Bindable):
+    """Node object for displaying travel path/options."""
 
     COLOUR = {
         "unknown" : (79, 74, 59),
@@ -34,6 +35,7 @@ class TravelNode(Renderable, Bindable):
 
     @classmethod
     def draw_hover(self, type):
+        """Draw method when hovered"""
         SCALE = 3
         surface = pygame.Surface((11, 11), pygame.SRCALPHA)
         surface.fill((0, 0, 0, 0))
@@ -45,6 +47,7 @@ class TravelNode(Renderable, Bindable):
 
     @classmethod
     def draw_click(self, type):
+        """Draw method when clicked"""
         SCALE = 3
         surface = pygame.Surface((11, 11), pygame.SRCALPHA)
         surface.fill((0, 0, 0, 0))
