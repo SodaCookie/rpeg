@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
+USAGE/FOR DUMMIES <3
 ================================================
 <event> -> Used to group related dialogs (will scope), so a dialog from
            EventA will not be able to refer to a dialog from EventB
@@ -25,110 +25,82 @@ USAGE/FOR DUMMIES -> I MEAN YOU MADDIE ;) <3
 -->
 <data>
 
-    <event name="Sword Event" type="event" level="any" >
-        <tag>object@a sword, adj@mossy</tag>
+    <event name="the catacombs" type="entrance" level="catacomb">
         <dialog name="main">
-            <body>This is some text testing.
-                testing spacing
-                testing spacing</body>
-            <choices>
-                <choice name="picked sword">I would like to cut down a tree</choice>
-                <choice name="try">I can give it a try</choice>
-                <choice name="quit">Sorry, I can't cut down the tree</choice>
-            </choices>
-        </dialog>
-        <dialog name="picked sword">
-            <body>Hey man!!! You got some gold for cutting down that tree!</body>
-            <chance fail="picked sword failed">80</chance>
-            <condition>hasitemtype sword</condition>
-        </dialog>
-        <dialog name="picked sword failed">
-            <body>Your sword got stuck in the tree.</body>
-            <chance fail="picked sword failed failed">50</chance>
-        </dialog>
-        <dialog name="picked sword failed failed">
-            <body>You are super unlucky</body>
-            <action>lose sword</action>
-        </dialog>
-        <dialog name="try">
-            <body>Wow you tried to cut down a tree with your own hands. Tsk tsk.</body>
-        </dialog>
-        <dialog name="quit">
-            <body>You turn your back on your duty.</body>
+            <body>The Catacombs, once a place to rest the bodies of those who pasted on. Now a cesspool for necromancers, grave robbers and abominations alike. Hoards of undead and terrifying creatures await you at every turn. Trend carefully.</body>
         </dialog>
     </event>
 
-    <event name="Claire Sucks" type="event" level="any" >
-        <tag>object@a sword, adj@mossy</tag>
+    <event name="lost spirits" type="event" level="catacomb">
         <dialog name="main">
-            <body>This is some text testing.
-                testing spacing
-                testing spacing</body>
-            <choices>
-                <choice name="picked sword">I would like to cut down a tree</choice>
-                <choice name="try">I can give it a try</choice>
-                <choice name="quit">Sorry, I can't cut down the tree</choice>
-            </choices>
-        </dialog>
-        <dialog name="picked sword">
-            <body>Hey man!!! You got some gold for cutting down that tree!</body>
-            <chance fail="picked sword failed">80</chance>
-            <condition>hasitemtype sword</condition>
-        </dialog>
-        <dialog name="picked sword failed">
-            <body>Your sword got stuck in the tree.</body>
-            <chance fail="picked sword failed failed">50</chance>
-        </dialog>
-        <dialog name="picked sword failed failed">
-            <body>You are super unlucky</body>
-        </dialog>
-        <dialog name="try">
-            <body>Wow you tried to cut down a tree with your own hands. Tsk tsk.</body>
-        </dialog>
-        <dialog name="quit">
-            <body>You turn your back on your duty.</body>
-        </dialog>
-    </event>
+            <body>You see wandering spirits ahead of your party. Simmering in the distance you can hear them moaning and wailing.
 
-    <event name="the catacombs" type="entrance" level="any">
-        <dialog name="main">
-            <body>Hello and welcome to RNG Kitty Blaster where you blast kitties with the magic of RNGesus.</body>
+            "I can't see the light"
+
+            As they slowly drift aimlessly.</body>
             <choices>
-                <choice name="quit">Quit.</choice>
-                <choice name="leave">Leave.</choice>
-                <choice name="peta">PETA!</choice>
+                <choice name="leave"> - Leave them be</choice>
+                <choice name="approach"> - Approach the lost spirits</choice>
             </choices>
-        </dialog>
-        <dialog name="peta">
-            <body>PETA isn`t coming.</body>
-            <chance fail="peta came">50</chance>
-        </dialog>
-        <dialog name="peta came">
-            <body>PETA came to the rescue. The End.</body>
         </dialog>
         <dialog name="leave">
-            <body>You storm away. After all what kind of sick game designer would make you such horrible things.</body>
+            <body>Your party decides to leave them be. As you and the spirits take separate path down the catacombs, you hear their moans grow increasingly distant.</body>
+            <chance fail="leave-fail">50</chance>
         </dialog>
-        <dialog name="quit">
-            <body>Quitting is not an option.</body>
-            <chance fail="quit money">0</chance>
+        <dialog name="leave-fail">
+            <body>Suddenly, the spirit notice you're presence. Their wails turn to screeches and dash angrily towards your party!
+
+            "Why won't anyone help me?!?"</body>
+            <action>battle</action>
         </dialog>
-        <dialog name="quit money">
-            <body>Quitting is not an option. OHHH A PENNY</body>
-            <action>reward 50 []</action>
+        <dialog name="approach">
+            <body>Your party cautiously walks towards the spirits. They notice your presence and turn to confront you.
+
+            "Help, can you please help us?"</body>
+            <choices>
+                <choice name="help"> - "How can we help you?"</choice>
+                <choice name="abandon"> - "You're on your own."</choice>
+            </choices>
+        </dialog>
+        <dialog name="help-fail">
+            <body>"No, no, you can't help us! Tricks, more tricks!"
+
+                The spirits refuse your offer of help. They shriek curses at your party as they turn to fight you.
+            </body>
+            <action>battle</action>
+        </dialog>
+        <dialog name="help">
+            <body>"Please, the Necromancer has sealed these catacombs, none who are dead can escape it and find peace."
+            </body>
+            <choices>
+                <choice name="promise"> - Promise to defeat the Necromancer
+                </choice>
+            </choices>
+            <chance fail="help-fail">80</chance>
+        </dialog>
+        <dialog name="abandon">
+            <body>"Why, why won't you help us?"
+
+                Their wails turn to screeches and dash angrily towards your party!</body>
+            <action>battle</action>
+        </dialog>
+        <dialog name="promise">
+            <body>The spirits are pleased by your promise of good will. They give your party shards to help you on your quest.
+            </body>
+            <action>nothing</action>
         </dialog>
     </event>
 
-    <event name="A New Shop" type="shop" level="any">
+    <event name="Shop Found" type="shop" level="any">
         <dialog name="main">
             <body>You spot a shop.</body>
-            <action>shop Cranky_Ben's</action>
+            <action>shop</action>
         </dialog>
     </event>
 
-    <event name="A New Shop" type="monster" level="any">
+    <event name="Ambush!" type="monster" level="any">
         <dialog name="main">
-            <body>You spot a monster.</body>
+            <body>You're party is surrounded by monsters.</body>
             <action>battle</action>
         </dialog>
     </event>
