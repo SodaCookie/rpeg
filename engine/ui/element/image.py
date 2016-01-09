@@ -3,6 +3,7 @@ import pygame
 from engine.ui.core.renderable import Renderable
 
 class Image(Renderable):
+    """Basic object to render graphics"""
 
     def __init__(self, image, x, y):
         super().__init__()

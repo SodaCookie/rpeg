@@ -3,7 +3,7 @@
 from xml.etree import ElementTree
 
 def parse_names(filename, tag, rarity, speech):
-    """returns a list of viable names given tag, rarity and part of
+    """Returns a list of viable names given tag, rarity and part of
     speech"""
     root = ElementTree.parse(filename).getroot()
     names = root.find(tag)

@@ -1,6 +1,7 @@
 from engine.game.dungeon.rooms.shop.general_builder import GeneralBuilder
 
 class Shop(object):
+    """Holds items for sale in a given shop room"""
 
     BUILDERS = [GeneralBuilder]
 

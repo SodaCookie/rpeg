@@ -3,6 +3,7 @@ import pygame
 from engine.ui.core.renderable import Renderable
 
 class Text(Renderable):
+    """Text object for displaying strings."""
 
     font_cache = {}
     LEFT = "left"
@@ -65,6 +66,7 @@ class Text(Renderable):
 
     @staticmethod
     def _word_wrap(text, width, font):
+        """Breaks string into a list of strings based on width specified"""
         words = text.split(' ')
         lines = []
         cur_line = [words.pop(0)]

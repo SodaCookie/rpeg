@@ -142,6 +142,8 @@ class Item(object):
         return template.title()
 
     def _generate_stats(self, stats, tag, rarity, type):
+        """Passes parameters to builders to build the stats. Returns the stat
+        distribution"""
         raw_stats = stats.copy()
         for builder in self.builders:
             raw_stats = builder.build_stats(raw_stats, tag, rarity, type)

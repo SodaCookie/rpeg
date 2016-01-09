@@ -1,6 +1,8 @@
 import random
 
 class Move(object):
+    """Contains a character's move's definition and how it interacts
+    with characters in battle"""
 
     def __init__(self, name, icon=None, components=None, miss_bound=0,
                  miss_components=None, crit_bound=100, crit_components=None):

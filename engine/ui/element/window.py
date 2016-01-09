@@ -5,7 +5,7 @@ import math
 from engine.ui.core.renderable import Renderable
 
 class Window(Renderable):
-    """docstring for Window"""
+    """Window Object to contain menus with buttons, slots etc."""
 
     def __init__(self, width, height, x, y, highlight=None):
         super(Window, self).__init__()
@@ -17,6 +17,7 @@ class Window(Renderable):
 
     @classmethod
     def highlight_window(self, window, highlight):
+        """Highlights the window with a given color"""
         SCALE = 4
         window = window.copy()
         window.fill(highlight, (0, 0, SCALE, window.get_height()))

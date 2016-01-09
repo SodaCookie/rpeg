@@ -1,7 +1,7 @@
 import pygame
 
 class EventHandler(object):
-    """docstring for EventHandler"""
+    """Handles events in the game loop"""
 
     def __init__(self):
         super(EventHandler, self).__init__()
