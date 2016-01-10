@@ -205,6 +205,7 @@ USAGE/FOR DUMMIES <3
 <!--     <event name="the caves" type="entrance" level="cave">
     </event>
  -->
+
     <event name="Shop Found" type="shop" level="any">
         <dialog name="main">
             <body>You spot a shop.</body>
