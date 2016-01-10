@@ -7,6 +7,7 @@ from pygame import image, Surface, SRCALPHA, BLEND_RGBA_MULT
 from pygame.transform import scale
 
 import engine.game.character.character as character
+import engine.game.move.built_moves as built_moves
 
 
 def parse_monsters(filename):
@@ -31,6 +32,7 @@ def parse_monsters(filename):
         monsters[name]['rating'] = int(monster.find('rating').text)
     return monsters
 
+
 class Monster(character.Character):
     """The enemy characters encountered in battle. The Monster object
     is responsible for holding a Monster's stats as well as generating
@@ -38,12 +40,24 @@ class Monster(character.Character):
 
     DATAPATH = os.path.dirname(os.path.realpath(__file__)) + "/data/"
     MONSTERS = parse_monsters(DATAPATH+"monster.xml")
-    # NAMES = _XML.find("names")
-    # IMAGE = _XML.find("image")
 
     def __init__(self, name):
         """Basic Monster constructor"""
-        super().__init__("")
+        super().__init__(name)
+        monster_def = Monster.MONSTERS[name] # grab definition
+
+        self.name = name
+        self.location = monster_def["location"]
+        self.graphic = monster_def["graphic"]
+        self.rating = monster_def["rating"]
+        self.stats.update(monster_def["stats"])
+        # add moves
+        for movename in monster_def["moves"]:
+            self.add_move(built_moves.MONSTER_MOVES[movename])
+        for attribute in monster_def["attributes"]:
+            #self.add_effect()
+            pass
+
 
 # For testing
 if __name__ == "__main__":

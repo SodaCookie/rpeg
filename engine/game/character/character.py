@@ -20,11 +20,10 @@ class Character(BattleController):
         super().__init__()
 
         self.name = name
-        self.effects = []
         self.moves = []
+        self.effects = []
         self.fallen = False
         self.target = None
-        self.args = []
         self.overflow = 0
 
         self.stats = OrderedDict()
@@ -33,9 +32,9 @@ class Character(BattleController):
         self.stats["magic"] = 10
         self.stats["health"] = 100
         self.stats["resist"] = 0
+        self.stats["speed"] = Character.SPEED_BASE/(Character.SPEED_CAP-1)
         self.current_health = self.stats["health"]
          # enough to do 1 ACTION_SPEED per second
-        self.speed = Character.SPEED_BASE/(Character.SPEED_CAP-1)
         self.action_max = 100
         self.action = 0
         self.ready = False
@@ -65,11 +64,6 @@ class Character(BattleController):
             else:
                 self.current_health = 1
 
-    def is_enemy(self, character):
-        if type(self) != type(character):
-            return True
-        return False
-
     def kill(self):
         """Kills this character returns True if success else False
         takes into account effects"""
@@ -87,6 +81,7 @@ class Character(BattleController):
         self.fallen = True
 
     def start_turn(self):
+        """Called on start turn"""
         for effect in self.effects:
             if effect.active:
                 effect.on_start_turn()
@@ -185,3 +180,16 @@ class Character(BattleController):
 
     def remove_move(self, move):
         return self.moves.remove(move)
+
+    def set_speed(self, speed):
+        self.stats["speed"] = speed
+
+    def get_speed(self):
+        return self.stats["speed"]
+
+    def is_enemy(self, character):
+        if type(self) != type(character):
+            return True
+        return False
+
+    speed = property(get_speed, set_speed)
