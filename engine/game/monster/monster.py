@@ -10,6 +10,28 @@ import engine.game.character.character as character
 
 from engine.game.monster.general_builder import GeneralBuilder
 
+def parse_monsters(filename):
+    """Takes a filename and returns a dict of dicts containing all monster
+    definitions with keys of monster names"""
+    root = tree.parse(filename).getroot()
+    monsters = {}
+    for monster in root:
+        name = monster.find('name').text
+        monsters[name] = {}
+        monsters[name]['location'] = monster.find('location').text
+        monsters[name]['stats'] = {}
+        for stat in monster.find('stats'):
+            monsters[name]['stats'][stat.tag] = stat.text
+        monsters[name]['abilities'] = []
+        for ability in monster.find('abilities'):
+            monsters[name]['abilities'].append(ability.text)
+        monsters[name]['attributes'] = []
+        for attribute in monster.find('attributes'):
+            monsters[name]['attributes'].append(attribute.text)
+        monsters[name]['graphic'] = {} # we need to do some work here
+        monsters[name]['rating'] = monster.find('rating').text
+    return monsters
+
 def parse_tags(filename):
     """Takes a filename and returns a list of all possible tags."""
     root = tree.parse(filename).getroot()

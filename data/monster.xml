@@ -1,10 +1,45 @@
 <?xml version="1.0"?>
-<data>
 
-  <tags>
+<!-- Monster definition composed of
+<monster>                         Beginning of definition
+  <name>name</name>               monster name
+  <location>catacomb</name>       the dungeon it can appear in
+  <stats>                         list of monster stats
+    <attack>10</attack>           monster attack
+    ...
+  </stats>
+  <abilities></abilities>         the moves the monster has
+  <attributes></attributes>       the passive effects of the monster
+  <graphics></graphics>             the monster's sprites
+  <rating>1</rating>              the monster's challenge rating
+</monster>
+ -->
+
+<data>
+  <monster>
+    <name>testmonster</name>
+    <location>catacomb</location>
+    <stats>
+      <attack>10</attack>
+      <defense>10</defense>
+      <magic>10</magic>
+      <health>10</health>
+      <resist>10</resist>
+    </stats>
+    <abilities>
+      <ability>nameofability</ability>
+    </abilities>
+    <attributes>
+      <attribute>nameofattribute</attribute>
+    </attributes>
+    <graphics></graphics>
+    <rating>1</rating>
+  </monster>
+
+
+<!-- <tags>
     <tag type="fire" attack="0.2" magic="0.2" exclude="ice, nature"/>
     <tag type="ice" defense="0.2" resist="0.2" magic="0.2" exclude="fire, nature"/>
-    <!---
     <tag type="nature" health="0.2" magic="0.2" exclude="fire, ice"/>
     <tag type="dark" attack="0.5" defense="0.5" exclude="light"/>
     <tag type="light"resist="2" magic="2" exclude="dark"/>
@@ -13,7 +48,7 @@
     <tag type="power" attack="3" magic="3" health="-0.5" exclude="defense"/>
     <tag type="defense" defense="2" resist="2" health="2" exclude="power"/>
     <tag type="speed" speed="2"/>
-    <tag type="magic" magic="2"/>-->
+    <tag type="magic" magic="2"/>
   </tags>
 
   <names>
@@ -54,5 +89,5 @@
   <mtypes>
     <mtype type="slime"/>
   </mtypes>
-
+-->
 </data>
