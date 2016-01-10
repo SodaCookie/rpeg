@@ -33,7 +33,7 @@ class Dialog(object):
           if dialog.find("chance").attrib.get("fail") is not None:
             self.fail = Dialog(dialog.find("chance").attrib["fail"], etree)
         if dialog.find("action") is not None:
-          self.action = dialog.find("action").text
+          self.action = [action.text for action in dialog.findall("action")]
     elif name == "main":
       raise Exception("Could not find 'main' dialog")
 
