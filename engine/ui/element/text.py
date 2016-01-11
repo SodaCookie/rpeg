@@ -23,6 +23,12 @@ class Text(Renderable):
         self.surface = self.draw(self.text, self.size, self.colour,
                                  self.width, self.justify)
 
+    def set_text(self, text):
+        """Convenience function that will update the text for the object"""
+        self.text = text
+        self.surface = self.draw(self.text, self.size, self.colour,
+                                 self.width, self.justify)
+
     @classmethod
     def draw(self, text, size, colour, width, justify):
         if not Text.font_cache.get(size):
