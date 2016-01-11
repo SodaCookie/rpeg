@@ -40,7 +40,7 @@ class GameManager(Manager):
         game.focus_window = "scenario"
         game.party = Party([Player("Player "+str(i)) for i in range(3)])
         for player in game.party.players:
-            player.add_move(mv.slash)
+            player.add_move(mv.PLAYER_MOVES["slash"])
             player.castbar[0] = player.moves[0] # temp
 
     def render(self, surface, game):

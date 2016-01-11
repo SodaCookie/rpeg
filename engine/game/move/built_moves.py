@@ -3,9 +3,12 @@
 from engine.game.move.move import Move
 from engine.game.move.built_components import *
 
-__all__ = ["punch", "triplepunch", "slash", "magic_bolt", "magic_blast"]
+__all__ = ["PLAYER_MOVES", "MONSTER_MOVES"]
 
-punch = Move("punch",
+MONSTER_MOVES = {}
+PLAYER_MOVES = {}
+
+PLAYER_MOVES["punch"] = Move("punch",
     None,
     [
     SingleTarget(),
@@ -13,7 +16,7 @@ punch = Move("punch",
     Damage(50, "physical")
     ])
 
-triplepunch = Move("triple punch",
+PLAYER_MOVES["triple punch"] = Move("triple punch",
     None,
     [
     SingleTarget(),
@@ -21,7 +24,7 @@ triplepunch = Move("triple punch",
     Repeat(3, Damage(50, "physical"))
     ])
 
-slash = Move("slash",
+PLAYER_MOVES["slash"] = Move("slash",
     "image/icon/attack_icon.png",
     [
     SingleTarget(),
@@ -29,7 +32,7 @@ slash = Move("slash",
     ScaleDamage(30, "physical", 1.0, "attack")
     ])
 
-magic_bolt = Move("magic-bolt",
+PLAYER_MOVES["magic-bolt"] = Move("magic-bolt",
     "image/icon/magic_bolt_icon.png",
     [
     SingleTarget(),
@@ -37,7 +40,7 @@ magic_bolt = Move("magic-bolt",
     ScaleDamage(30, "magic", 1.1, "magic")
     ])
 
-magic_blast = Move("magic-blast",
+PLAYER_MOVES["magic-blast"] = Move("magic-blast",
     "image/icon/magic_blast_icon.png",
     [
     GroupTarget(),
