@@ -36,10 +36,10 @@ class EncounterManager(Manager):
                 # bind on_hover to this manager
                 on_hover = partial(self.on_hover, mm)
                 off_hover = partial(self.off_hover, mm)
-                coordx = x - mm.monster_image.surface.get_size()[0]//2
-                coordy = y - mm.monster_image.surface.get_size()[1]
+                coordx = x - mm.image_element.surface.get_size()[0]//2
+                coordy = y - mm.image_element.surface.get_size()[1]
                 z = Zone(((coordx, coordy),
-                    mm.monster_image.surface.get_size()),
+                    mm.image_element.surface.get_size()),
                     mm.on_click, on_hover, off_hover)
                 self.zones.append(z)
 

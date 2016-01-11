@@ -1,9 +1,7 @@
 """Compilation of the components to be combined to create moves"""
 
 from engine.game.move.component import Component
-from engine.game.monster.monster import Monster
-from engine.game.player.player import Player
-
+import engine.game.player.player as Player
 
 class SingleTarget(Component):
     """Defines Single Targetting for a move"""
@@ -13,9 +11,9 @@ class SingleTarget(Component):
 class GroupTarget(Component):
     """Defines Group Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(selected, Monster):
-            return monsters
-        return players
+        if isinstance(selected, Player):
+            return players
+        return monsters
 
 class AlliesOnly(Component):
     """Descriptor for targetting allies only"""

@@ -81,7 +81,8 @@ class SidebarManager(Manager):
         self.shards = 0
         self.shard_window = element.Window(button_width, button_height,
             width-128, 185)
-        self.shard_text = element.Button("0", 20, width-128, 185)
+        self.shard_text = element.Text("0", 20, width-128, 190,
+            width=button_width, justify=element.Text.CENTER)
 
     def render(self, surface, game):
         if not game.encounter:
@@ -94,7 +95,7 @@ class SidebarManager(Manager):
                 if game.shop:
                     self.shop_window.render(surface, game)
                     self.shop.render(surface, game)
-            self.shard_window(surface, game)
+            self.shard_window.render(surface, game)
             self.shard_text.render(surface, game)
 
     def update(self, game):
