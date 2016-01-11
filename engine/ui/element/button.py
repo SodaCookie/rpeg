@@ -30,6 +30,10 @@ class Button(Renderable, Bindable):
         self.hover = self.draw_hover(self.text, self.size, windowed)
         self.click = self.draw_click(self.text, self.size, windowed)
 
+    def get_rect(self):
+        """Convenience function returns a tuple of rect values"""
+        return ((self.x, self.y), self.surface.get_size())
+
     def draw(self, text, size, windowed):
         SCALE = 4
         text = Text.draw(text, size, (255, 255, 255), None, Text.LEFT)

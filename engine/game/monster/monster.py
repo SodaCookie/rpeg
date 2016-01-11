@@ -52,6 +52,7 @@ class Monster(character.Character):
         self.graphic = monster_def["graphic"].copy()
         self.rating = monster_def["rating"]
         self.stats.update(monster_def["stats"])
+        self.current_health = self.stats["health"]
         # add moves
         # for movename in monster_def["abilities"]:
         #     self.add_move(built_moves.MONSTER_MOVES[movename])
@@ -59,6 +60,15 @@ class Monster(character.Character):
             #self.add_effect()
             pass
 
+    def handle_battle(self, delta):
+        """Function override for monster to execute its own moves"""
+        super().handle_battle(delta)
+
+        # Run moves if ready
+        if self.ready:
+            # status = game.selected_move.cast(game.selected_target,
+            #     game.selected_player, game.party.players, game.encounter)
+            self.action = 0
 
 # For testing
 if __name__ == "__main__":
