@@ -29,6 +29,8 @@ def parse_monsters(filename):
         for attribute in monster.find('attributes'):
             monsters[name]['attributes'].append(attribute.text)
         monsters[name]['graphic'] = {} # we need to do some work here
+        for graphic in monster.find('graphics'):
+            monsters[name]['graphic'][graphic.attrib["name"]] = graphic.text
         monsters[name]['rating'] = int(monster.find('rating').text)
     return monsters
 
@@ -48,7 +50,7 @@ class Monster(character.Character):
 
         self.name = name
         self.location = monster_def["location"]
-        self.graphic = monster_def["graphic"]
+        self.graphic = monster_def["graphic"].copy()
         self.rating = monster_def["rating"]
         self.stats.update(monster_def["stats"])
         # add moves
