@@ -40,25 +40,25 @@ def action_battle(game, **kwargs):
                 for name, monster in Monster.MONSTERS.items()
                 if monster["rating"] <= defaults["challenge"] and\
                 monster["location"] == game.floor_type]
-            if valid_monsters:
-                highest_value = 0
-                for name, value in valid_monsters:
-                    if value > highest_value:
-                        highest_value = value
+
+            highest_value = 0
+            for name, value in valid_monsters:
+                if value > highest_value:
+                    highest_value = value
             valid_names = [name for name, value in valid_monsters
-                           if value == highest_value]
+                           if value <= highest_value]
             names.append(random.choice(valid_names))
         defaults["monsters"] = [Monster(name) for name in names]
     else:
         names = defaults["monsters"]
         defaults["monsters"] = [Monster(name) for name in names]
-    monsters = [Monster(**defaults) for i in range(defaults["number"])]
+    monsters = defaults["monsters"]
     game.encounter = defaults["monsters"]
 
 def action_loot(game, **kwargs):
     """Gives party loot"""
     defaults = {
-        "reward-tier" : "low"
+        "reward-tier" : "low",
         "shard" : None,
         "item" : None
     }
@@ -71,6 +71,8 @@ def action_loot(game, **kwargs):
             defaults["shard"] = game.floor_level * random.randint(30, 35)
         elif defaults["reward-tier"] == "high":
             defaults["shard"] = game.floor_level * random.randint(50, 70)
+    else:
+        defaults["shard"] = int(defaults["shard"])
     # Handle unspecified item
     if defaults["item"] == None:
         defaults["item"] = []
@@ -102,7 +104,8 @@ def action_loot(game, **kwargs):
                     parameter_value = parameter.split(",")[1]
                     parameters[parameter_name] = parameter_value
                 defaults["item"].append(Item(**parameters))
-    game.loot = (defaults["shards"], defaults["item"])
+    game.loot = (defaults["shard"], defaults["item"])
+    game.party.shards += defaults["shard"]
     game.focus_window = "loot"
 
 ACTIONS = {

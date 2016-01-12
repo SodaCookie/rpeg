@@ -18,9 +18,21 @@ class Button(Renderable, Bindable):
         self.size = size
         self.x = x
         self.y = y
+        self.windowed = windowed
+        self.surface = self.draw(self.text, self.size, self.windowed)
+        self.hover = self.draw_hover(self.text, self.size, self.windowed)
+        self.click = self.draw_click(self.text, self.size, self.windowed)
+
+    def set_text(self, text):
+        """Convenience function that will update the text for the object"""
+        self.text = text
         self.surface = self.draw(self.text, self.size, windowed)
         self.hover = self.draw_hover(self.text, self.size, windowed)
         self.click = self.draw_click(self.text, self.size, windowed)
+
+    def get_rect(self):
+        """Convenience function returns a tuple of rect values"""
+        return ((self.x, self.y), self.surface.get_size())
 
     def draw(self, text, size, windowed):
         SCALE = 4

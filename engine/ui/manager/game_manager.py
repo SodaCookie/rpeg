@@ -33,7 +33,8 @@ class GameManager(Manager):
     def init(self, game, difficulty):
         # May need to shift this functionality
         game.difficulty = difficulty
-        game.current_dungeon = Dungeon("catacomb", game.difficulty)
+        game.current_dungeon = Dungeon("catacombs", game.difficulty)
+        game.floor_type = game.current_dungeon.level
         game.current_location = game.current_dungeon.start
         game.current_location.generate()
         game.current_dialog = game.current_location.get_event()

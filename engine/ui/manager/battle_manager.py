@@ -53,12 +53,13 @@ class BattleManager(Manager):
             print("LOST")
         if all(monster.fallen for monster in game.encounter):
             # Create loot
-            difficulty = sum(m.stats["points"] for m in game.encounter)
+            difficulty = sum(m.rating for m in game.encounter)
             # constant for the difficulty of fight
             shards = round(difficulty*0.5)
             experience = round(difficulty*0.3)
             items = [Item() for i in range(len(game.encounter))]
             game.loot = (shards, items)
+            game.party.shards += shards
             game.focus_window = "loot"
             # Remove the encounter
             game.encounter = []

@@ -21,7 +21,7 @@ class CharacterManager(Manager):
         self.neutral_name = self.name.surface
         # window
         self.window = element.Window(280, 156, x, y+4)
-        self.neutral = self.window.surface# this is super hacky I DONT LIKE
+        self.neutral = self.window.surface
         self.hover = element.Window.highlight_window(
             self.window.surface, (255, 255, 0)) # yellow
         self.renderables.append(self.window)

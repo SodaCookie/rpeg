@@ -16,6 +16,7 @@ from engine.ui.element.text import Text
 from engine.ui.element.image import Image
 from engine.ui.element.bar import Bar
 from engine.ui.element.slot import Slot
+from engine.ui.element.button import Button
 
 from engine.game.item.item import Item
 from engine.game.move.move import Move
@@ -92,12 +93,14 @@ class CharacterCardManager(Manager):
             self.plyr_eqp = []
             i = 0
             equipment_text = []
+
             # makes a grid, need to add header elements for each slot
             for key, itm in self.cur_plyr.equipment.items():
                 self.plyr_eqp.append(Slot(itm, Item, self.x+(56*(i%4))+150, self.y+(76*(i//4))+40, self.cur_plyr.equipment, key))
                 text = Text(key, 16, self.x+(56*(i%4))+150, self.y+(76*(i//4))+92)
                 equipment_text.append(text)
                 i += 1
+
             # limited to 4 moves only at the moment, need to extend
             skill_text = Text("Skills", 22, self.x+150, self.y+192)
             self.plyr_mv = []
@@ -107,6 +110,15 @@ class CharacterCardManager(Manager):
                 else:
                     move = None
                 self.plyr_mv.append(Slot(move, Move, self.x+(56*(i%4))+148, self.y+(56*(i//4)+220), self.cur_plyr.moves, i)) # Can't move moves to this one
+
+            # Create level up button
+            level_up_button = Button("LEVEL UP", 28, self.x+20,
+                self.y+self.win.height-60, True)
+
+            # Create zone for button
+            level_up_zone = Zone(level_up_button.get_rect())
+            level_up_button.bind(level_up_zone)
+
             # update inventory
             # self.plyr_inv = []
             # i=0
@@ -128,8 +140,10 @@ class CharacterCardManager(Manager):
             self.renderables.extend(self.plyr_mv)
             self.renderables.append(skill_text)
             self.renderables.extend(equipment_text)
+            self.renderables.append(level_up_button)
             # Bind all slots to zones
             self.zones = []
+            self.zones.append(level_up_zone)
             for slot in self.plyr_eqp:
                 on_click = partial(slot.on_click, slot,
                     self.equip_drag_validator, False)

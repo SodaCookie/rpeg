@@ -25,13 +25,13 @@ USAGE/FOR DUMMIES <3
 -->
 <data>
 
-    <event name="the catacombs" type="entrance" level="catacomb">
+    <event name="the catacombs" type="entrance" level="catacombs">
         <dialog name="main">
             <body>The Catacombs, once a place to rest the bodies of those who pasted on. Now a cesspool for necromancers, grave robbers and abominations alike. Hoards of undead and terrifying creatures await you at every turn. Trend carefully.</body>
         </dialog>
     </event>
 
-    <event name="lost spirits" type="event" level="catacomb">
+    <event name="lost spirits" type="event" level="catacombs">
         <dialog name="main">
             <body>You see wandering spirits ahead of your party. Shimmering in the distance you can hear them moaning and wailing.
 
@@ -98,7 +98,7 @@ USAGE/FOR DUMMIES <3
         </dialog>
     </event>
 
-    <event name="the occult" type="event" level="catacomb">
+    <event name="the occult" type="event" level="catacombs">
         <dialog name="main">
             <body>Your path is blocked by cloaked figures up ahead. They confront you as you approach.
 
@@ -133,7 +133,7 @@ USAGE/FOR DUMMIES <3
         </dialog>
     </event>
 
-    <event name="boatman" type="event" level="catacomb">
+    <event name="boatman" type="event" level="catacombs">
         <dialog name="main">
             <body>As you continue your descent, you hear running water up ahead. A thin man stands next a boat on the shore of a short river that runs through the underground.
 
@@ -158,7 +158,7 @@ USAGE/FOR DUMMIES <3
         </dialog>
     </event>
 
-    <event name="grave robbers" type="event" level="catacomb">
+    <event name="grave robbers" type="event" level="catacombs">
         <dialog name="main">
             <body>As you continue down your path, you hear hushed whispers up ahead.
 

@@ -15,10 +15,16 @@ class MonsterManager(Manager):
         self.highlight = False
 
         # Load monster neutral image
-        raw_image = pygame.image.load( \
-            monster.graphic["neutral"]).convert_alpha()
-        raw_image = pygame.transform.scale(raw_image, \
-            (raw_image.get_width()*SCALE, raw_image.get_height()*SCALE))
+        try:
+            raw_image = pygame.image.load( \
+                monster.graphic["neutral"]).convert_alpha()
+            raw_image = pygame.transform.scale(raw_image, \
+                (raw_image.get_width()*SCALE, raw_image.get_height()*SCALE))
+        except pygame.error:
+            raw_image = pygame.Surface((70*SCALE, 20*SCALE))
+            raw_image.fill((255, 255, 255))
+            raw_image.blit(element.Text.draw(monster.name, 20, (0, 0, 0),
+                           70*SCALE, element.Text.CENTER), (0, 10))
 
         # Create image element
         self.image_element = element.Image(raw_image,
@@ -29,15 +35,22 @@ class MonsterManager(Manager):
         self.neutral_image = raw_image
 
         # Load monster hover image
-        raw_image = pygame.image.load(
-            monster.graphic["hover"]).convert_alpha()
+        try:
+            raw_image = pygame.image.load( \
+                monster.graphic["hover"]).convert_alpha()
+        except pygame.error:
+            raw_image = pygame.Surface((70, 20))
+            raw_image.fill((255, 255, 0))
+            raw_image.blit(element.Text.draw(monster.name, 20, (0, 0, 0),
+                           70*SCALE, element.Text.CENTER), (0, 10))
 
         # Store hover image
         self.hover_image = pygame.transform.scale(raw_image,
             (raw_image.get_width()*SCALE, raw_image.get_height()*SCALE))
 
         # Create text element
-        self.text_element = element.Text(monster.name.title(), 20, x, y-self.image.get_height()-75)
+        self.text_element = element.Text(monster.name.title(), 20, x,
+            y-self.image_element.surface.get_height()-75)
         self.text_element.x = x - self.text_element.surface.get_width()//2
         self.renderables.append(self.text_element)
 
@@ -48,13 +61,13 @@ class MonsterManager(Manager):
 
         # Create health and action bars
         self.health_bar = element.Bar(32*SCALE, 2*SCALE, (116, 154, 104),
-            x-16*SCALE , y-self.image.get_height()-40)
+            x-16*SCALE , y-self.neutral_image.get_height()-40)
         self.action_bar = element.Bar(32*SCALE, 2*SCALE, (212, 196, 148),
-            x-16*SCALE, y-self.image.get_height()-25)
+            x-16*SCALE, y-self.neutral_image.get_height()-25)
         health_missing = element.Bar(32*SCALE, 2*SCALE, (30, 30, 30),
-            x-16*SCALE,  y-self.image.get_height()-40)
+            x-16*SCALE,  y-self.neutral_image.get_height()-40)
         action_missing = element.Bar(32*SCALE, 2*SCALE, (30, 30, 30),
-            x-16*SCALE,  y-self.image.get_height()-25)
+            x-16*SCALE,  y-self.neutral_image.get_height()-25)
         self.renderables.append(health_missing)
         self.renderables.append(action_missing)
         self.renderables.append(self.health_bar)
