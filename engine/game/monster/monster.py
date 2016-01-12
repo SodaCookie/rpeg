@@ -48,30 +48,35 @@ class Monster(character.Character):
         monster_def = Monster.MONSTERS[name] # grab definition
 
         self.name = name
+        self.active_moves = [] # Used to determine the next move
         self.location = monster_def["location"]
         self.graphic = monster_def["graphic"].copy()
         self.rating = monster_def["rating"]
         self.stats.update(monster_def["stats"])
         self.current_health = self.stats["health"]
+
         # add moves
         # for movename in monster_def["abilities"]:
         #     self.add_move(built_moves.MONSTER_MOVES[movename])
+        self.add_move(built_moves.MONSTER_MOVES["attack"]) # TEMP
+        self.set_active_moves(self.moves)
+
         for attribute in monster_def["attributes"]:
             #self.add_effect()
             pass
 
-    def handle_battle(self, delta):
-        """Function override for monster to execute its own moves"""
-        super().handle_battle(delta)
+    def set_active_moves(self, moves):
+        self.active_moves = list(moves)
 
-        # Run moves if ready
+    def handle_battle(self, delta, game):
+        super().handle_battle(delta, game)
         if self.ready:
-            # status = game.selected_move.cast(game.selected_target,
-            #     game.selected_player, game.party.players, game.encounter)
-            self.action = 0
+            if self.active_moves:
+                self.selected_move = random.choice(self.active_moves)
+
 
 # For testing
 if __name__ == "__main__":
     for i in range(10):
-        m = Monster()
-        print(m.abilities)
+            m = Monster()
+            print(m.abilities)

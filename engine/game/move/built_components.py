@@ -2,28 +2,60 @@
 
 from engine.game.move.component import Component
 import engine.game.player.player as Player
+import random
 
 class SingleTarget(Component):
     """Defines Single Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        return [selected]
+        return selected
 
 class GroupTarget(Component):
     """Defines Group Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(selected, Player):
+        if isinstance(selected[0], Player):
             return players
         return monsters
 
+class RandomAllyTarget(Component):
+    """Defines Random Ally Target for a move"""
+    def get_targets(self, selected, caster, players, monsters):
+        if isinstance(Player, type(caster)):
+            return [random.choice([player for player in players if \
+                not player.fallen])]
+        return [random.choice([monster for monster in monsters if \
+            not monster.fallen])]
+
+class RandomEnemyTarget(Component):
+    """Defines Random Enemy Target for a move"""
+    def get_targets(self, selected, caster, players, monsters):
+        if not isinstance(Player, type(caster)):
+            return [random.choice([player for player in players if \
+                not player.fallen])]
+        return [random.choice([monster for monster in monsters if \
+            not monster.fallen])]
+
+class TargetNumberOnly(Component):
+    """Descriptor for targetting a specific number of characters only"""
+    def __init__(self, number):
+        self.number = number
+
+    def valid_targets(self, selected, caster, players, monsters):
+        return len(selected) == self.number
+
+class TargetOneOnly(TargetNumberOnly):
+    """Descriptor for targetting one character only"""
+    def __init__(self):
+        super().__init__(1)
+
 class AlliesOnly(Component):
     """Descriptor for targetting allies only"""
-    def valid_targets(self, selected, caster, players, monsters, targets):
-        return all([isinstance(caster, t) for t in targets])
+    def valid_targets(self, selected, caster, players, monsters):
+        return all([isinstance(t, type(caster)) for t in selected])
 
 class EnemiesOnly(Component):
     """Descriptor for targetting enemies only"""
-    def valid_targets(self, selected, caster, players, monsters, targets):
-        return all([not isinstance(caster, t) for t in targets])
+    def valid_targets(self, selected, caster, players, monsters):
+        return all([not isinstance(t, type(caster)) for t in selected])
 
 class Effect(Component):
     """Applies an effect of target(s)"""

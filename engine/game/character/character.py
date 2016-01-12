@@ -4,9 +4,7 @@ import math
 import random
 import copy
 
-from engine.game.controller.battle_controller import BattleController
-
-class Character(BattleController):
+class Character(object):
     """Character is the base class for units that interact during battles.
     They have a collection of stats and a current status."""
 
@@ -23,7 +21,6 @@ class Character(BattleController):
         self.moves = []
         self.effects = []
         self.fallen = False
-        self.target = None
         self.overflow = 0
 
         self.stats = OrderedDict()
@@ -39,8 +36,10 @@ class Character(BattleController):
         self.action = 0
         self.ready = False
         self.scroll = 0
+        self.target = [] # Used to get the target of the move
+        self.selected_move = None # Used to store the move
 
-    def handle_battle(self, delta):
+    def handle_battle(self, delta, game):
         """Handles each characters update loop"""
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
         self.overflow = (self.overflow+delta)-steps    # Used for carry over
@@ -52,6 +51,8 @@ class Character(BattleController):
                 (Character.SPEED_CAP*1/\
                 (Character.SPEED_BASE+1))
         self.build_action(action)
+
+        # Calculate ready
         if self.action == self.action_max and not self.ready:
             # Available to cast
             self.start_turn()
@@ -63,6 +64,20 @@ class Character(BattleController):
                 self.fallen = True
             else:
                 self.current_health = 1
+
+        # Move casting
+        if self.selected_move and self.ready:
+            if self.selected_move.is_valid_target(self.target,
+                    game.party.players, game.encounter):
+                # Cast move
+                status = self.selected_move.cast(self.target,
+                    game.selected_player, game.party.players, game.encounter)
+
+                # Finished casting move
+                self.action = 0
+                self.selected_move = None
+                self.target = []
+
 
     def kill(self):
         """Kills this character returns True if success else False

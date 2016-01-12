@@ -30,6 +30,10 @@ class Move(object):
         self.miss_bound = miss_bound
         self.crit_bound = crit_bound
 
+    def is_valid_target(self, selected, players, monsters):
+        return all(c.valid_targets(selected, self.caster, players,
+            monsters) for c in self.components)
+
     def set_caster(self, caster):
         self.caster = caster
 
@@ -47,10 +51,7 @@ class Move(object):
             if component_targets:
                 targets = component_targets
         assert targets, "Move must have a target"
-        # Validates targets
-        if not any(c.valid_targets(selected, self.caster, players, monsters, targets) for c in self.components):
-            return None
-        # execute the move
+
         # roll for the miss, normal or crit
         miss_bound = self.miss_bound
         crit_bound = self.crit_bound
@@ -67,6 +68,7 @@ class Move(object):
         else:
             move = self.crit_components
 
+        # execute the move
         total_msg = ""
         for target in targets:
             for component in move:
