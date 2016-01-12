@@ -40,8 +40,9 @@ class CastBarManager(Manager):
     @staticmethod
     def on_click(slot, game):
         element.Slot.on_click(slot, CastBarManager.drag_validator, True, game)
-        if game.selected_player.ready and game.encounter:
-            game.selected_move = slot.value
+        if game.encounter:
+            game.selected_player.selected_move = slot.value
+            game.selected_player.target = []
 
     @staticmethod
     def drag_validator(slot, game):

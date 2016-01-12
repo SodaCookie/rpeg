@@ -6,7 +6,10 @@ class Component(object):
 
     def get_targets(self, selected, caster, players, monsters):
         """Get target returns a list of targets in the form of
-        character objects"""
+        character objects, this list is formed from 'selected' targets'
+        for instance even though a character's target is a single enemy
+        get target will return a full list of enemies since its a
+        'Group' component"""
         return []
 
     def get_miss(self, miss, selected, caster, players, monsters):
@@ -22,6 +25,6 @@ class Component(object):
         with a message from that component"""
         return ""
 
-    def valid_targets(self, selected, caster, players, monsters, targets):
+    def valid_targets(self, selected, caster, players, monsters):
         """Returns a if the given targets are valid for the move"""
         return True

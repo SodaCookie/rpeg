@@ -28,29 +28,18 @@ class BattleManager(Manager):
     def update_battle(self, game):
         """Deals with updating the battle game loop"""
         delta_time = (pygame.time.get_ticks() - self.time)/1000
-        # Cast move is any
-        if game.selected_player and game.selected_move and \
-                game.selected_target:
-            status = game.selected_move.cast(game.selected_target,
-                game.selected_player, game.party.players, game.encounter)
-            if status == None:
-                # Bad target Error
-                game.selected_target = None
-            else:
-                # Move executed correctly
-                game.selected_player.action = 0 # empty action
-                game.selected_move = None
-                game.selected_player = None
-                game.selected_target = None
         # Update player
         for player in game.party.players:
-            player.handle_battle(delta_time)
+            player.handle_battle(delta_time, game)
+
         # Update monster
         for monster in game.encounter:
-            monster.handle_battle(delta_time)
+            monster.handle_battle(delta_time, game)
+
         # Check for win or lose conditions
         if all(player.fallen for player in game.party.players):
             print("LOST")
+
         if all(monster.fallen for monster in game.encounter):
             # Create loot
             difficulty = sum(m.rating for m in game.encounter)

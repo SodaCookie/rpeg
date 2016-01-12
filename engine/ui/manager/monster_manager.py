@@ -81,8 +81,13 @@ class MonsterManager(Manager):
             self.monster.action_max
 
     def on_click(self, game):
-        if game.selected_move and not self.monster.fallen:
-            game.selected_target = self.monster
+        if game.selected_player and game.selected_player.selected_move and \
+                not self.monster.fallen:
+            if game.selected_player.selected_move.is_valid_target(
+                    game.selected_player.target+[self.monster],
+                    game.party.players,
+                    game.encounter):
+                game.selected_player.target.append(self.monster)
 
     def render(self, surface, game):
         if self.monster.fallen:
