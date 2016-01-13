@@ -43,6 +43,7 @@ class BattleManager(Manager):
         if all(monster.fallen for monster in game.encounter):
             # Create loot
             difficulty = sum(m.rating for m in game.encounter)
+
             # constant for the difficulty of fight
             shards = round(difficulty*0.5)
             experience = round(difficulty*0.3)
@@ -50,5 +51,9 @@ class BattleManager(Manager):
             game.loot = (shards, items)
             game.party.shards += shards
             game.focus_window = "loot"
+
+            for player in game.party.players:
+                player.cleanup_battle()
+
             # Remove the encounter
             game.encounter = []

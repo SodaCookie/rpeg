@@ -1,4 +1,4 @@
-import enginge.game.effect.effect as effects
+import engine.game.effect.effect as effect
 
 class Attribute(effect.Effect):
   """Attributes are permanent effects that are applied through items

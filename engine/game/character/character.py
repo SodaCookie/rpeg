@@ -4,6 +4,8 @@ import math
 import random
 import copy
 
+from engine.game.attribute.attribute import Attribute
+
 class Character(object):
     """Character is the base class for units that interact during battles.
     They have a collection of stats and a current status."""
@@ -38,6 +40,20 @@ class Character(object):
         self.scroll = 0
         self.target = [] # Used to get the target of the move
         self.selected_move = None # Used to store the move
+
+    def cleanup_battle(self):
+        # Remove all non-attribute type effects (any in battle effects)
+        old_effects = self.effects
+        self.effects = []
+        for effect in old_effects:
+            if isinstance(effect, Attribute):
+                self.effects.append(effect)
+
+        # Reset Health
+        self.current_health = self.get_stat("health")
+
+        # Reset Action
+        self.action = 0
 
     def handle_battle(self, delta, game):
         """Handles each characters update loop"""
