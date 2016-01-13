@@ -11,6 +11,7 @@
   <abilities></abilities>         the moves the monster has
   <attributes></attributes>       the passive effects of the monster
   <graphics></graphics>           the monster's sprites
+  <unique>false</unique>
   <rating>1</rating>              the monster's challenge rating
 </monster>
  -->
@@ -36,6 +37,7 @@
       <graphic name="neutral">/image/monster/rat_neutral.png</graphic>
       <graphic name="hover">/image/monster/rat_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>1</rating>
   </monster>
 
@@ -58,6 +60,7 @@
       <graphic name="neutral">/image/monster/rat_neutral.png</graphic>
       <graphic name="hover">/image/monster/rat_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>2</rating>
   </monster>
 
@@ -82,6 +85,7 @@
       <graphic name="hover">/image/monster/spider_hover.png</graphic>
     </graphics>
     <rating>2</rating>
+    <unique>False</unique>
   </monster>
 
   <monster>
@@ -104,6 +108,7 @@
       <graphic name="neutral">/image/monster/lost_soul_neutral.png</graphic>
       <graphic name="hover">/image/monster/lost_soul_hover.png</graphic>
     </graphics>
+    <unique>True</unique>
     <rating>2</rating>
   </monster>
 
@@ -126,6 +131,7 @@
       <graphic name="neutral">/image/monster/grave_robber_neutral.png</graphic>
       <graphic name="hover">/image/monster/grave_robber_hover.png</graphic>
     </graphics>
+    <unique>True</unique>
     <rating>2</rating>
   </monster>
 
@@ -151,6 +157,7 @@
       <graphic name="neutral">/image/monster/skeleton_warrior_neutral.png</graphic>
       <graphic name="hover">/image/monster/skeleton_warrior_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>2</rating>
   </monster>
 
@@ -176,6 +183,7 @@
       <graphic name="neutral">/image/monster/skeleton_archer_neutral.png</graphic>
       <graphic name="hover">/image/monster/skeleton_archer_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>2</rating>
   </monster>
 
@@ -199,6 +207,7 @@
       <graphic name="neutral">/image/monster/zombie_neutral.png</graphic>
       <graphic name="hover">/image/monster/zombie_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>3</rating>
   </monster>
 
@@ -222,6 +231,7 @@
       <graphic name="neutral">/image/monster/giant_spider_neutral.png</graphic>
       <graphic name="hover">/image/monster/giant_spider_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>3</rating>
   </monster>
 
@@ -245,6 +255,7 @@
       <graphic name="neutral">/image/monster/zombie_neutral.png</graphic>
       <graphic name="hover">/image/monster/zombie_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>3</rating>
   </monster>
 
@@ -270,6 +281,7 @@
       <graphic name="neutral">/image/monster/abomination_neutral.png</graphic>
       <graphic name="hover">/image/monster/abomination_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>4</rating>
   </monster>
 
@@ -296,7 +308,8 @@
       <graphic name="neutral">/image/monster/zombie_neutral.png</graphic>
       <graphic name="hover">/image/monster/zombie_hover.png</graphic>
     </graphics>
-    <rating>100</rating>
+    <unique>True</unique>
+    <rating>7</rating>
   </monster>
 
   <monster>
@@ -318,7 +331,8 @@
       <graphic name="neutral">/image/monster/skeletal_thrall_neutral.png</graphic>
       <graphic name="hover">/image/monster/skeletal_thrall_hover.png</graphic>
     </graphics>
-    <rating>100</rating>
+    <unique>True</unique>
+    <rating>1</rating>
   </monster>
 
 </data>
