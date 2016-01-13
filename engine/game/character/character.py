@@ -136,8 +136,9 @@ class Character(object):
             if effect.duration == "permanent":
                 continue
             effect.duration -= amount
-            # look for ticks 7000 miliseconds 6001 -> 5999 -> call on_tick()
-            # if tick should be applied
+            if effect.duration <= effect.cur_tick and effect.tick:
+                effect.cur_tick -= effect.tick
+                effect.on_tick()
         self.effects = list(filter(lambda eff: eff.active and \
             (eff.duration == Effect.PERMANENT or eff.duration > 0),
             self.effects))

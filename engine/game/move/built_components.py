@@ -57,15 +57,6 @@ class EnemiesOnly(Component):
     def valid_targets(self, selected, caster, players, monsters):
         return all([not isinstance(t, type(caster)) for t in selected])
 
-class AddEffect(Component):
-    """Applies an effect of target(s)"""
-    def __init__(self, effect):
-        self.effect = effect
-
-    def on_cast(self, target, caster, players, monsters):
-        damage = target.add_effect(self.effect)
-        return ""
-
 class AddChanceEffect(Component):
     """Chance to apply effect on target(s)"""
     def __init__(self, effect, chance):
@@ -77,8 +68,20 @@ class AddChanceEffect(Component):
         if rand > self.chance:
             return ""
         else:
+            self.effect.set_caster(caster)
             damage = target.add_effect(self.effect)
             return ""
+
+class AddEffect(AddChanceEffect):
+    """Applies an effect of target(s)"""
+    def __init__(self, effect):
+        self.effect = effect
+        self.chance = 1
+
+    def on_cast(self, target, caster, players, monsters):
+        self.effect.set_caster(caster)
+        damage = target.add_effect(self.effect)
+        return ""
 
 class SelfEffect(Component):
     """Applies self-effect on cast"""
@@ -104,7 +107,7 @@ class Damage(Component):
         Suggested standard is additions, then multiplications"""
         damage = self.damage
         for mod in self.modifiers:
-            damage = mod.modify(damage, target, caster, players, monsters)
+            damage = mod.modify(damage, target, caster)
         damage = target.deal_damage(caster, damage, self.dtype)
         return "%s dealt %d %s damage to %s" % \
             (caster.name, damage, self.dtype, target.name)
@@ -121,6 +124,7 @@ class ScaleMiss(Component):
 
 
 class ScaleCrit(Component):
+    #changes the critbound?
 
     def __init__(self, scaling, stype):
         super().__init__()
@@ -144,7 +148,7 @@ class Heal(Component):
         Suggested standard is additions, then multiplications"""
         heal = self.heal
         for mod in self.modifiers:
-            heal = mod.modify(heal, target, caster, players, monsters)
+            heal = mod.modify(heal, target, caster)
         heal = target.apply_heal(caster, heal)
         return "%s healed %s for %d health" % \
             (caster.name, target.name, heal)

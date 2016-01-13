@@ -33,7 +33,8 @@ PLAYER_MOVES["attack"] = Move("attack",
     Damage(0, "physical",
         [
         ScaleStat(1, "attack"),
-        ScaleLevel(2),
+        ScaleLevel(1),
+        ScaleCritDamage(2)
         ])
     ])
 
@@ -84,8 +85,9 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     AddChanceEffect(Stun(5), 0.2),
     Damage(0, "physical",
         [
-        ScaleStat(2, "attack"),
+        ScaleStat(1, "attack"),
         ScaleLevel(1),
+        ScaleCritDamage(2)
         ])
     ])
 
@@ -113,34 +115,34 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
         [
         ScaleStat(2, "attack"),
         ScaleLevel(1),
+        ScaleCritDamage(2)
         ])
     ])
 
-## NEEDS DOT EFFECT
-# PLAYER_MOVES["firebolt"] = Move("firebolt",
-#     None,
-#     [
-#     TargetOneOnly(),
-#     SingleTarget(),
-#     EnemiesOnly(),
-#     Damage(0, "magic",
-#         [
-#         ScaleStat(1, "magic"),
-#         ScaleLevel(0.6)
-#         ])
-#     ],
-#     crit_bound = 50,
-#     crit_components = [
-#     TargetOneOnly(),
-#     SingleTarget(),
-#     EnemiesOnly(),
-#     Damage(0, "magic",
-#         [
-#         ScaleStat(1, "magic"),
-#         ScaleLevel(0.6)
-#         ]),
-#     AddEffect()
-#     ])
+PLAYER_MOVES["firebolt"] = Move("firebolt",
+    None,
+    [
+    TargetOneOnly(),
+    SingleTarget(),
+    EnemiesOnly(),
+    Damage(0, "magic",
+        [
+        ScaleStat(1, "magic"),
+        ScaleLevel(0.6)
+        ])
+    ],
+    crit_bound = 50,
+    crit_components = [
+    TargetOneOnly(),
+    SingleTarget(),
+    EnemiesOnly(),
+    AddEffect(DoT("burning", 2, 5, 1, [ScaleLevelAdd(1)], "physical")),
+    Damage(0, "magic",
+        [
+        ScaleStat(1, "magic"),
+        ScaleLevel(0.6)
+        ])
+    ])
 
 # TESTED
 PLAYER_MOVES["arcane blast"] = Move("arcane blast",
@@ -203,8 +205,9 @@ PLAYER_MOVES["cleave"] = Move("cleave",
     EnemiesOnly(),
     Damage(0, "physical",
         [
-        ScaleStat(2, "attack"),
+        ScaleStat(1, "attack"),
         ScaleLevel(0.6),
+        ScaleCritDamage(2)
         ])
     ])
 
@@ -254,12 +257,12 @@ PLAYER_MOVES["double stab"] = Move("double stab",
     TargetOneOnly(),
     SingleTarget(),
     EnemiesOnly(),
-    ScaleCrit(2),
     Repeat(2,
         Damage(0, "physical",
             [
             ScaleStat(2, "attack"),
-            ScaleLevel(0.6)
+            ScaleLevel(0.6),
+            ScaleCritDamage(2),
             ])
         )
     ])
