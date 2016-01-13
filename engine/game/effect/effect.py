@@ -3,7 +3,7 @@ class Effect:
     PERMANENT = "permanent" # Given to permanent Effects
                             # can be removed with remove()
 
-    def __init__(self, name, duration):
+    def __init__(self, name, duration, tick=None):
         """ Effects are actions that trigger after a certain action is made
         'name' is the identifier used to identify the effect
         duration is used to indicate how long the effect will last on the
@@ -13,11 +13,20 @@ class Effect:
         self.name = name
         self.max_duration = duration
         self.duration = duration
+        self.tick = tick
+        if not tick:
+            self.cur_tick = 0
+        else:
+            self.cur_tick = self.max_duration - tick
         self.active = True
         self.owner = None
+        self.caster = None
 
     def set_owner(self, owner):
         self.owner = owner
+
+    def set_caster(self, caster):
+        self.caster = caster
 
     def remove(self):
         """Inactivates and removes effect

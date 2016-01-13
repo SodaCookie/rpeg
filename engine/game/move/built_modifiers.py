@@ -11,7 +11,7 @@ class ScaleStat(Modifier):
         self.scaling = scaling
         self.stype = stype
 
-    def modify(self, value, target, caster, players, monsters):
+    def modify(self, value, target, caster):
         return value + self.scaling * caster.get_stat(self.stype)
 
 class ScaleLevel(Modifier):
@@ -20,14 +20,23 @@ class ScaleLevel(Modifier):
     def __init__(self, scaling):
         self.scaling = scaling
 
-    def modify(self, value, target, caster, players, monsters):
+    def modify(self, value, target, caster):
         return value * (self.scaling * caster.get_level())
 
-class ScaleCrit(Modifier):
+class ScaleLevelAdd(Modifier):
+    """Additively scales value by a percentage"""
+
+    def __init__(self, scaling):
+        self.scaling = scaling
+
+    def modify(self, value, target, caster):
+        return value + self.scaling * caster.get_level()
+
+class ScaleCritDamage(Modifier):
     """Multiplicatively scales value by a percentage"""
 
     def __init__(self, scaling):
         self.scaling = scaling
 
-    def modify(self, value, target, caster, players, monsters):
+    def modify(self, value, target, caster):
         return value * self.scaling
