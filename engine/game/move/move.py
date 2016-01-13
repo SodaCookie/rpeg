@@ -79,3 +79,8 @@ class Move(object):
             total_msg = total_msg[:-1]
         return total_msg
 
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memo):
+        return self

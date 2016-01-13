@@ -14,6 +14,7 @@ class StatChange(Effect):
     def on_get_stat(self, value, stat_type):
         if stat_type == self.stype:
             return value + self.strength
+        return value
 
 class StatChangeTilMove(Effect):
     """Creates a stat-change with a name, strength, stat to effect that
@@ -27,6 +28,7 @@ class StatChangeTilMove(Effect):
     def on_get_stat(self, value, stat_type):
         if stat_type == self.stype:
             return value + self.strength
+        return value
 
     def on_cast(self, source, move):
         self.remove()
@@ -38,9 +40,8 @@ class Stun(Effect):
     def __init__(self, duration):
         super().__init__("stun", duration)
 
-    def on_get_stat(self, value, stat_type):
-        if stat_type == "speed":
-            return 0
+    def on_build_action(self, action):
+        return 0
 
 # def DoT(Effect):
 #     """Deals damage of time"""

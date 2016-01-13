@@ -51,7 +51,7 @@ PLAYER_MOVES["magic bolt"] = Move("magic bolt",
         ])
     ])
 
-# BROKEN
+# TESTED
 PLAYER_MOVES["blessing"] = Move("blessing",
     None,
     [
@@ -61,7 +61,7 @@ PLAYER_MOVES["blessing"] = Move("blessing",
     AddEffect(StatChange("blessing", 5, "attack", 6))
     ])
 
-# BUG: Filter object has no attribute append line 185 in character.py
+# TESTED
 PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     None,
     [
@@ -89,7 +89,7 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
         ])
     ])
 
-# Same bug as stunning blow
+# TESTED
 PLAYER_MOVES["quick attack"] = Move("quick attack",
     None,
     [
@@ -142,7 +142,7 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
 #     AddEffect()
 #     ])
 
-# BUGGED: line 15: built_components isinstance(): arg 2 should something
+# TESTED
 PLAYER_MOVES["arcane blast"] = Move("arcane blast",
     None,
     [
@@ -156,7 +156,7 @@ PLAYER_MOVES["arcane blast"] = Move("arcane blast",
         ])
     ])
 
-# UNTESTED BEYOND THIS POINT
+# TESTED
 PLAYER_MOVES["healing word"] = Move("healing word",
     None,
     [
