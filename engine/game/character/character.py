@@ -4,6 +4,8 @@ import math
 import random
 import copy
 
+from engine.game.effect.effect import Effect
+
 class Character(object):
     """Character is the base class for units that interact during battles.
     They have a collection of stats and a current status."""
@@ -44,8 +46,10 @@ class Character(object):
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
         self.overflow = (self.overflow+delta)-steps    # Used for carry over
         self.decrease_durations(steps)
+        # Calculated after effect speed
+        speed = self.get_stat("speed")
         action = delta * Character.ACTION_SPEED *\
-            (Character.SPEED_CAP*self.speed/(Character.SPEED_BASE+self.speed))
+            (Character.SPEED_CAP*speed/(Character.SPEED_BASE+speed))
         if action == 0: # being nice as if you have speed 1
             action = delta * Character.ACTION_SPEED *\
                 (Character.SPEED_CAP*1/\
@@ -53,7 +57,7 @@ class Character(object):
         self.build_action(action)
 
         # Calculate ready
-        if self.action == self.action_max and not self.ready:
+        if self.action >= self.action_max and not self.ready:
             # Available to cast
             self.start_turn()
         if self.action < self.action_max:
@@ -66,10 +70,16 @@ class Character(object):
                 self.current_health = 1
 
         # Move casting
-        if self.selected_move and self.ready:
+        if self.selected_move and self.ready and not self.fallen:
             if self.selected_move.is_valid_target(self.target,
                     game.party.players, game.encounter):
-                # Cast move
+
+                # on_cast effect call
+                for effect in self.effects:
+                    if effect.active:
+                        effect.on_cast(self, self.selected_move)
+
+                # Call spell
                 status = self.selected_move.cast(self.target,
                     self, game.party.players, game.encounter)
 
@@ -111,10 +121,14 @@ class Character(object):
             effect.duration -= amount
             # look for ticks 7000 miliseconds 6001 -> 5999 -> call on_tick()
             # if tick should be applied
-        self.effects = filter(lambda effect: effect.duration == "permanent"
-                              or effect.duration > 0, self.effects)
-        removed = filter(lambda effect: not effect.active
-                                      or effect.duration <= 0, self.effects)
+        self.effects = list(filter(lambda eff: eff.active and \
+            (eff.duration == Effect.PERMANENT or eff.duration > 0),
+            self.effects))
+
+        removed = filter(lambda effect:
+            not effect.active or (effect.duration != Effect.PERMANENT and \
+            effect.duration <= 0), self.effects)
+
         for effect in removed:
             effect.on_remove()
 
@@ -140,7 +154,7 @@ class Character(object):
         if damage <= 0:
             damage = 1
         for effect in source.effects:
-            damage = effect.on_deal_damage()
+            damage = effect.on_deal_damage(damage, damage_type)
         self.current_health -= damage
         return damage
 
@@ -152,31 +166,33 @@ class Character(object):
                 continue
             heal = effect.on_heal(battle, source, heal)
         heal = round(heal)
-        heal = int(heal*(random.randint(100-Character.HEAL_VARIATION, 100+CharacterHEAL_VARIATION)/100))
+        heal = int(heal*(random.randint(100-Character.HEAL_VARIATION,
+            100+Character.HEAL_VARIATION)/100))
         if self.fallen:
             heal = 0
         for effect in source.effects:
             heal = effect.on_apply_heal(heal)
-        if self.current_health + heal > self.get_max_health():
-            self.current_health = self.health
+        if self.current_health + heal > self.get_stat("health"):
+            self.current_health = self.get_stat("health")
         else:
             self.current_health += heal
         return heal
 
-    def get_stat(self, stat):
+    def get_stat(self, stat_type):
         """Can be only used for health, attack, defense, speed,
         resist, magic"""
-        stat = self.stats[stat]
+        stat = self.stats[stat_type]
         for effect in self.effects:
             if not effect.active:
                 continue
-            stat = effect.on_get_stat(stat, stat)
+            stat = effect.on_get_stat(stat, stat_type)
         return int(stat)
 
     def get_cur_health(self):
         return self.current_health
 
     def add_effect(self, effect):
+        effect = copy.deepcopy(effect)
         for eff in self.effects:
             if eff.name == effect.name:
                 eff.on_refresh(effect)
@@ -192,6 +208,7 @@ class Character(object):
         return False
 
     def add_move(self, move):
+        move = copy.deepcopy(move)
         self.moves.append(move)
         move.set_caster(self)
 

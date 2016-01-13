@@ -1,7 +1,7 @@
 """Compilation of the components to be combined to create moves"""
 
 from engine.game.move.component import Component
-import engine.game.player.player as Player
+from engine.game.player.player import Player
 import random
 
 class SingleTarget(Component):
@@ -19,7 +19,7 @@ class GroupTarget(Component):
 class RandomAllyTarget(Component):
     """Defines Random Ally Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(Player, type(caster)):
+        if isinstance(type(caster), Player):
             return [random.choice([player for player in players if \
                 not player.fallen])]
         return [random.choice([monster for monster in monsters if \
@@ -28,7 +28,7 @@ class RandomAllyTarget(Component):
 class RandomEnemyTarget(Component):
     """Defines Random Enemy Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if not isinstance(Player, type(caster)):
+        if not isinstance(caster, Player):
             return [random.choice([player for player in players if \
                 not player.fallen])]
         return [random.choice([monster for monster in monsters if \
@@ -143,8 +143,8 @@ class Heal(Component):
         """Order IMPORTANT in modifying heal:
         Suggested standard is additions, then multiplications"""
         heal = self.heal
-        for mod in modifiers:
-            heal = modify(heal, target, caster, players, monsters)
+        for mod in self.modifiers:
+            heal = mod.modify(heal, target, caster, players, monsters)
         heal = target.apply_heal(caster, heal)
         return "%s healed %s for %d health" % \
             (caster.name, target.name, heal)
