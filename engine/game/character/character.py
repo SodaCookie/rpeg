@@ -71,7 +71,7 @@ class Character(object):
                     game.party.players, game.encounter):
                 # Cast move
                 status = self.selected_move.cast(self.target,
-                    game.selected_player, game.party.players, game.encounter)
+                    self, game.party.players, game.encounter)
 
                 # Finished casting move
                 self.action = 0
@@ -109,6 +109,8 @@ class Character(object):
             if effect.duration == "permanent":
                 continue
             effect.duration -= amount
+            # look for ticks 7000 miliseconds 6001 -> 5999 -> call on_tick()
+            # if tick should be applied
         self.effects = filter(lambda effect: effect.duration == "permanent"
                               or effect.duration > 0, self.effects)
         removed = filter(lambda effect: not effect.active
@@ -179,7 +181,7 @@ class Character(object):
             if eff.name == effect.name:
                 eff.on_refresh(effect)
                 return
-        effet.set_owner(self)
+        effect.set_owner(self)
         self.effects.append(effect)
 
     def remove_effect(self, ename):

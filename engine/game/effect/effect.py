@@ -33,6 +33,9 @@ class Effect:
     def on_refresh(self, effect):
         self.duration = self.max_duration
 
+    def on_tick(self):
+        pass
+
     def on_deal_damage(self, damage, damage_type):
         """Returns the amount of modified damage the target receives
         When host deals an amount of damage
