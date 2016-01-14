@@ -34,6 +34,17 @@ class MonsterManager(Manager):
         # Store raw image
         self.neutral_image = raw_image
 
+        # Create selection image
+        selection_image = pygame.Surface(
+            (self.neutral_image.get_width() + 10,
+            self.neutral_image.get_height() + 85),
+            pygame.SRCALPHA)
+        selection_image.fill((0, 0, 0, 0))
+        pygame.draw.rect(selection_image, (255, 0, 0),
+            selection_image.get_rect(), 1)
+        self.selection_element = element.Image(selection_image,
+            x-raw_image.get_width()//2-5, y-raw_image.get_height()-80)
+
         # Load monster hover image
         try:
             raw_image = pygame.image.load( \
@@ -99,6 +110,10 @@ class MonsterManager(Manager):
             self.text_element.surface = self.neutral_name
             self.image_element.surface = self.neutral_image
         super().render(surface, game)
+        # Render selection
+        if game.selected_player:
+            if self.monster in game.selected_player.target:
+                self.selection_element.render(surface, game)
 
     def __hash__(self):
         """This object is hashed by its name"""
