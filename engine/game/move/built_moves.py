@@ -9,10 +9,28 @@ __all__ = ["PLAYER_MOVES", "MONSTER_MOVES"]
 
 MONSTER_MOVES = {}
 PLAYER_MOVES = {}
+SKILL_TREE = {}
+SKILL_TREE['attack'] = ['magic bolt', 'quick attack', 'blessing',
+                        'stunning blow']
+SKILL_TREE['magic bolt'] = ['firebolt', 'arcane blast']
+SKILL_TREE['blessing'] = ['healing word', 'mark for death']
+SKILL_TREE['stunning blow'] = ['cleave', 'bolster']
+SKILL_TREE['quick attack'] = ['backstab', 'double stab']
+SKILL_TREE['firebolt'] = []
+SKILL_TREE['arcane blast'] = []
+SKILL_TREE['healing word'] = []
+SKILL_TREE['mark for death'] = []
+SKILL_TREE['bolster'] = []
+SKILL_TREE['cleave'] = []
+SKILL_TREE['backstab'] = []
+SKILL_TREE['double stab'] = []
+
+
+
 
 # PLAYER MOVE SEGMENT
 
-# TESTED UNSURE ABOUT CRIT FUNCTIONALITY
+# TESTED and WORKS
 PLAYER_MOVES["attack"] = Move("attack",
     None,
     [
@@ -38,7 +56,7 @@ PLAYER_MOVES["attack"] = Move("attack",
         ])
     ])
 
-# TESTED
+# TESTED AND WORKS
 PLAYER_MOVES["magic bolt"] = Move("magic bolt",
     None,
     [
@@ -52,7 +70,7 @@ PLAYER_MOVES["magic bolt"] = Move("magic bolt",
         ])
     ])
 
-# TESTED
+# TESTED AND WORKS
 PLAYER_MOVES["blessing"] = Move("blessing",
     None,
     [
@@ -62,7 +80,7 @@ PLAYER_MOVES["blessing"] = Move("blessing",
     AddEffect(StatChange("blessing", 5, "attack", 6))
     ])
 
-# TESTED
+# TESTED AND WORKS
 PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     None,
     [
@@ -73,8 +91,7 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     Damage(0, "physical",
         [
         ScaleStat(1, "attack"),
-        ScaleLevel(0.8),
-
+        ScaleLevel(0.8)
         ])
     ],
     crit_bound = 90,
@@ -91,14 +108,14 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
         ])
     ])
 
-# TESTED
+# BROKEN REFRESHING BEFORE REMOVING (Instead of vice-versa)
 PLAYER_MOVES["quick attack"] = Move("quick attack",
     None,
     [
     TargetOneOnly(),
     SingleTarget(),
     EnemiesOnly(),
-    SelfEffect(StatChangeTilMove("haste", 5, "speed")),
+    SelfEffect(StatChangeTilMove("haste", 100, "speed")),
     Damage(0, "physical",
         [
         ScaleStat(1, "attack"),

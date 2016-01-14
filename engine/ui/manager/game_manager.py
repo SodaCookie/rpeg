@@ -41,8 +41,10 @@ class GameManager(Manager):
         game.focus_window = "scenario"
         game.party = Party([Player("Player "+str(i)) for i in range(3)])
         for player in game.party.players:
-            player.add_move(mv.PLAYER_MOVES["firebolt"])
+            player.add_move(mv.PLAYER_MOVES["quick attack"])
             player.castbar[0] = player.moves[0] # temp
+            player.add_move(mv.PLAYER_MOVES["attack"])
+            player.castbar[1] = player.moves[1] # temp
 
     def render(self, surface, game):
         super().render(surface, game)
