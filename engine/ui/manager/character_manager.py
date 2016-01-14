@@ -52,10 +52,16 @@ class CharacterManager(Manager):
     def on_click(self, game):
         if game.selected_player:
             if game.selected_player.selected_move:
-                if not game.selected_player.target:
-                    game.selected_player.target.append(self.character)
-                else:
+                if game.selected_player.selected_move.is_valid_cast(
+                        game.selected_player.target,
+                        game.party.players,
+                        game.encounter):
                     game.selected_player = self.character
+                elif game.selected_player.selected_move.is_valid_target(
+                        game.selected_player.target+[self.character],
+                        game.party.players,
+                        game.encounter):
+                    game.selected_player.target.append(self.character)
             else:
                 game.selected_player = self.character
         else:

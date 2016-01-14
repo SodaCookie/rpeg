@@ -31,7 +31,11 @@ class Move(object):
         self.crit_bound = crit_bound
 
     def is_valid_target(self, selected, players, monsters):
-        return all(c.valid_targets(selected, self.caster, players,
+        return all(c.valid_target(selected, self.caster, players,
+            monsters) for c in self.components)
+
+    def is_valid_cast(self, selected, players, monsters):
+        return all(c.valid_cast(selected, self.caster, players,
             monsters) for c in self.components)
 
     def set_caster(self, caster):
