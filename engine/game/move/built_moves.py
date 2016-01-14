@@ -14,7 +14,7 @@ PLAYER_MOVES = {}
 
 # TESTED UNSURE ABOUT CRIT FUNCTIONALITY
 PLAYER_MOVES["attack"] = Move("attack",
-    None,
+    "image/icon/attack_icon.png",
     [
     TargetOneOnly(),
     SingleTarget(),
@@ -40,7 +40,7 @@ PLAYER_MOVES["attack"] = Move("attack",
 
 # TESTED
 PLAYER_MOVES["magic bolt"] = Move("magic bolt",
-    None,
+    "image/icon/magic_bolt_icon.png",
     [
     TargetOneOnly(),
     SingleTarget(),
@@ -54,7 +54,7 @@ PLAYER_MOVES["magic bolt"] = Move("magic bolt",
 
 # TESTED
 PLAYER_MOVES["blessing"] = Move("blessing",
-    None,
+    "image/icon/blessing_icon.png",
     [
     TargetOneOnly(),
     SingleTarget(),
@@ -93,7 +93,7 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
 
 # TESTED
 PLAYER_MOVES["quick attack"] = Move("quick attack",
-    None,
+    "image/icon/quick_attack_icon.png",
     [
     TargetOneOnly(),
     SingleTarget(),
@@ -120,7 +120,7 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
     ])
 
 PLAYER_MOVES["firebolt"] = Move("firebolt",
-    None,
+    "image/icon/firebolt_icon.png",
     [
     TargetOneOnly(),
     SingleTarget(),
@@ -146,7 +146,7 @@ PLAYER_MOVES["firebolt"] = Move("firebolt",
 
 # TESTED
 PLAYER_MOVES["arcane blast"] = Move("arcane blast",
-    None,
+    "image/icon/magic_blast_icon.png",
     [
     TargetOneOnly(),
     GroupTarget(),

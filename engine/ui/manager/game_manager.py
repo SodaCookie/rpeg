@@ -41,8 +41,18 @@ class GameManager(Manager):
         game.focus_window = "scenario"
         game.party = Party([Player("Player "+str(i)) for i in range(3)])
         for player in game.party.players:
+            player.add_move(mv.PLAYER_MOVES["attack"])
+            player.add_move(mv.PLAYER_MOVES["magic bolt"])
+            player.add_move(mv.PLAYER_MOVES["quick attack"])
+            player.add_move(mv.PLAYER_MOVES["blessing"])
             player.add_move(mv.PLAYER_MOVES["firebolt"])
+            player.add_move(mv.PLAYER_MOVES["arcane blast"])
             player.castbar[0] = player.moves[0] # temp
+            player.castbar[1] = player.moves[1] # temp
+            player.castbar[2] = player.moves[2] # temp
+            player.castbar[3] = player.moves[3] # temp
+            player.castbar[4] = player.moves[4] # temp
+            player.castbar[5] = player.moves[5] # temp
 
     def render(self, surface, game):
         super().render(surface, game)
