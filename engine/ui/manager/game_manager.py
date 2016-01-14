@@ -47,7 +47,7 @@ class GameManager(Manager):
             player.add_move(mv.PLAYER_MOVES["blessing"])
             player.add_move(mv.PLAYER_MOVES["firebolt"])
             player.add_move(mv.PLAYER_MOVES["arcane blast"])
-            player.add_move(mv.PLAYER_MOVES["double stab"])
+            player.add_move(mv.PLAYER_MOVES["cleave"])
             player.castbar[0] = player.moves[0] # temp
             player.castbar[1] = player.moves[1] # temp
             player.castbar[2] = player.moves[2] # temp

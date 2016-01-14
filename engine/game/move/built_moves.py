@@ -35,7 +35,7 @@ PLAYER_MOVES["attack"] = Move("attack",
     "image/icon/attack_icon.png",
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     Damage(0, "physical",
         [
@@ -46,7 +46,7 @@ PLAYER_MOVES["attack"] = Move("attack",
     crit_bound = 90,
     crit_components = [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     Damage(0, "physical",
         [
@@ -61,7 +61,7 @@ PLAYER_MOVES["magic bolt"] = Move("magic bolt",
     "image/icon/magic_bolt_icon.png",
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     Damage(0, "magic",
         [
@@ -75,7 +75,7 @@ PLAYER_MOVES["blessing"] = Move("blessing",
     "image/icon/blessing_icon.png",
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     AlliesOnly(),
     AddEffect(StatChange("blessing", 5, "attack", 6))
     ])
@@ -85,7 +85,7 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     None,
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     AddChanceEffect(Stun(5), 0.2),
     Damage(0, "physical",
@@ -97,7 +97,7 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     crit_bound = 90,
     crit_components = [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     AddChanceEffect(Stun(5), 0.2),
     Damage(0, "physical",
@@ -113,7 +113,7 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
     "image/icon/quick_attack_icon.png",
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     SelfEffect(StatChangeTilMove("haste", 5, "speed")),
     Damage(0, "physical",
@@ -125,7 +125,7 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
     crit_bound = 90,
     crit_components = [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     SelfEffect(StatChangeTilMove("haste", 5, "speed")),
     Damage(0, "physical",
@@ -141,7 +141,7 @@ PLAYER_MOVES["firebolt"] = Move("firebolt",
     "image/icon/firebolt_icon.png",
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     Damage(0, "magic",
         [
@@ -152,7 +152,7 @@ PLAYER_MOVES["firebolt"] = Move("firebolt",
     crit_bound = 50,
     crit_components = [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     AddEffect(DoT("burning", 2, 5, 1, [ScaleLevelAdd(1)], "physical")),
     Damage(0, "magic",
@@ -167,7 +167,7 @@ PLAYER_MOVES["arcane blast"] = Move("arcane blast",
     "image/icon/magic_blast_icon.png",
     [
     TargetOneOnly(),
-    GroupTarget(),
+    GroupCast(),
     EnemiesOnly(),
     Damage(0, "magic",
         [
@@ -181,7 +181,7 @@ PLAYER_MOVES["healing word"] = Move("healing word",
     None,
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     Heal(10, [
         ScaleLevel(1)
         ])
@@ -192,7 +192,7 @@ PLAYER_MOVES["mark for death"] = Move("mark for death",
     None,
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     AddEffect(StatChange("marked", -5, "defense", 10))
     ])
@@ -201,34 +201,35 @@ PLAYER_MOVES["mark for death"] = Move("mark for death",
 PLAYER_MOVES["bolster"] = Move("bolster",
     None,
     [
-    SelfTarget(),
+    SelfCast(),
     SelfEffect(StatChange("bolstered", 20, "defense", 8))
     ])
 
 # DOESN'T WORK - CRASHES
-# PLAYER_MOVES["cleave"] = Move("cleave",
-#     None,
-#     [
-#     TargetNumberOnly(2),
-#     EnemiesOnly(),
-#     Damage(0, "physical",
-#         [
-#         ScaleStat(1, "attack"),
-#         ScaleLevel(0.6),
-#         ])
-#     ],
-#     crit_bound = 90,
-#     crit_components = [
-#     TargetOneOnly(),
-#     SingleTarget(),
-#     EnemiesOnly(),
-#     Damage(0, "physical",
-#         [
-#         ScaleStat(1, "attack"),
-#         ScaleLevel(0.6),
-#         ScaleCritDamage(2)
-#         ])
-#     ])
+PLAYER_MOVES["cleave"] = Move("cleave",
+    None,
+    [
+    SingleCast(),
+    TargetNumberOnly(2),
+    EnemiesOnly(),
+    Damage(0, "physical",
+        [
+        ScaleStat(1, "attack"),
+        ScaleLevel(0.6),
+        ])
+    ],
+    crit_bound = 90,
+    crit_components = [
+    TargetOneOnly(),
+    SingleCast(),
+    EnemiesOnly(),
+    Damage(0, "physical",
+        [
+        ScaleStat(1, "attack"),
+        ScaleLevel(0.6),
+        ScaleCritDamage(2)
+        ])
+    ])
 
 # IGNORES DEFENSE OF STUNNED TARGET
 # PLAYER_MOVES["backstab"] = Move("backstab",
@@ -246,7 +247,7 @@ PLAYER_MOVES["bolster"] = Move("bolster",
 #     crit_bound = 90,
 #     crit_components = [
 #     TargetOneOnly(),
-#     SingleTarget(),
+#     SingleCast(),
 #     EnemiesOnly(),
 #     someignoredefense()
 #     Damage(0, "physical",
@@ -262,7 +263,7 @@ PLAYER_MOVES["double stab"] = Move("double stab",
     None,
     [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     Repeat(2,
         Damage(0, "physical",
@@ -275,7 +276,7 @@ PLAYER_MOVES["double stab"] = Move("double stab",
     crit_bound = 90,
     crit_components = [
     TargetOneOnly(),
-    SingleTarget(),
+    SingleCast(),
     EnemiesOnly(),
     Repeat(2,
         Damage(0, "physical",
@@ -292,7 +293,7 @@ PLAYER_MOVES["double stab"] = Move("double stab",
 MONSTER_MOVES["attack"] = Move("punch",
     None,
     [
-    RandomEnemyTarget(),
+    RandomEnemyCast(),
     EnemiesOnly(),
     Damage(0, "physical",
         [

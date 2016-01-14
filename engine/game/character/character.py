@@ -88,7 +88,7 @@ class Character(object):
 
         # Move casting
         if self.selected_move and self.ready and not self.fallen:
-            if self.selected_move.is_valid_target(self.target,
+            if self.selected_move.is_valid_cast(self.target,
                     game.party.players, game.encounter):
 
                 # on_cast effect call

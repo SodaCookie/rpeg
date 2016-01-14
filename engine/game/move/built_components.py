@@ -4,24 +4,24 @@ from engine.game.move.component import Component
 from engine.game.player.player import Player
 import random
 
-class SelfTarget(Component):
+class SelfCast(Component):
     """Targeting scheme for self only"""
     def get_targets(self, selected, caster, players, monsters):
         return [caster]
 
-class SingleTarget(Component):
+class SingleCast(Component):
     """Defines Single Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
         return selected
 
-class GroupTarget(Component):
+class GroupCast(Component):
     """Defines Group Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
         if isinstance(selected[0], Player):
             return players
         return monsters
 
-class RandomAllyTarget(Component):
+class RandomAllyCast(Component):
     """Defines Random Ally Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
         if isinstance(type(caster), Player):
@@ -30,7 +30,7 @@ class RandomAllyTarget(Component):
         return [random.choice([monster for monster in monsters if \
             not monster.fallen])]
 
-class RandomEnemyTarget(Component):
+class RandomEnemyCast(Component):
     """Defines Random Enemy Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
         if not isinstance(caster, Player):
@@ -44,8 +44,11 @@ class TargetNumberOnly(Component):
     def __init__(self, number):
         self.number = number
 
-    def valid_targets(self, selected, caster, players, monsters):
+    def valid_cast(self, selected, caster, players, monsters):
         return len(selected) == self.number
+
+    def valid_target(self, selected, caster, players, monsters):
+        return len(selected) <= self.number
 
 class TargetOneOnly(TargetNumberOnly):
     """Descriptor for targetting one character only"""
@@ -54,12 +57,12 @@ class TargetOneOnly(TargetNumberOnly):
 
 class AlliesOnly(Component):
     """Descriptor for targetting allies only"""
-    def valid_targets(self, selected, caster, players, monsters):
+    def valid_target(self, selected, caster, players, monsters):
         return all([isinstance(t, type(caster)) for t in selected])
 
 class EnemiesOnly(Component):
     """Descriptor for targetting enemies only"""
-    def valid_targets(self, selected, caster, players, monsters):
+    def valid_target(self, selected, caster, players, monsters):
         return all([not isinstance(t, type(caster)) for t in selected])
 
 class AddChanceEffect(Component):
