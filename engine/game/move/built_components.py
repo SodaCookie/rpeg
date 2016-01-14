@@ -4,6 +4,11 @@ from engine.game.move.component import Component
 from engine.game.player.player import Player
 import random
 
+class SelfTarget(Component):
+    """Targeting scheme for self only"""
+    def get_targets(self, selected, caster, players, monsters):
+        return [caster]
+
 class SingleTarget(Component):
     """Defines Single Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
