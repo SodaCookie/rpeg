@@ -108,14 +108,14 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
         ])
     ])
 
-# BROKEN REFRESHING BEFORE REMOVING (Instead of vice-versa)
+# TESTED AND WORKS
 PLAYER_MOVES["quick attack"] = Move("quick attack",
     "image/icon/quick_attack_icon.png",
     [
     TargetOneOnly(),
     SingleTarget(),
     EnemiesOnly(),
-    SelfEffect(StatChangeTilMove("haste", 100, "speed")),
+    SelfEffect(StatChangeTilMove("haste", 5, "speed")),
     Damage(0, "physical",
         [
         ScaleStat(1, "attack"),
@@ -136,6 +136,7 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
         ])
     ])
 
+# TESTED AND WORKS
 PLAYER_MOVES["firebolt"] = Move("firebolt",
     "image/icon/firebolt_icon.png",
     [
@@ -161,7 +162,7 @@ PLAYER_MOVES["firebolt"] = Move("firebolt",
         ])
     ])
 
-# TESTED
+# TESTED AND WORKS
 PLAYER_MOVES["arcane blast"] = Move("arcane blast",
     "image/icon/magic_blast_icon.png",
     [
@@ -175,7 +176,7 @@ PLAYER_MOVES["arcane blast"] = Move("arcane blast",
         ])
     ])
 
-# TESTED
+# TESTED AND WORKS
 PLAYER_MOVES["healing word"] = Move("healing word",
     None,
     [
@@ -186,6 +187,7 @@ PLAYER_MOVES["healing word"] = Move("healing word",
         ])
     ])
 
+# TESTED AND WORKS
 PLAYER_MOVES["mark for death"] = Move("mark for death",
     None,
     [
@@ -195,38 +197,38 @@ PLAYER_MOVES["mark for death"] = Move("mark for death",
     AddEffect(StatChange("marked", -5, "defense", 10))
     ])
 
-# SHOULD TARGET SELF ONLY
-# PLAYER_MOVES["bolster"] = Move("bolster",
-#     None,
-#     [
-#     sometargetscheme()
-#     SelfEffect(StatChange("bolstered", 5, "defense", 8))
-#     ])
-
-
-PLAYER_MOVES["cleave"] = Move("cleave",
+# TESTED AND WORKS
+PLAYER_MOVES["bolster"] = Move("bolster",
     None,
     [
-    TargetNumberOnly(2),
-    EnemiesOnly(),
-    Damage(0, "physical",
-        [
-        ScaleStat(1, "attack"),
-        ScaleLevel(0.6),
-        ])
-    ],
-    crit_bound = 90,
-    crit_components = [
-    TargetOneOnly(),
-    SingleTarget(),
-    EnemiesOnly(),
-    Damage(0, "physical",
-        [
-        ScaleStat(1, "attack"),
-        ScaleLevel(0.6),
-        ScaleCritDamage(2)
-        ])
+    SelfTarget(),
+    SelfEffect(StatChange("bolstered", 20, "defense", 8))
     ])
+
+# DOESN'T WORK - CRASHES
+# PLAYER_MOVES["cleave"] = Move("cleave",
+#     None,
+#     [
+#     TargetNumberOnly(2),
+#     EnemiesOnly(),
+#     Damage(0, "physical",
+#         [
+#         ScaleStat(1, "attack"),
+#         ScaleLevel(0.6),
+#         ])
+#     ],
+#     crit_bound = 90,
+#     crit_components = [
+#     TargetOneOnly(),
+#     SingleTarget(),
+#     EnemiesOnly(),
+#     Damage(0, "physical",
+#         [
+#         ScaleStat(1, "attack"),
+#         ScaleLevel(0.6),
+#         ScaleCritDamage(2)
+#         ])
+#     ])
 
 # IGNORES DEFENSE OF STUNNED TARGET
 # PLAYER_MOVES["backstab"] = Move("backstab",
@@ -255,6 +257,7 @@ PLAYER_MOVES["cleave"] = Move("cleave",
 #         ])
 #     ])
 
+# WORKS? Tho the double attack is not explicit
 PLAYER_MOVES["double stab"] = Move("double stab",
     None,
     [

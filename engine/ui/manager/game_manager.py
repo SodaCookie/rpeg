@@ -47,12 +47,15 @@ class GameManager(Manager):
             player.add_move(mv.PLAYER_MOVES["blessing"])
             player.add_move(mv.PLAYER_MOVES["firebolt"])
             player.add_move(mv.PLAYER_MOVES["arcane blast"])
+            player.add_move(mv.PLAYER_MOVES["double stab"])
             player.castbar[0] = player.moves[0] # temp
             player.castbar[1] = player.moves[1] # temp
             player.castbar[2] = player.moves[2] # temp
             player.castbar[3] = player.moves[3] # temp
             player.castbar[4] = player.moves[4] # temp
             player.castbar[5] = player.moves[5] # temp
+            player.castbar[6] = player.moves[6] # temp
+
 
     def render(self, surface, game):
         super().render(surface, game)

@@ -34,6 +34,10 @@ class StatChangeTilMove(Effect):
         self.remove()
         return ""
 
+    def on_refresh(self, effect):
+        self.active = True
+        self.duration = self.max_duration
+
 class Stun(Effect):
     """Sets target's speed to 0 in order to stun"""
 

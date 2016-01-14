@@ -58,8 +58,8 @@ class Monster(character.Character):
         # add moves
         # for movename in monster_def["abilities"]:
         #     self.add_move(built_moves.MONSTER_MOVES[movename])
-        # self.add_move(built_moves.MONSTER_MOVES["attack"]) # TEMP
-        # self.set_active_moves(self.moves)
+        self.add_move(built_moves.MONSTER_MOVES["attack"]) # TEMP
+        self.set_active_moves(self.moves)
 
         for attribute in monster_def["attributes"]:
             #self.add_effect()
