@@ -4,10 +4,10 @@ import math
 import random
 import copy
 
+
 from engine.game.attribute.attribute import Attribute
 
 from engine.game.effect.effect import Effect
-
 
 class Character(object):
     """Character is the base class for units that interact during battles.
