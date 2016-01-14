@@ -19,7 +19,7 @@ def action_nothing(game, **kwargs):
 def action_battle(game, **kwargs):
     """Implements a battle"""
     defaults = {
-        "challenge" : random.randint(8, 12), # TO FIX
+        "challenge" : random.randint(4, 8), # TO FIX
         "monsters" : None
     }
     defaults.update(kwargs)
