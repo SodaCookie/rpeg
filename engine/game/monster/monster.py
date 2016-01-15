@@ -58,7 +58,7 @@ class Monster(character.Character):
         # add moves
         # for movename in monster_def["abilities"]:
         #     self.add_move(built_moves.MONSTER_MOVES[movename])
-        self.add_move(built_moves.MONSTER_MOVES["bite"]) # TEMP
+        self.add_move(built_moves.MONSTER_MOVES["piercing shriek"]) # TEMP
         self.set_active_moves(self.moves)
 
         for attribute in monster_def["attributes"]:

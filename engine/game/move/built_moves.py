@@ -25,10 +25,9 @@ SKILL_TREE['cleave'] = []
 SKILL_TREE['backstab'] = []
 SKILL_TREE['double stab'] = []
 
-
-
-
+###############################################################################
 # PLAYER MOVE SEGMENT
+###############################################################################
 
 # TESTED and WORKS
 PLAYER_MOVES["attack"] = Move("attack",
@@ -328,9 +327,12 @@ PLAYER_MOVES["double stab"] = Move("double stab",
         )
     ])
 
+###############################################################################
 # MONSTER MOVE SEGMENT
+###############################################################################
 
 # Standard physical attack
+# TESTED AND WORKS
 MONSTER_MOVES["attack"] = Move("attack",
     None,
     "",
@@ -345,6 +347,7 @@ MONSTER_MOVES["attack"] = Move("attack",
     ])
 
 # Rat standard physical attack
+# TESTED AND WORKS
 MONSTER_MOVES["bite"] = Move("bite",
     None,
     "",
@@ -359,6 +362,7 @@ MONSTER_MOVES["bite"] = Move("bite",
     ])
 
 # Plagued rat physical attack
+# TESTED AND WORKS
 MONSTER_MOVES["plagued bite"] = Move("plagued bite",
     None,
     "",
@@ -374,6 +378,7 @@ MONSTER_MOVES["plagued bite"] = Move("plagued bite",
     ])
 
 # Spider standard attack
+# TESTED AND WORKS
 MONSTER_MOVES["venomous bite"] = Move("venomous bite",
     None,
     "",
@@ -389,6 +394,7 @@ MONSTER_MOVES["venomous bite"] = Move("venomous bite",
     ])
 
 # Spider debuff attack
+# TESTED AND WORKS
 MONSTER_MOVES["web wrap"] = Move("web wrap",
     None,
     "",
@@ -400,11 +406,13 @@ MONSTER_MOVES["web wrap"] = Move("web wrap",
     ])
 
 # Lost soul standard AoE magic attack
+# AOE TARGETING NOT WORKING
 MONSTER_MOVES["piercing shriek"] = Move("piercing shriek",
     None,
     "",
     None,
     [
+    RandomEnemyCast(),
     GroupCast(),
     EnemiesOnly(),
     Damage(0, "magic",
@@ -414,6 +422,7 @@ MONSTER_MOVES["piercing shriek"] = Move("piercing shriek",
     ])
 
 # Lost soul single target nuke/heal
+# heals itself, but doesn't do damage
 MONSTER_MOVES["soul drain"] = Move("soul drain",
     None,
     "",
@@ -423,18 +432,19 @@ MONSTER_MOVES["soul drain"] = Move("soul drain",
     SelfCast(),
     EnemiesOnly(),
     Conditional(
-        lambda target, caster, players, monsters: target.is_enemy(),
+        lambda target, caster, players, monsters: target.is_enemy(caster),
         [Damage(0, "magic",
         [
         ScaleStat(1, "magic"),
         ])],
-        Heal(0,
+        [Heal(0,
         [
         ScaleStat(1, "magic"),
-        ]))
+        ])])
     ])
 
 # Zombie special attack
+# TESTED AND WORKS
 MONSTER_MOVES["festering bite"] = Move("festering bite",
     None,
     "",
@@ -450,6 +460,7 @@ MONSTER_MOVES["festering bite"] = Move("festering bite",
     ])
 
 # AoE physical attack for abomination
+# Group targeting not working
 MONSTER_MOVES["cleave"] = Move("cleave",
     None,
     "",
@@ -464,6 +475,7 @@ MONSTER_MOVES["cleave"] = Move("cleave",
     ])
 
 # Magic Damage DoT for necromancer
+# TESTED AND WORKS
 MONSTER_MOVES["decay"] = Move("decay",
     None,
     "",
@@ -475,17 +487,20 @@ MONSTER_MOVES["decay"] = Move("decay",
     ])
 
 # Necromancer AoE Debuff
+# GROUP TARGETING NOT WORKING
 MONSTER_MOVES["plague"] = Move("plague",
     None,
     "",
     None,
     [
+    RandomEnemyCast(),
     GroupCast(),
     EnemiesOnly(),
     AddEffect(StatChange("diseased", -5, "attack", 5))
     ])
 
 # AoE physical attack for the necromancer
+# GROUP TARGETTING NOT WORKING
 MONSTER_MOVES["hands of the dead"] = Move("hands of the dead",
     None,
     "",
@@ -500,3 +515,4 @@ MONSTER_MOVES["hands of the dead"] = Move("hands of the dead",
     ])
 
 # Summon minions move for necromancer
+# NOT IMPLEMENTED
