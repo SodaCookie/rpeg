@@ -33,6 +33,8 @@ SKILL_TREE['double stab'] = []
 # TESTED and WORKS
 PLAYER_MOVES["attack"] = Move("attack",
     "image/icon/attack_icon.png",
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -59,6 +61,8 @@ PLAYER_MOVES["attack"] = Move("attack",
 # TESTED AND WORKS
 PLAYER_MOVES["magic bolt"] = Move("magic bolt",
     "image/icon/magic_bolt_icon.png",
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -73,6 +77,8 @@ PLAYER_MOVES["magic bolt"] = Move("magic bolt",
 # TESTED AND WORKS
 PLAYER_MOVES["blessing"] = Move("blessing",
     "image/icon/blessing_icon.png",
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -83,11 +89,13 @@ PLAYER_MOVES["blessing"] = Move("blessing",
 # TESTED AND WORKS
 PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     None,
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
     EnemiesOnly(),
-    AddChanceEffect(Stun(5), 0.2),
+    AddChanceEffect(Stun(5), 1),
     Damage(0, "physical",
         [
         ScaleStat(1, "attack"),
@@ -99,7 +107,7 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
     TargetOneOnly(),
     SingleCast(),
     EnemiesOnly(),
-    AddChanceEffect(Stun(5), 0.2),
+    AddChanceEffect(Stun(5), 1),
     Damage(0, "physical",
         [
         ScaleStat(1, "attack"),
@@ -111,6 +119,8 @@ PLAYER_MOVES["stunning blow"] = Move("stunning blow",
 # TESTED AND WORKS
 PLAYER_MOVES["quick attack"] = Move("quick attack",
     "image/icon/quick_attack_icon.png",
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -139,6 +149,8 @@ PLAYER_MOVES["quick attack"] = Move("quick attack",
 # TESTED AND WORKS
 PLAYER_MOVES["firebolt"] = Move("firebolt",
     "image/icon/firebolt_icon.png",
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -165,6 +177,8 @@ PLAYER_MOVES["firebolt"] = Move("firebolt",
 # TESTED AND WORKS
 PLAYER_MOVES["arcane blast"] = Move("arcane blast",
     "image/icon/magic_blast_icon.png",
+    "",
+    None,
     [
     TargetOneOnly(),
     GroupCast(),
@@ -179,6 +193,8 @@ PLAYER_MOVES["arcane blast"] = Move("arcane blast",
 # TESTED AND WORKS
 PLAYER_MOVES["healing word"] = Move("healing word",
     None,
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -190,6 +206,8 @@ PLAYER_MOVES["healing word"] = Move("healing word",
 # TESTED AND WORKS
 PLAYER_MOVES["mark for death"] = Move("mark for death",
     None,
+    "",
+    None,
     [
     TargetOneOnly(),
     SingleCast(),
@@ -200,13 +218,17 @@ PLAYER_MOVES["mark for death"] = Move("mark for death",
 # TESTED AND WORKS
 PLAYER_MOVES["bolster"] = Move("bolster",
     None,
+    "",
+    None,
     [
     SelfCast(),
     SelfEffect(StatChange("bolstered", 20, "defense", 8))
     ])
 
-# DOESN'T WORK - CRASHES
+# TESTED AND WORKS
 PLAYER_MOVES["cleave"] = Move("cleave",
+    None,
+    "",
     None,
     [
     SingleCast(),
@@ -232,34 +254,52 @@ PLAYER_MOVES["cleave"] = Move("cleave",
     ])
 
 # IGNORES DEFENSE OF STUNNED TARGET
-# PLAYER_MOVES["backstab"] = Move("backstab",
-#     None,
-#     [
-#     TargetOneOnly(),
-#     EnemiesOnly(),
-#     someignoredefense()
-#     Damage(0, "physical",
-#         [
-#         ScaleStat(1, "attack"),
-#         ScaleLevel(1),
-#         ])
-#     ],
-#     crit_bound = 90,
-#     crit_components = [
-#     TargetOneOnly(),
-#     SingleCast(),
-#     EnemiesOnly(),
-#     someignoredefense()
-#     Damage(0, "physical",
-#         [
-#         ScaleStat(1, "attack"),
-#         ScaleLevel(1),
-#         ScaleCrit(3)
-#         ])
-#     ])
+PLAYER_MOVES["backstab"] = Move("backstab",
+    None,
+    "",
+    None,
+    [
+    TargetOneOnly(),
+    SingleCast(),
+    EnemiesOnly(),
+    Conditional(
+        lambda target, caster, players, monsters: target.has_effect("stunned"),
+        [Damage(0, "true",
+            [
+            ScaleStat(1, "attack"),
+            ScaleLevel(1),
+            ])],
+        [Damage(0, "physical",
+            [
+            ScaleStat(1, "attack"),
+            ScaleLevel(1),
+            ])]
+    )],
+    crit_bound = 90,
+    crit_components = [
+    TargetOneOnly(),
+    SingleCast(),
+    EnemiesOnly(),
+    Conditional(
+        lambda target, caster, players, monsters: target.has_effect("stunned"),
+        [Damage(0, "true",
+            [
+            ScaleStat(1, "attack"),
+            ScaleLevel(1),
+            ScaleCritDamage(3),
+            ])],
+        [Damage(0, "physical",
+            [
+            ScaleStat(1, "attack"),
+            ScaleLevel(1),
+            ScaleCritDamage(3),
+            ])])
+    ])
 
 # WORKS? Tho the double attack is not explicit
 PLAYER_MOVES["double stab"] = Move("double stab",
+    None,
+    "",
     None,
     [
     TargetOneOnly(),
@@ -290,7 +330,10 @@ PLAYER_MOVES["double stab"] = Move("double stab",
 
 # MONSTER MOVE SEGMENT
 
-MONSTER_MOVES["attack"] = Move("punch",
+# Standard physical attack
+MONSTER_MOVES["attack"] = Move("attack",
+    None,
+    "",
     None,
     [
     RandomEnemyCast(),
@@ -300,3 +343,160 @@ MONSTER_MOVES["attack"] = Move("punch",
         ScaleStat(1, "attack"),
         ])
     ])
+
+# Rat standard physical attack
+MONSTER_MOVES["bite"] = Move("bite",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    EnemiesOnly(),
+    Damage(0, "physical",
+        [
+        ScaleStat(1, "attack"),
+        ])
+    ])
+
+# Plagued rat physical attack
+MONSTER_MOVES["plagued bite"] = Move("plagued bite",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    EnemiesOnly(),
+    AddEffect(StatChange("diseased", -3, "attack", 5)),
+    Damage(0, "physical",
+        [
+        ScaleStat(1, "attack"),
+        ])
+    ])
+
+# Spider standard attack
+MONSTER_MOVES["venomous bite"] = Move("venomous bite",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    EnemiesOnly(),
+    AddEffect(DoT("poisoned", 5, 5, 1, None, "magic")),
+    Damage(0, "physical",
+        [
+        ScaleStat(1, "attack"),
+        ])
+    ])
+
+# Spider debuff attack
+MONSTER_MOVES["web wrap"] = Move("web wrap",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    EnemiesOnly(),
+    AddEffect(StatChange("wrapped", -5, "speed", 5))
+    ])
+
+# Lost soul standard AoE magic attack
+MONSTER_MOVES["piercing shriek"] = Move("piercing shriek",
+    None,
+    "",
+    None,
+    [
+    GroupCast(),
+    EnemiesOnly(),
+    Damage(0, "magic",
+        [
+        ScaleStat(0.7, "magic"),
+        ])
+    ])
+
+# Lost soul single target nuke/heal
+MONSTER_MOVES["soul drain"] = Move("soul drain",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    SelfCast(),
+    EnemiesOnly(),
+    Conditional(
+        lambda target, caster, players, monsters: target.is_enemy(),
+        [Damage(0, "magic",
+        [
+        ScaleStat(1, "magic"),
+        ])],
+        Heal(0,
+        [
+        ScaleStat(1, "magic"),
+        ]))
+    ])
+
+# Zombie special attack
+MONSTER_MOVES["festering bite"] = Move("festering bite",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    EnemiesOnly(),
+    AddEffect(StatChange("open wound", -3, "defense", 5)),
+    Damage(0, "physical",
+        [
+        ScaleStat(1, "attack"),
+        ])
+    ])
+
+# AoE physical attack for abomination
+MONSTER_MOVES["cleave"] = Move("cleave",
+    None,
+    "",
+    None,
+    [
+    GroupCast(),
+    EnemiesOnly(),
+    Damage(0, "physical",
+        [
+        ScaleStat(0.7, "physical"),
+        ])
+    ])
+
+# Magic Damage DoT for necromancer
+MONSTER_MOVES["decay"] = Move("decay",
+    None,
+    "",
+    None,
+    [
+    RandomEnemyCast(),
+    EnemiesOnly(),
+    AddEffect(DoT("decaying", 5, 7, 1, None, "magic")),
+    ])
+
+# Necromancer AoE Debuff
+MONSTER_MOVES["plague"] = Move("plague",
+    None,
+    "",
+    None,
+    [
+    GroupCast(),
+    EnemiesOnly(),
+    AddEffect(StatChange("diseased", -5, "attack", 5))
+    ])
+
+# AoE physical attack for the necromancer
+MONSTER_MOVES["hands of the dead"] = Move("hands of the dead",
+    None,
+    "",
+    None,
+    [
+    GroupCast(),
+    EnemiesOnly(),
+    Damage(0, "physical",
+        [
+        ScaleStat(0.7, "physical"),
+        ])
+    ])
+
+# Summon minions move for necromancer

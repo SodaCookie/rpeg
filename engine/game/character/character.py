@@ -225,6 +225,12 @@ class Character(object):
                 return True
         return False
 
+    def has_effect(self, ename):
+        for eff in self.effects[:]:
+            if eff.name == ename:
+                return True
+        return False
+
     def add_move(self, move):
         move = copy.deepcopy(move)
         self.moves.append(move)

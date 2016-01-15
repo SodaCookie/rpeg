@@ -43,11 +43,11 @@ class GameManager(Manager):
         for player in game.party.players:
             player.add_move(mv.PLAYER_MOVES["attack"])
             player.add_move(mv.PLAYER_MOVES["magic bolt"])
-            player.add_move(mv.PLAYER_MOVES["quick attack"])
+            player.add_move(mv.PLAYER_MOVES["stunning blow"])
             player.add_move(mv.PLAYER_MOVES["blessing"])
             player.add_move(mv.PLAYER_MOVES["firebolt"])
             player.add_move(mv.PLAYER_MOVES["arcane blast"])
-            player.add_move(mv.PLAYER_MOVES["cleave"])
+            player.add_move(mv.PLAYER_MOVES["backstab"])
             player.castbar[0] = player.moves[0] # temp
             player.castbar[1] = player.moves[1] # temp
             player.castbar[2] = player.moves[2] # temp

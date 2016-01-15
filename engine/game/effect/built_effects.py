@@ -42,7 +42,7 @@ class Stun(Effect):
     """Sets target's speed to 0 in order to stun"""
 
     def __init__(self, duration):
-        super().__init__("stun", duration)
+        super().__init__("stunned", duration)
 
     def on_build_action(self, action):
         return 0
