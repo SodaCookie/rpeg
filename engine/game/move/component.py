@@ -25,6 +25,10 @@ class Component(object):
         with a message from that component"""
         return ""
 
-    def valid_targets(self, selected, caster, players, monsters):
-        """Returns a if the given targets are valid for the move"""
+    def valid_target(self, selected, caster, players, monsters):
+        """Returns a if the given targets are valid to add to the move"""
+        return True
+
+    def valid_cast(self, targets, caster, players, monsters):
+        """Returns if a move is ready to be cast"""
         return True

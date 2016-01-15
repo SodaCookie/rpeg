@@ -31,9 +31,9 @@ def parse_monsters(filename):
         monsters[name]['graphic'] = {} # we need to do some work here
         for graphic in monster.find('graphics'):
             monsters[name]['graphic'][graphic.attrib["name"]] = graphic.text
+        monsters[name]['unique'] = bool(monster.find('unique').text)
         monsters[name]['rating'] = int(monster.find('rating').text)
     return monsters
-
 
 class Monster(character.Character):
     """The enemy characters encountered in battle. The Monster object
@@ -58,7 +58,7 @@ class Monster(character.Character):
         # add moves
         # for movename in monster_def["abilities"]:
         #     self.add_move(built_moves.MONSTER_MOVES[movename])
-        self.add_move(built_moves.MONSTER_MOVES["attack"]) # TEMP
+        self.add_move(built_moves.MONSTER_MOVES["piercing shriek"]) # TEMP
         self.set_active_moves(self.moves)
 
         for attribute in monster_def["attributes"]:

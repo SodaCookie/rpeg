@@ -1,34 +1,39 @@
 """Compilation of the components to be combined to create moves"""
 
 from engine.game.move.component import Component
-import engine.game.player.player as Player
+from engine.game.player.player import Player
 import random
 
-class SingleTarget(Component):
+class SelfCast(Component):
+    """Targeting scheme for self only"""
+    def get_targets(self, selected, caster, players, monsters):
+        return [caster]
+
+class SingleCast(Component):
     """Defines Single Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
         return selected
 
-class GroupTarget(Component):
+class GroupCast(Component):
     """Defines Group Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
         if isinstance(selected[0], Player):
             return players
         return monsters
 
-class RandomAllyTarget(Component):
+class RandomAllyCast(Component):
     """Defines Random Ally Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(Player, type(caster)):
+        if isinstance(type(caster), Player):
             return [random.choice([player for player in players if \
                 not player.fallen])]
         return [random.choice([monster for monster in monsters if \
             not monster.fallen])]
 
-class RandomEnemyTarget(Component):
+class RandomEnemyCast(Component):
     """Defines Random Enemy Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if not isinstance(Player, type(caster)):
+        if not isinstance(caster, Player):
             return [random.choice([player for player in players if \
                 not player.fallen])]
         return [random.choice([monster for monster in monsters if \
@@ -39,8 +44,11 @@ class TargetNumberOnly(Component):
     def __init__(self, number):
         self.number = number
 
-    def valid_targets(self, selected, caster, players, monsters):
+    def valid_cast(self, selected, caster, players, monsters):
         return len(selected) == self.number
+
+    def valid_target(self, selected, caster, players, monsters):
+        return len(selected) <= self.number
 
 class TargetOneOnly(TargetNumberOnly):
     """Descriptor for targetting one character only"""
@@ -49,47 +57,68 @@ class TargetOneOnly(TargetNumberOnly):
 
 class AlliesOnly(Component):
     """Descriptor for targetting allies only"""
-    def valid_targets(self, selected, caster, players, monsters):
+    def valid_target(self, selected, caster, players, monsters):
         return all([isinstance(t, type(caster)) for t in selected])
 
 class EnemiesOnly(Component):
     """Descriptor for targetting enemies only"""
-    def valid_targets(self, selected, caster, players, monsters):
+    def valid_target(self, selected, caster, players, monsters):
         return all([not isinstance(t, type(caster)) for t in selected])
 
-class Effect(Component):
+class AddChanceEffect(Component):
+    """Chance to apply effect on target(s)"""
+    def __init__(self, effect, chance):
+        self.effect = effect
+        self.chance = chance
+
+    def on_cast(self, target, caster, players, monsters):
+        rand = random.random()
+        if rand > self.chance:
+            return ""
+        else:
+            self.effect.set_caster(caster)
+            damage = target.add_effect(self.effect)
+            return ""
+
+class AddEffect(AddChanceEffect):
     """Applies an effect of target(s)"""
+    def __init__(self, effect):
+        self.effect = effect
+        self.chance = 1
+
+    def on_cast(self, target, caster, players, monsters):
+        self.effect.set_caster(caster)
+        damage = target.add_effect(self.effect)
+        return ""
+
+class SelfEffect(Component):
+    """Applies self-effect on cast"""
     def __init__(self, effect):
         self.effect = effect
 
     def on_cast(self, target, caster, players, monsters):
-        damage = target.add_effect(self.effect)
+        damage = caster.add_effect(self.effect)
         return ""
 
 class Damage(Component):
     """Deals flat damage to given targets"""
-    def __init__(self, damage, dtype):
+    def __init__(self, damage, dtype, modifiers=None):
         self.damage = damage
         self.dtype = dtype
+        if not modifiers:
+            self.modifiers = []
+        else:
+            self.modifiers = modifiers
 
     def on_cast(self, target, caster, players, monsters):
-        damage = target.deal_damage(caster, self.damage, self.dtype)
+        """Order IMPORTANT in modifying damage:
+        Suggested standard is additions, then multiplications"""
+        damage = self.damage
+        for mod in self.modifiers:
+            damage = mod.modify(damage, target, caster)
+        damage = target.deal_damage(caster, damage, self.dtype)
         return "%s dealt %d %s damage to %s" % \
             (caster.name, damage, self.dtype, target.name)
-
-class ScaleDamage(Damage):
-    """Deals scaling damage to given targets"""
-    def __init__(self, damage, dtype, scaling, stype):
-        super().__init__(damage, dtype)
-        self.scaling = scaling
-        self.stype = stype
-
-    def on_cast(self, target, caster, players, monsters):
-        scaled_damage = self.damage + self.scaling * caster.get_stat(self.stype)
-        damage = target.deal_damage(caster, scaled_damage, self.dtype)
-        return "%s dealt %d %s damage to %s" % \
-            (caster.name, damage, self.dtype, target.name)
-
 
 class ScaleMiss(Component):
 
@@ -103,6 +132,7 @@ class ScaleMiss(Component):
 
 
 class ScaleCrit(Component):
+    #changes the critbound?
 
     def __init__(self, scaling, stype):
         super().__init__()
@@ -112,40 +142,22 @@ class ScaleCrit(Component):
     def get_crit(self, crit, selected, caster, players, monsters):
         return crit + self.scaling * caster.get_stat(self.stype)
 
-
 class Heal(Component):
     """Deals flat healing to given targets"""
-    def __init__(self, heal):
+    def __init__(self, heal, modifiers):
         self.heal = heal
+        if not modifiers:
+            self.modifiers = []
+        else:
+            self.modifiers = modifiers
 
     def on_cast(self, target, caster, players, monsters):
-        heal = target.apply_heal(caster, self.heal)
-        return "%s healed %s for %d health" % \
-            (caster.name, target.name, heal)
-
-
-class ScaleHeal(Heal):
-    """Deals scaling healing to given targets"""
-    def __init__(self, heal, scaling, stype):
-        super().__init__(heal)
-        self.scaling = scaling
-        self.stype = stype
-
-    def on_cast(self, target, caster, players, monsters):
-        if self.stype == "attack":
-            scale = caster.get_attack()
-        elif self.stype == "defense":
-            scale = caster.get_defense()
-        elif self.stype == "health":
-            scale = caster.get_max_defense()
-        elif self.stype == "magic":
-            scale = caster.get_magic()
-        elif self.stype == "resist":
-            scale = caster.get_resist()
-        elif self.stype == "speed":
-            scale = caster.get_speed()
-        scaled_heal = self.heal + self.scaling * scale
-        heal = target.apply_heal(caster, scaled_heal)
+        """Order IMPORTANT in modifying heal:
+        Suggested standard is additions, then multiplications"""
+        heal = self.heal
+        for mod in self.modifiers:
+            heal = mod.modify(heal, target, caster)
+        heal = target.apply_heal(caster, heal)
         return "%s healed %s for %d health" % \
             (caster.name, target.name, heal)
 
@@ -162,17 +174,23 @@ class Repeat(Component):
         return msg
 
 class Conditional(Component):
-    """Component that will execute component 1 if given condition is
-    True else will execute component 2"""
-    def __init__(self, condition, component1, component2):
+    """Component that will execute list of components 1 if given condition is
+    True else will execute list of components 2"""
+    def __init__(self, condition, components1, components2):
         self.condition = condition
-        self.component1 = component1
-        self.component2 = component2
+        self.components1 = components1
+        self.components2 = components2
 
     def on_cast(self, target, caster, players, monsters):
+        msg = ""
         if self.condition(target, caster, players, monsters):
-            return self.component1.on_cast(target, caster, players, monsters)
-        return self.component2.on_cast(target, caster, players, monsters)
+            for component in self.components1:
+                msg += component.on_cast(target, caster, players, monsters)
+            return msg
+        else:
+            for component in self.components2:
+                msg += component.on_cast(target, caster, players, monsters)
+            return msg
 
 class Message(Component):
     """Component that will return a message"""
@@ -180,4 +198,5 @@ class Message(Component):
         self.message = message
 
     def on_cast(self, target, caster, players, monsters):
+        print(self.message)
         return self.message

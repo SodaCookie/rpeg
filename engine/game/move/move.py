@@ -4,12 +4,25 @@ class Move(object):
     """Contains a character's move's definition and how it interacts
     with characters in battle"""
 
-    def __init__(self, name, icon=None, components=None, miss_bound=0,
-                 miss_components=None, crit_bound=100, crit_components=None):
+    def __init__(self, name, icon=None, description="", statdist=None,
+                 components=None, miss_bound=0, miss_components=None,
+                 crit_bound=100, crit_components=None):
         self.name = name
         self.caster = None
         self.icon = icon
         self.animation = NotImplemented
+        self.description = description
+        self.statdist = {
+            'attack': 0,
+            'defense': 0,
+            'magic': 0,
+            'resist': 0,
+            'speed': 0,
+            'health': 0
+        }
+        if statdist:
+            self.statdist.update(statdist)
+
         # Standard Move
         if components != None:
             self.components = components
@@ -31,7 +44,11 @@ class Move(object):
         self.crit_bound = crit_bound
 
     def is_valid_target(self, selected, players, monsters):
-        return all(c.valid_targets(selected, self.caster, players,
+        return all(c.valid_target(selected, self.caster, players,
+            monsters) for c in self.components)
+
+    def is_valid_cast(self, selected, players, monsters):
+        return all(c.valid_cast(selected, self.caster, players,
             monsters) for c in self.components)
 
     def set_caster(self, caster):
@@ -79,3 +96,8 @@ class Move(object):
             total_msg = total_msg[:-1]
         return total_msg
 
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memo):
+        return self

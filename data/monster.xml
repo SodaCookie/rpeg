@@ -11,6 +11,7 @@
   <abilities></abilities>         the moves the monster has
   <attributes></attributes>       the passive effects of the monster
   <graphics></graphics>           the monster's sprites
+  <unique>false</unique>
   <rating>1</rating>              the monster's challenge rating
 </monster>
  -->
@@ -29,13 +30,14 @@
       <resist>0</resist>
     </stats>
     <abilities>
-      <ability>attack</ability> <!-- deal physical damage -->
+      <ability>bite</ability> <!-- deal physical damage -->
     </abilities>
     <attributes/>
     <graphics>
       <graphic name="neutral">/image/monster/rat_neutral.png</graphic>
       <graphic name="hover">/image/monster/rat_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>1</rating>
   </monster>
 
@@ -51,13 +53,14 @@
       <resist>0</resist>
     </stats>
     <abilities>
-      <ability>crippling attack</ability> <!-- weakens attack and speed -->
+      <ability>plagued bite</ability> <!-- weakens attack and speed -->
     </abilities>
     <attributes/>
     <graphics>
       <graphic name="neutral">/image/monster/rat_neutral.png</graphic>
       <graphic name="hover">/image/monster/rat_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>2</rating>
   </monster>
 
@@ -73,7 +76,7 @@
       <resist>0</resist>
     </stats>
     <abilities>
-      <ability>poison attack</ability> <!-- applies poison -->
+      <ability>venomous bite</ability> <!-- applies poison -->
       <ability>web wrap</ability> <!-- slows speed -->
     </abilities>
     <attributes/>
@@ -82,6 +85,7 @@
       <graphic name="hover">/image/monster/spider_hover.png</graphic>
     </graphics>
     <rating>2</rating>
+    <unique>False</unique>
   </monster>
 
   <monster>
@@ -96,7 +100,7 @@
       <resist>0</resist>
     </stats>
     <abilities>
-      <ability>magic attack</ability> <!-- deals magic damage -->
+      <ability>piercing shriek</ability> <!-- deals magic damage -->
       <ability>soul drain</ability> <!-- deals damage and heals -->
     </abilities>
     <attributes/>
@@ -104,6 +108,7 @@
       <graphic name="neutral">/image/monster/lost_soul_neutral.png</graphic>
       <graphic name="hover">/image/monster/lost_soul_hover.png</graphic>
     </graphics>
+    <unique>True</unique>
     <rating>2</rating>
   </monster>
 
@@ -126,6 +131,7 @@
       <graphic name="neutral">/image/monster/grave_robber_neutral.png</graphic>
       <graphic name="hover">/image/monster/grave_robber_hover.png</graphic>
     </graphics>
+    <unique>True</unique>
     <rating>2</rating>
   </monster>
 
@@ -151,6 +157,7 @@
       <graphic name="neutral">/image/monster/skeleton_warrior_neutral.png</graphic>
       <graphic name="hover">/image/monster/skeleton_warrior_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>2</rating>
   </monster>
 
@@ -176,6 +183,7 @@
       <graphic name="neutral">/image/monster/skeleton_archer_neutral.png</graphic>
       <graphic name="hover">/image/monster/skeleton_archer_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>2</rating>
   </monster>
 
@@ -199,6 +207,7 @@
       <graphic name="neutral">/image/monster/zombie_neutral.png</graphic>
       <graphic name="hover">/image/monster/zombie_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>3</rating>
   </monster>
 
@@ -214,7 +223,7 @@
       <resist>0</resist>
     </stats>
     <abilities>
-      <ability>poison attack</ability>
+      <ability>venomous bite</ability>
       <ability>web wrap</ability>
     </abilities>
     <attributes/>
@@ -222,29 +231,7 @@
       <graphic name="neutral">/image/monster/giant_spider_neutral.png</graphic>
       <graphic name="hover">/image/monster/giant_spider_hover.png</graphic>
     </graphics>
-    <rating>3</rating>
-  </monster>
-
-  <monster>
-    <name>zombie</name>
-    <location>catacombs</location>
-    <stats>
-      <attack>20</attack>
-      <speed>3</speed>
-      <defense>5</defense>
-      <magic>0</magic>
-      <health>70</health>
-      <resist>3</resist>
-    </stats>
-    <abilities>
-      <ability>attack</ability>
-      <ability>festering bite</ability> <!-- lowers defense -->
-    </abilities>
-    <attributes/>
-    <graphics>
-      <graphic name="neutral">/image/monster/zombie_neutral.png</graphic>
-      <graphic name="hover">/image/monster/zombie_hover.png</graphic>
-    </graphics>
+    <unique>False</unique>
     <rating>3</rating>
   </monster>
 
@@ -270,6 +257,7 @@
       <graphic name="neutral">/image/monster/abomination_neutral.png</graphic>
       <graphic name="hover">/image/monster/abomination_hover.png</graphic>
     </graphics>
+    <unique>False</unique>
     <rating>4</rating>
   </monster>
 
@@ -285,8 +273,7 @@
       <resist>3</resist>
     </stats>
     <abilities>
-      <ability>magic attack</ability>
-      <ability>summon shitters</ability> <!-- summons shitty token minions -->
+      <ability>decay</ability>
       <ability>plague</ability> <!-- AoE debuff to magic,attack,defense -->
       <ability>soul drain</ability> <!-- life steal -->
       <ability>hands of the dead</ability> <!-- AoE physical -->
@@ -296,7 +283,8 @@
       <graphic name="neutral">/image/monster/zombie_neutral.png</graphic>
       <graphic name="hover">/image/monster/zombie_hover.png</graphic>
     </graphics>
-    <rating>100</rating>
+    <unique>True</unique>
+    <rating>7</rating>
   </monster>
 
   <monster>
@@ -318,7 +306,8 @@
       <graphic name="neutral">/image/monster/skeletal_thrall_neutral.png</graphic>
       <graphic name="hover">/image/monster/skeletal_thrall_hover.png</graphic>
     </graphics>
-    <rating>100</rating>
+    <unique>True</unique>
+    <rating>1</rating>
   </monster>
 
 </data>
