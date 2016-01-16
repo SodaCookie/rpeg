@@ -184,14 +184,14 @@ USAGE/FOR DUMMIES <3
 
             "Guess we'll have to do this the hard way. Let's show 'em to the light boys!"
             </body>
-            <action>battle</action>
+            <action>battle monsters:grave_robber,grave_robber,grave_robber</action>
         </dialog>
         <dialog name="cat-fail">
             <body>"We know you're out there!"
 
             The men draw their weapons and assault your party.
             </body>
-            <action>battle</action>
+            <action>battle monsters:grave_robber,grave_robber,grave_robber</action>
         </dialog>
         <dialog name="cat">
             <body>"It's nothing boss, just a cat."
