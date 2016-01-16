@@ -16,6 +16,8 @@ class Party(object):
 
   def remove_shards(self, amount):
     self.shards -= amount
+    if self.shards < 0:
+      self.shards = 0
 
   def has_item(self, item):
     """Return True if party has item"""

@@ -35,9 +35,9 @@ class Character(object):
         self.stats["health"] = 100
         self.stats["resist"] = 0
         self.stats["speed"] = Character.SPEED_BASE/(Character.SPEED_CAP-1)
+        self.stats["action"] = 100 # defines max action
         self.current_health = self.stats["health"]
          # enough to do 1 ACTION_SPEED per second
-        self.action_max = 100
         self.action = 0
         self.ready = False
         self.scroll = 0
@@ -45,16 +45,9 @@ class Character(object):
         self.selected_move = None # Used to store the move
 
     def cleanup_battle(self):
-        # Remove all non-attribute type effects (any in battle effects)
-        old_effects = self.effects
-        self.effects = []
-        for effect in old_effects:
-            if isinstance(effect, Attribute):
-                self.effects.append(effect)
-
-        # Reset Health
-        if not self.fallen:
-            self.current_health = self.get_stat("health")
+        """After battle cleanup"""
+        self.cleanse()
+        self.full_heal()
 
         # Reset Action
         self.action = 0
@@ -75,10 +68,10 @@ class Character(object):
         self.build_action(action)
 
         # Calculate ready
-        if self.action >= self.action_max and not self.ready:
+        if self.action >= self.get_stat("action") and not self.ready:
             # Available to cast
             self.start_turn()
-        if self.action < self.action_max:
+        if self.action < self.get_stat("action"):
             self.ready = False
 
         if self.get_cur_health() <= 0:
@@ -160,8 +153,8 @@ class Character(object):
         self.action += action
         if self.action < 0:
             self.action = 0
-        elif self.action > self.action_max:
-            self.action = self.action_max
+        elif self.action > self.get_stat("action"):
+            self.action = self.get_stat("action")
 
     def deal_damage(self, source, damage, damage_type):
         """Deals damage to character by the given amount. Takes into
@@ -196,6 +189,24 @@ class Character(object):
         else:
             self.current_health += heal
         return heal
+
+    def full_heal(self):
+        """Fully heal self unless fallen"""
+        if not self.fallen:
+            self.current_health = self.get_stat("health")
+
+    def revive(self):
+        """Revives player with one health"""
+        self.fallen = False
+        self.current_health = 1
+
+    def cleanse(self):
+        """Remove all non-attribute type effects (any in battle effects)"""
+        old_effects = self.effects
+        self.effects = []
+        for effect in old_effects:
+            if isinstance(effect, Attribute):
+                self.effects.append(effect)
 
     def get_stat(self, stat_type):
         """Can be only used for health, attack, defense, speed,

@@ -1,6 +1,7 @@
 """Defines the actions"""
 
 import random
+import re
 from engine.game.monster.monster import Monster
 
 
@@ -101,11 +102,127 @@ def action_loot(game, **kwargs):
                     parameters[parameter_name] = parameter_value
                 defaults["item"].append(Item(**parameters))
     game.loot = (defaults["shard"], defaults["item"])
-    game.party.shards += defaults["shard"]
+    game.party.add_shards(defaults["shard"])
     game.focus_window = "loot"
+
+def action_add_action(game, **kwargs):
+    """Action to add actions"""
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+    }
+    defaults.update(kwargs)
+    percent = int(defaults["percent"])
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.build_action(percent/100*player.get_stat("action"))
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.build_action(percent/100*player.get_stat("action"))
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.build_action(percent/100*player.get_stat("action"))
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_remove_shard(game, **kwargs):
+    """Action to remove a shard. Proper use requires if the party has
+    enough shard. If amount is over than party shard amount is 0"""
+    defaults = {
+        "shard" : 0, # amount to remove
+    }
+    defaults.update(kwargs)
+    if re.match(r"^\d+", kwargs["shard"]):
+        game.party.remove_shards(int(kwargs["shard"]))
+    else:
+        print("Shard has an incorrect argument")
+
+def action_apply_effect(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_apply_attribute(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "attribute" : None
+    }
+    defaults.update(kwargs)
+
+def action_full_restore(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_remove_shard(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_remove_item(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_kill(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_revive(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_full_restore(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
+def action_cleanse(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+        "effect" : None
+    }
+    defaults.update(kwargs)
+
 
 ACTIONS = {
     "" : action_nothing,
     "battle" : action_battle,
-    "loot" : action_loot
+    "loot" : action_loot,
+    "action-full-restore" : action_full_restore,
+    "remove-shard" : action_remove_shard,
+    "remove-item" : action_remove_item,
+    "apply-effect" : action_apply_effect,
+    "apply-attribute" : action_apply_attribute,
+    "kill" : action_kill,
+    "revive" : action_revive,
+    "full_restore" : action_full_restore,
+    "cleanse" : action_cleanse
 }
