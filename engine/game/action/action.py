@@ -11,7 +11,7 @@ def action_nothing(game, **kwargs):
 def action_battle(game, **kwargs):
     """Implements a battle"""
     defaults = {
-        "challenge" : random.randint(4, 8), # TO FIX
+        "challenge" : random.randint(3, 7), # TO FIX
         "monsters" : None
     }
     defaults.update(kwargs)
@@ -20,18 +20,21 @@ def action_battle(game, **kwargs):
         while defaults["challenge"] > 0 and len(names) < 3:
             valid_monsters = [(name, monster["rating"])
                 for name, monster in Monster.MONSTERS.items()
-                if monster["rating"] <= defaults["challenge"] and\
-                monster["location"] == game.floor_type]
+                if monster["rating"] <= defaults["challenge"] and \
+                monster["location"] == game.floor_type and \
+                not monster["unique"]]
             if not valid_monsters:
                 break #failsafe
             name, rating = random.choice(valid_monsters)
             names.append(name)
             defaults["challenge"] -= rating
-        if defaults["challenge"]:
+        if defaults["challenge"]: # Any rating left over
+                                  # then we add the highest
             valid_monsters = [(name, monster["rating"])
                 for name, monster in Monster.MONSTERS.items()
-                if monster["rating"] <= defaults["challenge"] and\
-                monster["location"] == game.floor_type]
+                if monster["rating"] <= defaults["challenge"] and \
+                monster["location"] == game.floor_type and \
+                not monster["unique"]]
 
             highest_value = 0
             for name, value in valid_monsters:
