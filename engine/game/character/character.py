@@ -53,7 +53,8 @@ class Character(object):
                 self.effects.append(effect)
 
         # Reset Health
-        self.current_health = self.get_stat("health")
+        if not self.fallen:
+            self.current_health = self.get_stat("health")
 
         # Reset Action
         self.action = 0

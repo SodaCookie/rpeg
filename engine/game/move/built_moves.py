@@ -406,14 +406,13 @@ MONSTER_MOVES["web wrap"] = Move("web wrap",
     ])
 
 # Lost soul standard AoE magic attack
-# AOE TARGETING NOT WORKING
+# TESTED AND WORKS
 MONSTER_MOVES["piercing shriek"] = Move("piercing shriek",
     None,
     "",
     None,
     [
-    RandomEnemyCast(),
-    GroupCast(),
+    EnemiesCast(),
     EnemiesOnly(),
     Damage(0, "magic",
         [
@@ -423,6 +422,7 @@ MONSTER_MOVES["piercing shriek"] = Move("piercing shriek",
 
 # Lost soul single target nuke/heal
 # heals itself, but doesn't do damage
+# TESTED AND WORKS
 MONSTER_MOVES["soul drain"] = Move("soul drain",
     None,
     "",
@@ -466,7 +466,7 @@ MONSTER_MOVES["cleave"] = Move("cleave",
     "",
     None,
     [
-    GroupCast(),
+    EnemiesCast(),
     EnemiesOnly(),
     Damage(0, "physical",
         [
@@ -493,8 +493,7 @@ MONSTER_MOVES["plague"] = Move("plague",
     "",
     None,
     [
-    RandomEnemyCast(),
-    GroupCast(),
+    EnemiesCast(),
     EnemiesOnly(),
     AddEffect(StatChange("diseased", -5, "attack", 5))
     ])
@@ -506,7 +505,7 @@ MONSTER_MOVES["hands of the dead"] = Move("hands of the dead",
     "",
     None,
     [
-    GroupCast(),
+    EnemiesCast(),
     EnemiesOnly(),
     Damage(0, "physical",
         [
