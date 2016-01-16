@@ -45,8 +45,9 @@ def action_battle(game, **kwargs):
             names.append(random.choice(valid_names))
         defaults["monsters"] = [Monster(name) for name in names]
     else:
-        names = defaults["monsters"]
-        defaults["monsters"] = [Monster(name) for name in names]
+        names = defaults["monsters"].split(',')
+        defaults["monsters"] = [Monster(name.replace("_", " ")) \
+            for name in names]
     monsters = defaults["monsters"]
     game.encounter = defaults["monsters"]
 
