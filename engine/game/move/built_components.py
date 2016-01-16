@@ -21,6 +21,20 @@ class GroupCast(Component):
             return players
         return monsters
 
+class EnemiesCast(Component):
+    """Defines Enemy Targetting for a move"""
+    def get_targets(self, selected, caster, players, monsters):
+        if isinstance(caster, Player):
+            return monsters
+        return players
+
+class AlliesCast(Component):
+    """Defines Ally Targetting for a move"""
+    def get_targets(self, selected, caster, players, monsters):
+        if isinstance(caster, Player):
+            return players
+        return monsters
+
 class RandomAllyCast(Component):
     """Defines Random Ally Target for a move"""
     def get_targets(self, selected, caster, players, monsters):

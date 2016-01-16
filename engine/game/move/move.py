@@ -66,7 +66,7 @@ class Move(object):
             component_targets = component.get_targets(
                 selected, caster, players, monsters)
             if component_targets:
-                targets = component_targets
+                targets.extend(component_targets)
         assert targets, "Move must have a target"
 
         # roll for the miss, normal or crit
