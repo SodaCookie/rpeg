@@ -89,7 +89,7 @@ class MonsterManager(Manager):
         self.health_bar.percent = 100*self.monster.get_cur_health()/ \
             self.monster.get_stat("health")
         self.action_bar.percent = 100*self.monster.action/ \
-            self.monster.action_max
+            self.monster.get_stat("action")
 
     def on_click(self, game):
         if game.selected_player and game.selected_player.selected_move and \
