@@ -5,17 +5,18 @@ class Party(object):
   def __init__(self, players):
     self.players = players
     self.shards = 0
-    self.items = [] # strings, items that the party owns like "orb"
 
   def has_shards(self, amount):
     """Returns True if party has enough shards"""
-    return amount >= self.shards
+    return amount <= self.shards
 
   def add_shards(self, amount):
     self.shards += amount
 
   def remove_shards(self, amount):
     self.shards -= amount
+    if self.shards < 0:
+      self.shards = 0
 
   def has_item(self, item):
     """Return True if party has item"""

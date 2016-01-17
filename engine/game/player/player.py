@@ -60,16 +60,28 @@ class Player(character.Character):
     def config_for_new_battle(self):
         self.update()
 
-    def equip(self, item, slot=""):
+    def equip(self, item, slot):
         """Try to equip item into the slot"""
-        if not slot: slot = item.slot
         if self.equipment.get(slot) == None:
             return False
-        if item.slot not in slot:
-            return False
+
         self.equipment[slot] = item
         self.update()
         return True
+
+    def remove_item(self, name):
+        """Returns True is item is removed"""
+        for key, item in self.equipment.items():
+            if item != None:
+                if item.name == name:
+                    player.equip(None, key)
+                    return True
+        for item in self.inventory:
+            if item != None:
+                if item.name == name:
+                    player.equip(None, key)
+                    return True
+        return False
 
     def give_experience(self, experience):
         """Grants experience to a player"""

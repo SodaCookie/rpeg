@@ -1,7 +1,10 @@
 """Defines the actions"""
 
 import random
+import re
+
 from engine.game.monster.monster import Monster
+from engine.game.effect.built_scenario_effect import SCENARIO_EFFECTS
 
 
 def action_nothing(game, **kwargs):
@@ -101,11 +104,186 @@ def action_loot(game, **kwargs):
                     parameters[parameter_name] = parameter_value
                 defaults["item"].append(Item(**parameters))
     game.loot = (defaults["shard"], defaults["item"])
-    game.party.shards += defaults["shard"]
+    game.party.add_shards(defaults["shard"])
     game.focus_window = "loot"
+
+def action_add_action(game, **kwargs):
+    """Action to add actions"""
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "percent" : "100" # Values from 1-100, percent to charge
+    }
+    defaults.update(kwargs)
+    percent = int(defaults["percent"])
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.build_action(percent/100*player.get_stat("action"))
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.build_action(percent/100*player.get_stat("action"))
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.build_action(percent/100*player.get_stat("action"))
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_remove_shard(game, **kwargs):
+    """Action to remove a shard. Proper use requires if the party has
+    enough shard. If amount is over than party shard amount is 0"""
+    defaults = {
+        "shard" : 0, # amount to remove
+    }
+    defaults.update(kwargs)
+    if re.match(r"^\d+", kwargs["shard"]):
+        game.party.remove_shards(int(kwargs["shard"]))
+    else:
+        print("Shard has an incorrect argument")
+
+def action_apply_effect(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "effect" : None
+    }
+    defaults.update(kwargs)
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.add_effect(SCENARIO_EFFECTS[defaults["effect"]])
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.add_effect(SCENARIO_EFFECTS[defaults["effect"]])
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.add_effect(SCENARIO_EFFECTS[defaults["effect"]])
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_apply_attribute(game, **kwargs):
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+        "effect" : None
+    }
+    defaults.update(kwargs)
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.add_effect(SCENARIO_ATTRIBUTES[defaults["effect"]])
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.add_effect(SCENARIO_ATTRIBUTES[defaults["effect"]])
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.add_effect(SCENARIO_ATTRIBUTES[defaults["effect"]])
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_remove_item(game, **kwargs):
+    """Needs to be called with has item condition"""
+    defaults = {
+        "item" : None
+    }
+    defaults.update(kwargs)
+    for player in game.party.players:
+        if player.remove_item(defaults["name"]):
+            break
+
+
+def action_kill(game, **kwargs):
+    """Action to kill"""
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+    }
+    defaults.update(kwargs)
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.kill()
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.kill()
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.kill()
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_revive(game, **kwargs):
+    """Action to revive"""
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+    }
+    defaults.update(kwargs)
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.revive()
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.revive()
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.revive()
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_full_restore(game, **kwargs):
+    """Action to full restore"""
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+    }
+    defaults.update(kwargs)
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.full_heal()
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.full_heal()
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.full_heal()
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
+def action_cleanse(game, **kwargs):
+    """Action to cleanse"""
+    defaults = {
+        "target" : "all", # Values can be all, random, or random number
+    }
+    defaults.update(kwargs)
+    if defaults["target"] == "all":
+        for player in game.party.players:
+            player.cleanse()
+    elif defaults["target"] == "random":
+        player = random.choice(game.party.players)
+        player.cleanse()
+    elif re.match(r"^random\d+", defaults["target"]):
+        num_targets = int(defaults["target"].replace("random", ""))
+        for player in random.sample(game.party.players, num_targets):
+            player.cleanse()
+    else:
+        # Logging?
+        print("Target has an incorrect argument")
+
 
 ACTIONS = {
     "" : action_nothing,
     "battle" : action_battle,
-    "loot" : action_loot
+    "loot" : action_loot,
+    "action-full-restore" : action_full_restore,
+    "remove-shard" : action_remove_shard,
+    "remove-item" : action_remove_item,
+    "apply-effect" : action_apply_effect,
+    "apply-attribute" : action_apply_attribute,
+    "kill" : action_kill,
+    "revive" : action_revive,
+    "full_restore" : action_full_restore,
+    "cleanse" : action_cleanse
 }

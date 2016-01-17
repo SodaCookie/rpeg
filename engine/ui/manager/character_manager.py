@@ -47,7 +47,7 @@ class CharacterManager(Manager):
         self.health.percent = 100*self.character.get_cur_health()/ \
             self.character.get_stat("health")
         self.action.percent = 100*self.character.action/ \
-            self.character.action_max
+            self.character.get_stat("action")
 
     def on_click(self, game):
         if game.selected_player:

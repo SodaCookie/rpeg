@@ -98,7 +98,7 @@ USAGE/FOR DUMMIES <3
         </dialog>
     </event>
 
-    <event name="the occult" type="event" level="catacombs">
+    <event name="the occult" type="entrance" level="catacombs">
         <dialog name="main">
             <body>Your path is blocked by cloaked figures up ahead. They confront you as you approach.
 
@@ -140,7 +140,7 @@ USAGE/FOR DUMMIES <3
             "Are you here for the ferry travelers? I can help you cross for a fee of shards."
             </body>
             <choices>
-                <choice name="ferry"> - Pay the boatman 100 shards to cross</choice>
+                <choice name="ferry"> - Pay the boatman 20 shards to cross</choice>
                 <choice name="continue"> - Ignore the boatman</choice>
             </choices>
         </dialog>
@@ -149,7 +149,8 @@ USAGE/FOR DUMMIES <3
 
             Upon arriving at the other side, your party encounters a dark chamber hidden from view on the other shore. They discover equipment and shards within. Your party searches through the treasures for valuables and continues.
             </body>
-            <action>loot shard:100</action>
+            <condition>hasshard 20</condition>
+            <action>remove-shard 20</action>
             <action>loot</action>
         </dialog>
         <dialog name="continue">

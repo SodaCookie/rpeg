@@ -56,7 +56,7 @@ class ScenarioManager(Manager):
                             (255, 255, 255), 480)
         self.renderables.append(body)
         height_counter = body.surface.get_height()+20
-        for choice in dialog.get_choices(game.party.players):
+        for choice in dialog.get_choices(game.party):
             next_dialog = dialog.make_choice(choice)
             on_click = partial(self.on_choice_click, next_dialog)
             button = element.Button(choice, 18, self.x+10,
@@ -68,7 +68,7 @@ class ScenarioManager(Manager):
             self.renderables.append(button)
             height_counter += zone.rect.h
 
-        if not dialog.get_choices(game.party.players):
+        if not dialog.get_choices(game.party):
             button = element.Button("Next", 18, self.x+10,
                 self.y+height_counter)
             on_click = partial(self.on_no_choice_click, dialog)
