@@ -8,7 +8,7 @@ class Party(object):
 
   def has_shards(self, amount):
     """Returns True if party has enough shards"""
-    return amount >= self.shards
+    return amount <= self.shards
 
   def add_shards(self, amount):
     self.shards += amount

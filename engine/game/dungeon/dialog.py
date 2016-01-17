@@ -5,7 +5,7 @@ class Dialog(object):
 
   CONDITIONS = {
   "" : lambda party: True,
-  "hasgold" : lambda party, gold: party.has_gold(int(gold)),
+  "hasshard" : lambda party, gold: party.has_shards(int(gold)),
   "hasitem" : lambda party, item: party.has_item(item),
   "hasitemtype" : lambda party, wtype: party.has_item_type(wtype),
   "hasrace" : lambda party, race: party.has_race(race)
@@ -48,10 +48,10 @@ class Dialog(object):
 
   def get_choices(self, party):
     """get the available choices based on the party"""
-    return [choice for choice, d in self.choices.items()]
-    # return [choice for choice, d in self.choices.items()
-    #         if Dialog.CONDITIONS[d.condition.split(' ')[0]](party,
-    #         *d.condition.split(' ')[1:])]
+    # return [choice for choice, d in self.choices.items()]
+    return [choice for choice, d in self.choices.items()
+            if Dialog.CONDITIONS[d.condition.split(' ')[0]](party,
+            *d.condition.split(' ')[1:])]
 
   def make_choice(self, choice):
     """Returns the dialogue that was chosen, if every roll fails it will default to returning the last roll"""
