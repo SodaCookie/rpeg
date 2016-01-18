@@ -145,19 +145,17 @@ class CharacterCardManager(Manager):
             self.zones = []
             self.zones.append(level_up_zone)
             for slot in self.plyr_eqp:
-                on_click = partial(slot.on_click, slot,
-                    self.equip_drag_validator, False)
-                off_click = partial(slot.off_click, slot,
-                    self.equip_drop_validator, False)
+                on_click = partial(self.on_item_click, slot)
+                off_click = partial(self.on_item_off_click, slot)
                 zone = Zone((slot.x, slot.y, slot.surface.get_width(), slot.surface.get_height()), on_click, None, None, off_click)
                 slot.bind(zone)
                 self.zones.append(zone)
 
             for slot in self.plyr_mv:
                 on_click = partial(slot.on_click, slot,
-                    self.move_drag_validator, True)
+                    self.equip_drag_validator, True)
                 off_click = partial(slot.off_click, slot,
-                    self.move_drop_validator, False)
+                    self.equip_drop_validator, False)
                 zone = Zone((slot.x, slot.y, slot.surface.get_width(), slot.surface.get_height()), on_click, None, None, off_click)
                 slot.bind(zone)
                 self.zones.append(zone)
@@ -165,13 +163,30 @@ class CharacterCardManager(Manager):
         if game.selected_player:
             super().update(game)
 
+    def update_text(self):
+        stat_values = "\n"
+        stat_values += str(self.cur_plyr.get_stat("attack")) + "\n"
+        stat_values += str(self.cur_plyr.get_stat("defense")) + "\n"
+        stat_values += str(self.cur_plyr.get_stat("magic")) + "\n"
+        stat_values += str(self.cur_plyr.get_stat("health")) + "\n"
+        stat_values += str(self.cur_plyr.get_stat("resist")) + "\n"
+        self.plyr_stat_values.set_text(stat_values)
+
+    def on_item_click(self, slot, game):
+        Slot.on_click(slot, self.equip_drag_validator, False, game)
+        self.update_text()
+
+    def on_item_off_click(self, slot, game):
+        Slot.off_click(slot, self.equip_drop_validator, False, game)
+        self.update_text()
+
     @staticmethod
     def equip_drag_validator(slot, game):
         return True
 
     @staticmethod
     def equip_drop_validator(slot, game):
-        return True
+        return game.current_object.slot in slot.key
 
     @staticmethod
     def move_drag_validator(slot, game):

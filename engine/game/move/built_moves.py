@@ -470,7 +470,7 @@ MONSTER_MOVES["cleave"] = Move("cleave",
     EnemiesOnly(),
     Damage(0, "physical",
         [
-        ScaleStat(0.7, "physical"),
+        ScaleStat(0.7, "attack"),
         ])
     ])
 
@@ -509,7 +509,7 @@ MONSTER_MOVES["hands of the dead"] = Move("hands of the dead",
     EnemiesOnly(),
     Damage(0, "physical",
         [
-        ScaleStat(0.7, "physical"),
+        ScaleStat(0.7, "attack"),
         ])
     ])
 
