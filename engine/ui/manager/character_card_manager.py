@@ -18,7 +18,7 @@ from engine.ui.element.bar import Bar
 from engine.ui.element.slot import Slot
 from engine.ui.element.button import Button
 
-from engine.game.item.item import Item
+from engine.game.item.item_old2 import Item
 from engine.game.move.move import Move
 
 class CharacterCardManager(Manager):

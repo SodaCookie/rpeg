@@ -5,7 +5,7 @@ import pygame
 
 from engine.ui.core.zone import Zone
 from engine.ui.core.manager import Manager
-from engine.game.item.item import Item
+from engine.game.item.item_old2 import Item
 import engine.ui.element as element
 
 class LootManager(Manager):

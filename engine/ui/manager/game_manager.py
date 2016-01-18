@@ -8,7 +8,7 @@ import engine.ui.manager as manager
 
 import engine.game.move.built_moves as mv
 
-from engine.game.item.item import Item
+from engine.game.item.item_old2 import Item
 
 class GameManager(Manager):
     """GameManager is responsible for rendering and updating

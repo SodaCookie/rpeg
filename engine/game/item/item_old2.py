@@ -78,6 +78,7 @@ class Item(object):
         self.rarity = self._generate_rarity(Item.DEFAULT_RARITY)
         self.template = self._generate_template(Item.TEMPLATES, self.rarity)
         self.type = self._generate_type(Item.TYPES)
+        self.slot = "hand"
         self.name = self._generate_name(self.template, self.tag, self.rarity)
         self.stats = self._generate_stats(Item.DEFAULT_STATS, self.tag, self.rarity, self.type)
         self.abilities = self._generate_abilities() # to be completed when the abilities are good
@@ -165,7 +166,8 @@ class Item(object):
         stats["magic"] = round(raw_stats["points"] * magic_dist)
         stats["speed"] = round(raw_stats["points"] * speed_dist)
         stats["health"] = round(raw_stats["points"] * health_dist)
-
+        stats["resist"] = 1
+        stats["action"] = 0
         return stats
 
     def _generate_abilities(self):
