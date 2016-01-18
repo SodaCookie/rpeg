@@ -1,0 +1,16 @@
+<!-- XML Format
+     <set>                                      start of set
+        <name>"monsterorfloorname"</name>       key for dict
+        <items>                                 start of list
+            <item>"itemname"</item>             name of item in set
+        </items>
+    </item>
+-->
+
+<!-- FLOOR SEGMENT -->
+
+
+
+<!-- MONSTER SEGMENT -->
+
+
