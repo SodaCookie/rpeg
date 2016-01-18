@@ -91,8 +91,5 @@ class ScenarioManager(Manager):
         # Parse action
         # action := <type> [<parameter-name>:<parameter> <para...]
         for action in dialog.action:
-            action_data = action.split(" ")
-            action_type = action_data[0]
-            kwargs = {action.split(":")[0]: action.split(":")[1] \
-                for action in action_data[1:]}
-            ACTIONS[action_type](game, **kwargs)
+            action_type, parameters = action
+            ACTIONS[action_type](game, **parameters)

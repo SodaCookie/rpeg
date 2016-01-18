@@ -47,7 +47,7 @@ USAGE/FOR DUMMIES <3
             <body>Suddenly, the spirit notice you're presence. Their wails turn to screeches as they dash angrily towards your party!
 
             "Why won't anyone help us?!?"</body>
-            <action>battle</action>
+            <action type="battle"/>
         </dialog>
         <dialog name="leave">
             <body>Your party decides to leave them be. As you and the spirits take separate path down the catacombs, you hear their moans grow increasingly distant.</body>
@@ -57,7 +57,7 @@ USAGE/FOR DUMMIES <3
             <body>Suddenly, the spirit notice you're presence. Their wails turn to screeches and dash angrily towards your party!
 
             "Why won't anyone help me?!?"</body>
-            <action>battle</action>
+            <action type="battle"/>
         </dialog>
         <dialog name="approach">
             <body>Your party cautiously walks towards the spirits. They notice your presence and turn to confront you.
@@ -82,23 +82,25 @@ USAGE/FOR DUMMIES <3
 
                 The spirits refuse your offer of help. They shriek curses at your party as they turn to fight you.
             </body>
-            <action>battle</action>
+            <action type="battle"/>
         </dialog>
 
         <dialog name="abandon">
             <body>"Why, why won't you help us?"
 
                 Their wails turn to screeches and dash angrily towards your party!</body>
-            <action>battle</action>
+            <action type="battle"/>
         </dialog>
         <dialog name="promise">
             <body>The spirits are pleased by your promise of good will. They give your party shards to help you on your quest.
             </body>
-            <action>loot shard:100</action>
+            <action type="loot">
+                <parameter name="shard">100</parameter>
+            </action>
         </dialog>
     </event>
 
-    <event name="the occult" type="entrance" level="catacombs">
+    <event name="the occult" type="event" level="catacombs">
         <dialog name="main">
             <body>Your path is blocked by cloaked figures up ahead. They confront you as you approach.
 
@@ -129,7 +131,7 @@ USAGE/FOR DUMMIES <3
 
             The men draw their weapons and assault your party
             </body>
-            <action>battle</action>
+            <action type="battle"/>
         </dialog>
     </event>
 
@@ -150,8 +152,10 @@ USAGE/FOR DUMMIES <3
             Upon arriving at the other side, your party encounters a dark chamber hidden from view on the other shore. They discover equipment and shards within. Your party searches through the treasures for valuables and continues.
             </body>
             <condition>hasshard 20</condition>
-            <action>remove-shard 20</action>
-            <action>loot</action>
+            <action type="remove-shard">
+                <parameter name="shard">20</parameter>
+            </action>
+            <action type="loot"/>
         </dialog>
         <dialog name="continue">
             <body>You refuse the ferryman's offer and continue deeper into the catacombs.
@@ -185,14 +189,18 @@ USAGE/FOR DUMMIES <3
 
             "Guess we'll have to do this the hard way. Let's show 'em to the light boys!"
             </body>
-            <action>battle monsters:grave_robber,grave_robber,grave_robber</action>
+            <action type="battle">
+                <parameter name="monsters">grave_robber,grave_robber,grave_robber</parameter>
+            </action>
         </dialog>
         <dialog name="cat-fail">
             <body>"We know you're out there!"
 
             The men draw their weapons and assault your party.
             </body>
-            <action>battle monsters:grave_robber,grave_robber,grave_robber</action>
+            <action type="battle">
+                <parameter name="monsters">grave_robber,grave_robber,grave_robber</parameter>
+            </action>
         </dialog>
         <dialog name="cat">
             <body>"It's nothing boss, just a cat."
@@ -217,7 +225,7 @@ USAGE/FOR DUMMIES <3
     <event name="Ambush!" type="monster" level="any">
         <dialog name="main">
             <body>You're party is surrounded by monsters.</body>
-            <action>battle</action>
+            <action type="battle"/>
         </dialog>
     </event>
 
