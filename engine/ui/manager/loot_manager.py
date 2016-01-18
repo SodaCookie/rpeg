@@ -5,6 +5,7 @@ import pygame
 
 from engine.ui.core.zone import Zone
 from engine.ui.core.manager import Manager
+from engine.game.item.item import Item
 import engine.ui.element as element
 
 class LootManager(Manager):
@@ -39,19 +40,40 @@ class LootManager(Manager):
 
         self.renderables.append(shard_text)
         self.renderables.append(shard_amt_text)
+        self.item_text_elements = []
 
         for i, item in enumerate(self.items):
-            slot = element.Slot(item, "item", self.x+20, self.y+100+60*i,
+            slot = element.Slot(item, Item, self.x+20, self.y+100+60*i,
                 self.items, i, False)
             text = item.name if item else ""
             item_name = element.Text(text, 18, self.x+80, self.y+100+60*i,
                 width=self.width-100)
+            self.item_text_elements.append(item_name)
             self.renderables.append(slot)
             self.renderables.append(item_name)
+
+            # Create partials
+            on_click = partial(self.on_item_click, slot, self)
+            off_click = partial(self.on_item_off_click, slot, self)
+
+            # Create Zone bound to each item
+            zone = Zone(
+                ((self.x+20, self.y+100+60*i), slot.surface.get_size()),
+                on_click, None, None, off_click)
+
+            # Bind and Add to zones
+            slot.bind(zone)
+            self.zones.append(zone)
 
         close = element.Button("CLOSE", 30, 0, self.y+self.height+20, True)
         close.x = self.x+self.width//2-close.surface.get_width()//2
         self.renderables.append(close)
+
+    def update_item_text(self):
+        """Update the item text"""
+        for text_element, item in zip(self.item_text_elements, self.items):
+            text = item.name if item else ""
+            text_element.set_text(text)
 
     def render(self, surface, game):
         if game.loot and game.focus_window == "loot":
@@ -63,3 +85,32 @@ class LootManager(Manager):
                 self.loot = game.loot
                 self.draw()
             super().update(game)
+
+    @staticmethod
+    def loot_drag_validator(slot, game):
+        return True
+
+    @staticmethod
+    def loot_drop_validator(slot, game):
+        return True
+
+    @staticmethod
+    def on_item_click(slot, manager, game):
+        element.Slot.on_click(slot, LootManager.loot_drag_validator,
+            False, game)
+        manager.update_item_text()
+
+
+    @staticmethod
+    def on_item_off_click(slot, manager, game):
+        element.Slot.off_click(slot, LootManager.loot_drag_validator,
+            False, game)
+        manager.update_item_text()
+
+    @staticmethod
+    def on_item_hover(slot, game):
+        pass
+
+    @staticmethod
+    def on_item_off_hover(slot, game):
+        pass

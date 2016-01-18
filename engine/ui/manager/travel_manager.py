@@ -123,3 +123,4 @@ class TravelManager(Manager):
         game.current_location = location
         game.focus_window = "scenario"
         game.selected_player = None
+        game.loot = None

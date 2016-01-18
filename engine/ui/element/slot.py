@@ -69,6 +69,7 @@ class Slot(Renderable, Bindable):
             game.hover_y = slot.y - game.mouse_y
 
             if not copy:
+                slot.container[slot.key] = None
                 slot.value = None
                 slot.surface = slot.draw(slot.value)
                 slot.hover = slot.draw_highlight(slot.value)
@@ -83,7 +84,7 @@ class Slot(Renderable, Bindable):
                 slot.value = game.current_object
             else:
                 game.current_slot.container[game.current_slot.key], slot.container[slot.key] = \
-                    slot.container[slot.key], game.current_slot.container[game.current_slot.key]
+                    slot.container[slot.key], game.current_object
                 game.current_slot.value, slot.value = slot.value, \
                     game.current_object
             game.current_hover = None
