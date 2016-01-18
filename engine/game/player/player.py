@@ -42,32 +42,27 @@ class Player(character.Character):
         else:
             self.portrait = choice(Player.FEMALE_PORTRAITS)
 
-    def update(self):
-        self.stats["attack"] = self.base_attack
-        self.stats["defense"] = self.base_defense
-        self.stats["health"] = self.base_health
-        self.stats["speed"] = self.base_speed
-        self.stats["magic"] = self.base_magic
-        self.stats["resist"] = self.base_resist
-        for item in self.equipment.values():
-            self.stats["attack"] += item.attack
-            self.stats["defense"] += item.defense
-            self.stats["health"] += item.health
-            self.stats["speed"] += item.speed
-            self.stats["magic"] += item.magic
-            self.stats["resist"] += item.resist
-
-    def config_for_new_battle(self):
-        self.update()
-
     def equip(self, item, slot):
         """Try to equip item into the slot"""
         if self.equipment.get(slot) == None:
             return False
 
         self.equipment[slot] = item
-        self.update()
+        # Update new attributes?
         return True
+
+    def get_stat(self, stat_type):
+        """Can be only used for health, attack, defense, speed,
+        resist, magic takes into account"""
+        stat = self.stats[stat_type]
+        for item in self.equipment.values():
+            if item:
+                stat += item.stats[stat_type]
+        for effect in self.effects:
+            if not effect.active:
+                continue
+            stat = effect.on_get_stat(stat, stat_type)
+        return int(stat)
 
     def remove_item(self, name):
         """Returns True is item is removed"""

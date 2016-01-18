@@ -8,6 +8,8 @@ import engine.ui.manager as manager
 
 import engine.game.move.built_moves as mv
 
+from engine.game.item.item import Item
+
 class GameManager(Manager):
     """GameManager is responsible for rendering and updating
     all the various gameplay related elements in the game
@@ -40,6 +42,7 @@ class GameManager(Manager):
         game.current_dialog = game.current_location.get_event()
         game.focus_window = "scenario"
         game.party = Party([Player("Player "+str(i)) for i in range(3)])
+        game.loot = (100, [Item()])
         for player in game.party.players:
             player.add_move(mv.PLAYER_MOVES["attack"])
             player.add_move(mv.PLAYER_MOVES["magic bolt"])

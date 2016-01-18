@@ -26,12 +26,8 @@ class MouseHoverManager(Manager):
                     game.current_slot.value = game.current_object
                     game.current_slot.container[game.current_slot.key] = \
                         game.current_object # MAYBE
-                game.current_slot.surface = Slot.draw(game.current_slot.value)
-                game.current_slot.hover = Slot.draw_highlight( \
-                    game.current_slot.value)
-                game.current_hover = None
-                game.current_object = None
-                game.current_slot = None
+                    if game.current_slot.bound.off_click:
+                        game.current_slot.bound.off_click(game) # THE ZONE
                 self.counter = 0
         else:
             self.counter = 0
