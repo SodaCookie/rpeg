@@ -40,8 +40,3 @@ class LowerStat(Attribute):
 
   def description(self):
     return "Decrease +%d%% %s stat" % (int(1-min(1, self.amount)), self.stype)
-
-
-attributes = {}
-attributes["raise"] = RaiseStat
-attributes["lower"] = LowerStat
