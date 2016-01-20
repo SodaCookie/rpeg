@@ -5,7 +5,8 @@ import math
 
 from engine.game.item.item import Item
 from engine.game.item.built_items import BASE_ITEMS, ITEMS
-from engine.game.attribute.built_attributes import *
+from engine.game.attribute.built_item_attributes import RARE_ATTRIBUTES, \
+    LEGENDARY_ATTRIBUTES, UNIQUE_ATTRIBUTES
 
 def parse_sets(filename):
     """Takes a filename and returns a dict of lists containing all sets of
@@ -45,20 +46,24 @@ class ItemFactory(object):
             valid_items = valid_items | ITEM_SETS[floor]
         item_name = random.choice(valid_items)
         item = copy.deepcopy(ITEMS[item_name])
-        roll = random.randint(0, 100)
+        if item.itype == "extra": # extra items must be rare or better
+            roll = random.randint(51, 100)
+        else:
+            roll = random.randint(0, 100)
         if roll <= DEFAULT_RARITY["common"]:
             return item
         elif roll <= DEFAULT_RARITY["rare"]:
             item.stat = {key : math.ceil(value*1.1) \
                 for key, value in item.stats.items()}
             item.rarity = "rare"
-            # attribute roll
+            item.attributes.append(random.choice(RARE_ATTRIBUTES))
             return item
         elif roll <= rarity_distribution["legendary"]:
             item.stat = {key : math.ceil(value*1.2) \
                 for key, value in item.stats.items()}
             item.rarity = "legendary"
-            # need to do a bit of attribute refactor
+            item.attributes.append(random.choice(RARE_ATTRIBUTES))
+            item.attributes.append(random.choice(LEGENDARY_ATTRIBUTES))
             return item
 
     @classmethod
