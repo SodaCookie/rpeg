@@ -18,7 +18,8 @@ class Move(object):
             'magic': 0,
             'resist': 0,
             'speed': 0,
-            'health': 0
+            'health': 0,
+            'action': 0
         }
         if statdist:
             self.statdist.update(statdist)

@@ -6,6 +6,8 @@ import re
 from engine.game.monster.monster import Monster
 from engine.game.effect.built_scenario_effect import SCENARIO_EFFECTS
 
+from engine.game.item.item_old2 import Item
+
 
 def action_nothing(game, **kwargs):
     """Does nothing"""

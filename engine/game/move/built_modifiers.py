@@ -1,8 +1,6 @@
 """Compilation of the modifiers to be applied to move values"""
 
 from engine.game.move.modifier import Modifier
-import engine.game.player.player as Player
-
 
 class ScaleStat(Modifier):
     """Additively scales value by a percentage of a stat"""

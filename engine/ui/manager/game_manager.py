@@ -28,6 +28,7 @@ class GameManager(Manager):
         self.scenario = manager.ScenarioManager(20, 60)
         self.travel = manager.TravelManager(800, 300, 1280//2-800//2, 100)
         self.battle = manager.BattleManager()
+        self.level = manager.LevelUpManager(1280, 720)
         self.shop = None
         self.character = manager.CharacterCardManager(20, 20)
         self.item = None
@@ -68,6 +69,7 @@ class GameManager(Manager):
         self.character.render(surface, game)
         self.loot.render(surface, game)
         self.castbar.render(surface, game)
+        self.level.render(surface, game)
         if game.focus_window == "travel":
             self.travel.render(surface, game)
         elif game.focus_window == "shop":
@@ -80,21 +82,24 @@ class GameManager(Manager):
         # self.item.render(surface, game)
 
     def update(self, game):
-        super().update(game)
-        self.battle.update(game)
-        self.sidebar.update(game)
-        self.party.update(game)
-        self.character.update(game)
-        self.castbar.update(game)
-        self.encounter.update(game)
-        self.loot.update(game)
-        if game.focus_window == "travel":
-            self.travel.update(game)
-        if game.focus_window == "shop":
-            pass
-        if game.focus_window == "loot":
-            pass
-        if game.focus_window == "scenario":
-            self.scenario.update(game)
-        self.hover.update(game)
-        # self.item.update(game)
+        if game.focus_window != "level": # if level up not occurring
+            super().update(game)
+            self.battle.update(game)
+            self.sidebar.update(game)
+            self.party.update(game)
+            self.character.update(game)
+            self.castbar.update(game)
+            self.encounter.update(game)
+            self.loot.update(game)
+            if game.focus_window == "travel":
+                self.travel.update(game)
+            if game.focus_window == "shop":
+                pass
+            if game.focus_window == "loot":
+                pass
+            if game.focus_window == "scenario":
+                self.scenario.update(game)
+            self.hover.update(game)
+            # self.item.update(game)
+        else:
+            self.level.update(game)

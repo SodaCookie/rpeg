@@ -1,5 +1,6 @@
 from collections import OrderedDict
-from random import choice
+from engine.game.move.built_moves import SKILL_TREE, PLAYER_MOVES
+from random import choice, sample
 
 import engine.game.character.character as character
 
@@ -37,6 +38,7 @@ class Player(character.Character):
         self.equipment["extra1"] = None
         self.equipment["extra2"] = None
         self.inventory = [None, None, None, None]
+        self.level_up_moves = None
         if self.gender == "male":
             self.portrait = choice(Player.MALE_PORTRAITS)
         else:
@@ -89,63 +91,51 @@ class Player(character.Character):
     def get_level(self):
         return self.level
 
-    def is_level_up(self):
-        if self.experience >= 100:
-            return True
-        return False
+    def roll_moves(self):
+        """Rolls moves"""
+        if self.level_up_moves:
+            return # Do not regenerate
 
-    def level_up(self):
+        available_moves = set()
+        current_moves = set(move.name for move in self.moves)
+
+        for name in current_moves:
+            available_moves = available_moves.union(set(SKILL_TREE[name]))
+        available_moves.difference_update(current_moves)
+        if len(available_moves) >= 3:
+            move_names = sample(available_moves, 3)
+        else:
+            move_names = sample(available_moves, len(available_moves))
+        self.level_up_moves = [PLAYER_MOVES[name] for name in move_names]
+
+    def can_level_up(self, shards):
+        """Returns if the party has enough shards to level up"""
+        return shards >= self.level * 10
+
+    def level_up(self, move):
         """Increases the stats of a character."""
-        counter = 0
-        gain_attack = 0
-        gain_defense = 0
-        gain_health = 0
-        gain_speed = 0
-        gain_magic = 0
-        gain_resist = 0
+        increase_stats = {
+            "attack" : 2,
+            "magic" : 2,
+            "defense" : 2,
+            "resist" : 2,
+            "health" : 10,
+            "speed" : 2,
+            "action" : 0
+        }
 
-        attack = 1
-        defense = 1
-        health = 1
-        speed = 1
-        magic = 1
-        resist = 1
+        # Compile stat dist
+        for stype, value in move.statdist.items():
+            increase_stats[stype] += value
 
-        while self.experience >= 100:
-            self.experience -= 100
-            self.level += 1
-            self.skill_points += 1
-            counter += 1
+        # Increase base stats of character
+        for stype, value in increase_stats.items():
+            self.stats[stype] += value
 
-            for item in self.equipment.values():
-                attack += item.attack
-                defense += item.defense
-                health += item.health
-                speed += item.speed
-                magic += item.magic
-                resist += item.resist
-
-            total = attack + defense + health + speed + magic + resist
-            attack_weight = attack/total
-            defense_weight = defense/total
-            health_weight = health/total
-            speed_weight = speed/total
-            magic_weight = magic/total
-            resist_weight = resist/total
-
-            gain_attack += round(attack_weight * Player.POINTS_PER_LEVEL)
-            gain_defense += round(defense_weight * Player.POINTS_PER_LEVEL)
-            gain_health += round(health_weight * Player.POINTS_PER_LEVEL)
-            gain_speed += round(speed_weight * Player.POINTS_PER_LEVEL)
-            gain_magic += round(magic_weight * Player.POINTS_PER_LEVEL)
-            gain_resist += round(resist_weight * Player.POINTS_PER_LEVEL)
-
-        self.base_attack += gain_attack
-        self.base_defense += gain_defense
-        self.base_health += gain_health
-        self.base_speed += gain_speed
-        self.base_magic += gain_magic
-        self.base_resist += gain_resist
+        # Add move to the player
+        self.add_move(move)
+        self.level += 1
+        self.full_heal()
 
     def get_equip(self, slot):
         return self.equipment[slot]
