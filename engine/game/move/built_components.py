@@ -1,7 +1,6 @@
 """Compilation of the components to be combined to create moves"""
 
 from engine.game.move.component import Component
-from engine.game.player.player import Player
 import random
 
 class SelfCast(Component):
@@ -17,28 +16,28 @@ class SingleCast(Component):
 class GroupCast(Component):
     """Defines Group Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(selected[0], Player):
+        if isinstance(selected[0], type(players[0])):
             return players
         return monsters
 
 class EnemiesCast(Component):
     """Defines Enemy Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(caster, Player):
+        if isinstance(caster, type(players[0])):
             return monsters
         return players
 
 class AlliesCast(Component):
     """Defines Ally Targetting for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(caster, Player):
+        if isinstance(caster, type(players[0])):
             return players
         return monsters
 
 class RandomAllyCast(Component):
     """Defines Random Ally Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if isinstance(type(caster), Player):
+        if isinstance(type(caster), type(players[0])):
             return [random.choice([player for player in players if \
                 not player.fallen])]
         return [random.choice([monster for monster in monsters if \
@@ -47,7 +46,7 @@ class RandomAllyCast(Component):
 class RandomEnemyCast(Component):
     """Defines Random Enemy Target for a move"""
     def get_targets(self, selected, caster, players, monsters):
-        if not isinstance(caster, Player):
+        if not isinstance(caster, type(players[0])):
             return [random.choice([player for player in players if \
                 not player.fallen])]
         return [random.choice([monster for monster in monsters if \

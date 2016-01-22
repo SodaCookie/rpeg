@@ -116,17 +116,11 @@ class CharacterCardManager(Manager):
                 self.y+self.win.height-60, True)
 
             # Create zone for button
-            level_up_zone = Zone(level_up_button.get_rect())
+            level_up_zone = Zone(level_up_button.get_rect(),
+                on_click = self.on_level_up_click)
             level_up_button.bind(level_up_zone)
 
-            # update inventory
-            # self.plyr_inv = []
-            # i=0
-            # for i, itm in enumerate(self.cur_plyr.inventory):
-            #     self.plyr_eqp.append(Slot(itm, Item, self.x+(64*i)+148,
-            #         self.y+300, self.cur_plyr.inventory, i))
-            #     i+=1
-            # create new renderables list
+            # Add to renderables
             self.renderables = []
             self.renderables.append(self.win)
             self.renderables.append(self.plyr_img)
@@ -160,7 +154,7 @@ class CharacterCardManager(Manager):
                 slot.bind(zone)
                 self.zones.append(zone)
         # Need to run update functions of the zones
-        if game.selected_player:
+        if game.selected_player and not game.encounter:
             super().update(game)
 
     def update_text(self):
@@ -179,6 +173,12 @@ class CharacterCardManager(Manager):
     def on_item_off_click(self, slot, game):
         Slot.off_click(slot, self.equip_drop_validator, False, game)
         self.update_text()
+
+    @staticmethod
+    def on_level_up_click(game):
+        if game.selected_player.can_level_up(game.party.shards):
+            game.focus_window = "level"
+            game.selected_player.roll_moves()
 
     @staticmethod
     def equip_drag_validator(slot, game):
