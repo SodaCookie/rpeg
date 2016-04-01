@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>618</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RPG Editor</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="monster_tab">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Monster</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QGraphicsView" name="graphicsView"/>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Monster</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Name</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="lineEdit"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Location</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="comboBox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QGroupBox" name="groupBox_2">
+                 <property name="title">
+                  <string>Stats</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <item>
+                   <widget class="QTableWidget" name="tableWidget">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="gridStyle">
+                     <enum>Qt::SolidLine</enum>
+                    </property>
+                    <attribute name="horizontalHeaderVisible">
+                     <bool>false</bool>
+                    </attribute>
+                    <attribute name="horizontalHeaderCascadingSectionResizes">
+                     <bool>true</bool>
+                    </attribute>
+                    <attribute name="horizontalHeaderHighlightSections">
+                     <bool>false</bool>
+                    </attribute>
+                    <attribute name="horizontalHeaderStretchLastSection">
+                     <bool>true</bool>
+                    </attribute>
+                    <attribute name="verticalHeaderVisible">
+                     <bool>true</bool>
+                    </attribute>
+                    <attribute name="verticalHeaderCascadingSectionResizes">
+                     <bool>false</bool>
+                    </attribute>
+                    <attribute name="verticalHeaderDefaultSectionSize">
+                     <number>24</number>
+                    </attribute>
+                    <attribute name="verticalHeaderStretchLastSection">
+                     <bool>false</bool>
+                    </attribute>
+                    <row>
+                     <property name="text">
+                      <string>Attack</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Speed</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Defense</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Health</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Magic</string>
+                     </property>
+                    </row>
+                    <row>
+                     <property name="text">
+                      <string>Resist</string>
+                     </property>
+                    </row>
+                    <column>
+                     <property name="text">
+                      <string>Value</string>
+                     </property>
+                    </column>
+                    <item row="0" column="0">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </item>
+                    <item row="1" column="0">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </item>
+                    <item row="2" column="0">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </item>
+                    <item row="3" column="0">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </item>
+                    <item row="4" column="0">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </item>
+                    <item row="5" column="0">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_3">
+                 <property name="title">
+                  <string>Abilities</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <item>
+                   <widget class="QListView" name="listView_2"/>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_2">
+                    <property name="text">
+                     <string>Add New Ability...</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QListWidget" name="listWidget">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Create New Monster...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="skill_tab">
+       <attribute name="title">
+        <string>Skills</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="scenario_tab">
+       <attribute name="title">
+        <string>Scenario</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="floor_tab">
+       <attribute name="title">
+        <string>Floor</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
