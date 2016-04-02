@@ -6,7 +6,7 @@ import re
 from engine.game.monster.monster import Monster
 from engine.game.effect.built_scenario_effect import SCENARIO_EFFECTS
 
-from engine.game.item.item_old2 import Item
+from engine.game.item.item_factory import ItemFactory
 
 
 def action_nothing(game, **kwargs):
@@ -77,34 +77,29 @@ def action_loot(game, **kwargs):
     # Handle unspecified item
     if defaults["item"] == None:
         defaults["item"] = []
-        parameters = {
-            "floor": game.floor_level,
-            "floor-type": game.floor_type
-        }
         if "reward-tier" == "medium":
+            # 50% change of getting an item of "medium" reward tier
+            # Additionally, "medium" tier can only generate "rare"(s)
             if random.randint(0, 99) < 50:
-                defaults.append(Item(**parameters))
+                defaults.append(ItemFactory.generate(
+                    game.encounter,
+                    game.floor_type,
+                    rarity="rare"))
         elif "reward-tier" == "high":
-            game.floor_level * random.randint(50, 70)
-            if random.randint(0, 99) < 30:
-                defaults.append(Item(**parameters))
+            # 70% change of getting an item of "high" reward tier
+            if random.randint(0, 99) < 70:
+                defaults["item"].append(ItemFactory.generate(
+                    game.encounter,
+                    game.floor_type))
     # Handle raw input as a string for item
     else:
-        # item := <name>,<parameter>|[<more parameters>]@[<item>]
+        # item := <name>,[...]
         items = defaults["item"]
         defaults["item"] = []
-        if items:
-            for item_parameters in items.split("@"):
-                # to be fed into the builders
-                parameters = {
-                    "floor": game.floor_level,
-                    "floor-type": game.floor_type
-                }
-                for parameter in item_parameters.split("|"):
-                    parameter_name = parameter.split(",")[0]
-                    parameter_value = parameter.split(",")[1]
-                    parameters[parameter_name] = parameter_value
-                defaults["item"].append(Item(**parameters))
+        # Find item in list in premade items
+        for item_name in items.split(","):
+            defaults["item"].append(ItemFactory.static_generate(
+                item_name))
     game.loot = (defaults["shard"], defaults["item"])
     game.party.add_shards(defaults["shard"])
     game.focus_window = "loot"

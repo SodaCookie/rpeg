@@ -1,7 +1,7 @@
 """Defines the BattleManager"""
 import pygame
 
-from engine.game.item.item import Item
+from engine.game.item.item_factory import ItemFactory
 from engine.ui.core.manager import Manager
 
 class BattleManager(Manager):
@@ -47,7 +47,8 @@ class BattleManager(Manager):
             # constant for the difficulty of fight
             shards = round(difficulty*0.5)
             experience = round(difficulty*0.3)
-            items = [Item() for i in range(len(game.encounter))]
+            items = [ItemFactory.generate(game.encounter, game.floor_type)
+                for i in range(len(game.encounter))]
             game.loot = (shards, items)
             game.party.shards += shards
             game.focus_window = "loot"

@@ -28,6 +28,9 @@ USAGE/FOR DUMMIES <3
     <event name="the catacombs" type="entrance" level="catacombs">
         <dialog name="main">
             <body>The Catacombs, once a place to rest the bodies of those who pasted on. Now a cesspool for necromancers, grave robbers and abominations alike. Hoards of undead and terrifying creatures await you at every turn. Trend carefully.</body>
+            <action type="battle">
+                <parameter name="monsters">rat</parameter>
+            </action>
         </dialog>
     </event>
 
