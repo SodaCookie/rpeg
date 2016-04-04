@@ -4,7 +4,7 @@ from PyQt5 import QtGui, QtWidgets
 import sys
 import os
 
-import design
+import editor.design as design
 
 class Editor(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
