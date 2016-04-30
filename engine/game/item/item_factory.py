@@ -16,8 +16,8 @@ def parse_sets(filename):
     for item_set in root:
         name = item_set.find('name').text
         item_sets[name] = []
-        for item in item_set.find('items')
-            item_sets[name].add(item.text)
+        for item in item_set.find('items'):
+            item_sets[name].append(item.text)
     return item_sets
 
 
@@ -40,31 +40,47 @@ class ItemFactory(object):
         given, a rarity will be randomly rolled"""
         valid_items = []
         for monster in monsters:
-            if monster.name in ITEM_SETS:
-                valid_items = valid_items | ITEM_SETS[monster.name]
-        if floor in ITEM_SETS
-            valid_items = valid_items | ITEM_SETS[floor]
+            if monster.name in cls.ITEM_SETS:
+                valid_items.extend(cls.ITEM_SETS[monster.name])
+        if floor in cls.ITEM_SETS:
+            valid_items.extend(cls.ITEM_SETS[floor])
         item_name = random.choice(valid_items)
         item = copy.deepcopy(ITEMS[item_name])
         if item.itype == "extra": # extra items must be rare or better
             roll = random.randint(51, 100)
         else:
             roll = random.randint(0, 100)
-        if roll <= DEFAULT_RARITY["common"]:
-            return item
-        elif roll <= DEFAULT_RARITY["rare"]:
+
+        # Rolls confirmed
+        if roll <= cls.DEFAULT_RARITY["common"]:
+            item.name = item.name.title()
+        elif roll <= cls.DEFAULT_RARITY["rare"]:
+            # Roll for rare, one attribute (one rare)
+            # 10% increased stats
             item.stat = {key : math.ceil(value*1.1) \
                 for key, value in item.stats.items()}
             item.rarity = "rare"
-            item.attributes.append(random.choice(RARE_ATTRIBUTES))
-            return item
-        elif roll <= rarity_distribution["legendary"]:
+            desc, attribute = copy.deepcopy(random.choice(
+                list(RARE_ATTRIBUTES.items())))
+            # Rename
+            item.attributes.append(attribute)
+            item.name = "%s %s" % (desc, item.name)
+            item.name = item.name.title()
+        elif roll <= cls.DEFAULT_RARITY["legendary"]:
+            # Roll for legendary, two attributes (one rare and one legend)
+            # 20% increased stats
             item.stat = {key : math.ceil(value*1.2) \
                 for key, value in item.stats.items()}
             item.rarity = "legendary"
-            item.attributes.append(random.choice(RARE_ATTRIBUTES))
-            item.attributes.append(random.choice(LEGENDARY_ATTRIBUTES))
-            return item
+            _, attribute = copy.deepcopy(random.choice( # ignore the first attr
+                list(RARE_ATTRIBUTES.items())))
+            item.attributes.append(attribute)
+            desc, attribute = copy.deepcopy(random.choice(
+                list(LEGENDARY_ATTRIBUTES.items())))
+            item.attributes.append(attribute)
+            item.name = "%s %s" % (desc, item.name)
+            item.name = item.name.title()
+        return item
 
     @classmethod
     def static_generate(cls, name):

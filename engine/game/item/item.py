@@ -2,10 +2,12 @@
 class Item(object):
     """This is the base class for all items"""
 
-    def __init__(self, name, itype, stats, rarity="common",
+    def __init__(self, name, itype, stats, slot="", icon=None, rarity="common",
         attributes=None):
         """Item is simply a container of the item definition. Slot is
         the equipment slot the item fits into."""
+        self.icon = None
+        self.slot = slot
         self.name = name
         self.itype = itype
         self.stats = stats
@@ -13,4 +15,4 @@ class Item(object):
         if attributes:
             self.attributes = attributes
         else:
-            attributes = []
+            self.attributes = []
