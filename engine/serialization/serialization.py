@@ -1,2 +1,7 @@
-"""Module for dealing with data management. Provides methods for serializing
-and deserializing all persistent game objects. Implemented through pickle"""
+import pickle
+
+def serialize(obj, filename):
+        pickle.dump(obj, open(filename, "wb"))
+
+def deserialize(filename):
+        return pickle.load(open(filename, "rb"))

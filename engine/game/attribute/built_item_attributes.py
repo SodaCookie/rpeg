@@ -2,27 +2,29 @@
 for unique items. Some will be classified as available for rare items, Some
 will be classified as available for legendary items."""
 
+import os
+
+from engine.serialization import serialization as serial
 from engine.game.attribute.built_attributes import *
 
 RARE_ATTRIBUTES = {}
 LEGENDARY_ATTRIBUTES = {}
 UNIQUE_ATTRIBUTES = {}
 
+# LOAD RARE ATTRIBUTES
+path = "data/item/attributes/rare/"
+for file in os.listdir(path):
+    name = file.split(".")[0].replace("_", " ")
+    RARE_ATTRIBUTES[name] = serial.deserialize(path + file)
 
-# RARE ATTRIBUTE SEGMENT
-RARE_ATTRIBUTES["strong"] = RaiseStat(2, "attack")
-RARE_ATTRIBUTES["unbreaking"] = RaiseStat(2, "defense")
-RARE_ATTRIBUTES["arcane"] = RaiseStat(2, "magic")
-RARE_ATTRIBUTES["resisting"] = RaiseStat(2, "resist")
-RARE_ATTRIBUTES["quick"] = RaiseStat(2, "speed")
-RARE_ATTRIBUTES["bolstering"] = RaiseStat(2, "health")
-RARE_ATTRIBUTES["preemptive"] = RaiseStat(2, "action")
+# LOAD LEGENDARY ATTRIBTUES
+path = "data/item/attributes/legendary/"
+for file in os.listdir(path):
+    name = file.split(".")[0].replace("_", " ")
+    LEGENDARY_ATTRIBUTES[name] = serial.deserialize(path + file)
 
-# LEGENDARY ATTRIBUTE SEGMENT
-LEGENDARY_ATTRIBUTES["really strong"] = RaiseStat(3, "attack")
-LEGENDARY_ATTRIBUTES["really unbreaking"] = RaiseStat(3, "defense")
-LEGENDARY_ATTRIBUTES["really arcane"] = RaiseStat(3, "magic")
-LEGENDARY_ATTRIBUTES["really resisting"] = RaiseStat(3, "resist")
-LEGENDARY_ATTRIBUTES["really quick"] = RaiseStat(3, "speed")
-LEGENDARY_ATTRIBUTES["really bolstering"] = RaiseStat(3, "health")
-LEGENDARY_ATTRIBUTES["really preemptive"] = RaiseStat(3, "action")
+# LOAD UNIQUE ATTRIBUTES
+path = "data/item/attributes/unique/"
+for file in os.listdir(path):
+    name = file.split(".")[0].replace("_", " ")
+    UNIQUE_ATTRIBUTES[name] = serial.deserialize(path + file)
