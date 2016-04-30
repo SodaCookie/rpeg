@@ -7,7 +7,7 @@ class Item(object):
         """Item is simply a container of the item definition. Slot is
         the equipment slot the item fits into."""
         self.icon = None
-        self.slot = slot
+        self.slot = slot # String describing the slot type
         self.name = name
         self.itype = itype
         self.stats = stats

@@ -8,6 +8,7 @@ RARE_ATTRIBUTES = {}
 LEGENDARY_ATTRIBUTES = {}
 UNIQUE_ATTRIBUTES = {}
 
+
 # RARE ATTRIBUTE SEGMENT
 RARE_ATTRIBUTES["strong"] = RaiseStat(2, "attack")
 RARE_ATTRIBUTES["unbreaking"] = RaiseStat(2, "defense")
