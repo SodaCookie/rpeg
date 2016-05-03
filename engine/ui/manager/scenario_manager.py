@@ -80,7 +80,6 @@ class ScenarioManager(Manager):
     @staticmethod
     def on_choice_click(dialog, game):
         while dialog.fail:
-            print(dialog.chance)
             if random.randint(0, 99) < dialog.chance:
                 break
             dialog = dialog.fail
