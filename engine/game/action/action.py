@@ -8,6 +8,7 @@ from engine.game.effect.built_scenario_effect import SCENARIO_EFFECTS
 
 from engine.game.item.item_factory import ItemFactory
 
+from assets.actions import *
 
 def action_nothing(game, **kwargs):
     """Does nothing"""
