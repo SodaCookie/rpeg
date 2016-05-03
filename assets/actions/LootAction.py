@@ -6,10 +6,10 @@ class LootAction(Action):
     MEDUIM = "medium"
     HIGH = "high"
 
-    def __init__(self, reward_tier="low", shard=None, items=None):
+    def __init__(self, reward_tier="low", shards=None, items=None):
         super().__init__()
         self.reward_tier = reward_tier
-        self.shard = shard
+        self.shards = shards
         self.items = items
 
     def execute(self, game):
@@ -20,8 +20,8 @@ class LootAction(Action):
         shards = 0
         items = []
 
-        # Handle no shard or items
-        if not self.shard and not self.items:
+        # Handle no shards or items
+        if not self.shards and not self.items:
             # Generate shards
             if self.reward_tier == Loot.LOW:
                 shards = game.floor_level * random.randint(15, 20)
@@ -50,6 +50,6 @@ class LootAction(Action):
                     for name in self.items]
 
         # Assign create loot table to the game
-        game.loot = (shards, defaults["item"])
-        game.party.add_shards(defaults["shard"])
+        game.loot = (shards, items)
+        game.party.add_shards(shards)
         game.focus_window = "loot"
