@@ -32,9 +32,9 @@ class Text(Renderable):
     @classmethod
     def draw(self, text, size, colour, width, justify):
         if not Text.font_cache.get(size):
-            with open("fonts/VT323-Regular.ttf", 'r') as file:
+            with open("assets/fonts/VT323-Regular.ttf", 'r') as file:
                 Text.font_cache[size] = pygame.font.Font(
-                    "fonts/VT323-Regular.ttf", size)
+                    "assets/fonts/VT323-Regular.ttf", size)
         # text wrapping
         if width:
             lines = []

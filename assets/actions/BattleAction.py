@@ -1,3 +1,5 @@
+import random
+
 from engine.game.dungeon.action import Action
 from engine.game.monster.monster import Monster
 
@@ -21,8 +23,8 @@ class BattleAction(Action):
             while challenge > 0 and len(monster_names) < 3:
                 valid_monsters = []
                 # Get valid monsters
-                for name, monster in Monster.MONSTERS:
-                    if monster["rating"] <= defaults["challenge"] and \
+                for name, monster in Monster.MONSTERS.items():
+                    if monster["rating"] <= challenge and \
                             monster["location"] == game.floor_type and \
                             not monster["unique"]:
                         valid_monsters.append((name, monster["rating"]))
