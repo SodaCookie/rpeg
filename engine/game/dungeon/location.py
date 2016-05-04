@@ -9,11 +9,6 @@ from data.scenarios import EVENTS
 class Location(object):
 	"""Location object is the node for each part of a dungeon"""
 
-	ROOM_TYPE = {
-							 "default" : ["room"]}
-	INPUT_PATTERN = re.compile("\[(.*?)\]", re.IGNORECASE)
-	EVENTS = tree.parse("data/scenario.xml")
-
 	def __init__(self, room_type, floor_type):
 		# can be event, entrance, exit, shop, alter, item
 		self.room_type = room_type
