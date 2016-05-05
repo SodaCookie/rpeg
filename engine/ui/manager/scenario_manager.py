@@ -8,9 +8,7 @@ from engine.game.monster.monster import Monster
 from engine.ui.core.manager import Manager
 from engine.ui.core.zone import Zone
 from engine.game.item.item import Item
-from engine.game.action.action import ACTIONS
 import engine.ui.element as element
-
 
 __all__ = ["ScenarioManager"]
 
@@ -57,6 +55,7 @@ class ScenarioManager(Manager):
         self.renderables.append(body)
         height_counter = body.surface.get_height()+20
         for choice in dialog.get_available_choices(game.party):
+            choice = game.current_location.get_dialogue(choice)
             on_click = partial(self.on_choice_click, choice)
             button = element.Button(choice.dtext, 18, self.x+10,
                 self.y+height_counter)
@@ -82,7 +81,7 @@ class ScenarioManager(Manager):
         while dialog.fail:
             if random.randint(0, 99) < dialog.chance:
                 break
-            dialog = dialog.fail
+            dialog = game.current_location.get_dialogue(dialog.fail)
         game.current_dialog = dialog
 
     @staticmethod

@@ -3,7 +3,7 @@ import random
 class Dialogue(object):
 	"""Dialogue object is used to keep track of possible text"""
 
-	def __init__(self, dtext, body, chance=100, fail=None, choices=None,
+	def __init__(self, name, dtext, body, chance=100, fail=None, choices=None,
 			conditions=None, actions=None):
 		"""Creates a Dialogue object.
 		name - an identifier to access the dialogue
@@ -13,6 +13,7 @@ class Dialogue(object):
 		choices - a dictionary to access the children
 		condition - conditions to access this choice
 		action - """
+		self.name = name
 		self.dtext = dtext # dialogue text (text for the choice)
 		self.body = body
 		self.chance = chance
@@ -20,12 +21,14 @@ class Dialogue(object):
 		self.choices = choices if choices else []
 		self.conditions = conditions if conditions else []
 		self.actions = actions if actions else []
+		self.event = None # Reference to owning event
 
 	def get_available_choices(self, party):
 		"""get the available choices based on the party"""
 		available = []
 		for choice in self.choices:
-			if all(condition.apply(party) for condition in choice.conditions):
+			if all(condition.apply(party)
+					for condition in self.event.dialogues[choice].conditions):
 				available.append(choice)
 		return available
 
