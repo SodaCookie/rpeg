@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>817</width>
-    <height>608</height>
+    <height>689</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="monster_tab">
        <property name="maximumSize">
@@ -110,7 +110,7 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>Location</string>
+                  <string>Floor Type</string>
                  </property>
                 </widget>
                </item>
@@ -161,7 +161,7 @@
                      <bool>true</bool>
                     </attribute>
                     <attribute name="verticalHeaderVisible">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </attribute>
                     <attribute name="verticalHeaderCascadingSectionResizes">
                      <bool>false</bool>
@@ -318,9 +318,9 @@
       </widget>
       <widget class="QWidget" name="scenario_tab">
        <attribute name="title">
-        <string>Scenario</string>
+        <string>Events</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,0">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_12">
           <item>
@@ -366,7 +366,7 @@
                </size>
               </property>
               <property name="text">
-               <string>Location</string>
+               <string>Floor Type</string>
               </property>
              </widget>
             </item>
@@ -411,17 +411,38 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <item>
+               <property name="text">
+                <string>Event</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Entrance</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Exit</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Monster</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QTreeWidget" name="treeWidget">
-            <column>
-             <property name="text">
-              <string notr="true">1</string>
-             </property>
-            </column>
+           <widget class="QListWidget" name="listWidget"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_7">
+            <property name="text">
+             <string>Add New Dialogue...</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -501,6 +522,160 @@
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="QLabel" name="label_9">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Item Type</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Sword</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Shield</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Wand</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Axe</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Helmet</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Legs</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Gloves</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Chest</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Ring</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Shoes</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Boots</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Necklace</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mace</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Staff</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Slot</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_5">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Hand</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Body</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Legs</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Feet</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Head</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Extra</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
               <widget class="QLabel" name="label_4">
@@ -517,7 +692,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Location</string>
+                <string>Floor Type</string>
                </property>
               </widget>
              </item>
@@ -668,7 +843,7 @@
              <item>
               <widget class="QGroupBox" name="groupBox_8">
                <property name="title">
-                <string>Effects</string>
+                <string>Attributes</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_11">
                 <item>
@@ -677,7 +852,7 @@
                 <item>
                  <widget class="QPushButton" name="pushButton_5">
                   <property name="text">
-                   <string>Add New Effect...</string>
+                   <string>Add New Attribute...</string>
                   </property>
                  </widget>
                 </item>
@@ -688,6 +863,347 @@
            </item>
           </layout>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Moves</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_22" stretch="0,3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_20">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_21">
+            <item>
+             <widget class="QGraphicsView" name="graphicsView_2"/>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <item>
+               <widget class="QLabel" name="label_10">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Name</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEdit_4">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <item>
+               <widget class="QLabel" name="label_11">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Critical Chance</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>0.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_19">
+              <item>
+               <widget class="QLabel" name="label_12">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Miss Chance</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>0.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_9">
+            <property name="title">
+             <string>Description</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_20">
+             <item>
+              <widget class="QTextEdit" name="textEdit"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_5">
+            <property name="title">
+             <string>Stat Distribution</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_17">
+             <item>
+              <widget class="QTableWidget" name="tableWidget_2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="gridStyle">
+                <enum>Qt::SolidLine</enum>
+               </property>
+               <attribute name="horizontalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="horizontalHeaderHighlightSections">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="verticalHeaderCascadingSectionResizes">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="verticalHeaderDefaultSectionSize">
+                <number>24</number>
+               </attribute>
+               <attribute name="verticalHeaderHighlightSections">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderStretchLastSection">
+                <bool>false</bool>
+               </attribute>
+               <row>
+                <property name="text">
+                 <string>Attack</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>Speed</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>Defense</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>Health</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>Magic</string>
+                </property>
+               </row>
+               <row>
+                <property name="text">
+                 <string>Resist</string>
+                </property>
+               </row>
+               <column>
+                <property name="text">
+                 <string>Value</string>
+                </property>
+               </column>
+               <item row="0" column="0">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </item>
+               <item row="1" column="0">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </item>
+               <item row="2" column="0">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </item>
+               <item row="3" column="0">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </item>
+               <item row="4" column="0">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </item>
+               <item row="5" column="0">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_21" stretch="0,0,0">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <widget class="QListWidget" name="listWidget_8"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_8">
+              <property name="text">
+               <string>Add New Move...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_15">
+            <item>
+             <widget class="QTabWidget" name="tabWidget_2">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tab_2">
+               <attribute name="title">
+                <string>Standard</string>
+               </attribute>
+               <layout class="QHBoxLayout" name="horizontalLayout_16">
+                <item>
+                 <widget class="QListWidget" name="listWidget_7"/>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_3">
+               <attribute name="title">
+                <string>Critical</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_19">
+                <item>
+                 <widget class="QListWidget" name="listWidget_9"/>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_4">
+               <attribute name="title">
+                <string>Miss</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_18">
+                <item>
+                 <widget class="QListWidget" name="listWidget_10"/>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_9">
+              <property name="text">
+               <string>Add New Component...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_16">
+            <item>
+             <widget class="QListWidget" name="listWidget_6"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_10">
+              <property name="text">
+               <string>Add New Modifier...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
