@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="monster_tab">
        <property name="maximumSize">
@@ -322,7 +322,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,0">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_12">
+         <layout class="QVBoxLayout" name="dialogueLayout">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
@@ -345,7 +345,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_3"/>
+             <widget class="QLineEdit" name="eventName"/>
             </item>
            </layout>
           </item>
@@ -450,7 +450,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QListWidget" name="listWidget_5"/>
+           <widget class="QListWidget" name="eventList"/>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_6">
