@@ -371,7 +371,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_3">
+             <widget class="QComboBox" name="eventFloorType">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -404,7 +404,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_4">
+             <widget class="QComboBox" name="eventRoomType">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -436,10 +436,10 @@
            </layout>
           </item>
           <item>
-           <widget class="QListWidget" name="listWidget"/>
+           <widget class="QListWidget" name="dialogueList"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_7">
+           <widget class="QPushButton" name="newDialogue">
             <property name="text">
              <string>Add New Dialogue...</string>
             </property>
@@ -450,12 +450,22 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QListWidget" name="eventList"/>
+           <widget class="QListWidget" name="eventList">
+            <property name="batchSize">
+             <number>100</number>
+            </property>
+            <property name="selectionRectVisible">
+             <bool>false</bool>
+            </property>
+            <property name="currentRow">
+             <number>-1</number>
+            </property>
+           </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_6">
+           <widget class="QPushButton" name="newEvent">
             <property name="text">
-             <string>Add New Scenario...</string>
+             <string>Add New Event...</string>
             </property>
            </widget>
           </item>

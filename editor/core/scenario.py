@@ -1,6 +1,7 @@
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, QtCore
 from engine.game.dungeon.event import Event
 from engine.serialization.serialization import deserialize
+from editor.core.floor import FloorHandler
 
 class ScenarioHandler:
     """Class responsible for handling events/scenarios"""
@@ -8,49 +9,109 @@ class ScenarioHandler:
 
     def __init__(self, parent=None):
         self.parent = parent
+        self.floor_handler = FloorHandler()
         self.init_scenario()
         self.current_focus = None
 
     def init_scenario(self):
         self.EVENTS = deserialize("data/scenario.p")
+
         list_widget = self.parent.findChild(QtWidgets.QListWidget, "eventList")
         line_edit = self.parent.findChild(QtWidgets.QLineEdit, "eventName")
+        combo_box = self.parent.findChild(
+            QtWidgets.QComboBox, "eventFloorType")
+        event_button = self.parent.findChild(QtWidgets.QPushButton, "newEvent")
 
-        # Add slot to list signal
-        list_widget.itemClicked.connect(self.load_event)
-        line_edit.textEdited.connect(self.update_event_name)
+        # Load floor types
+        for floor in self.floor_handler.floors():
+            combo_box.addItem(floor.title())
 
         # Load scenarios to list item
-        self.events_by_name = {} # map used to find events by name quickly
+        self.event_to_location = {} # map used to find events by name quickly
         for floor_type in self.EVENTS:
             for room_type in self.EVENTS[floor_type]:
                 for event in self.EVENTS[floor_type][room_type]:
-                    self.events_by_name[event.name] = event
+                    self.event_to_location[event.name] = \
+                        (floor_type, room_type, event)
                     list_widget.addItem(event.name)
 
-        if list_widget.count() > 0:
-            list_widget.setCurrentRow(0)
-        else:
+        layout = self.parent.findChild(QtWidgets.QVBoxLayout, "dialogueLayout")
+        self.set_enable_layout(layout, False)
+
+        # Add slot to list signal
+        list_widget.currentItemChanged.connect(self.load_event)
+        list_widget.currentItemChanged.connect(self.set_dialogue_enable)
+        line_edit.textEdited.connect(self.update_event_name)
+        event_button.clicked.connect(self.new_event)
+
+    def set_dialogue_enable(self, next, prev):
+        if next != None:
             layout = self.parent.findChild(
                 QtWidgets.QVBoxLayout, "dialogueLayout")
-            layout.setEnabled(False)
+            self.set_enable_layout(layout, True)
 
-    def load_event(self, item):
+    def load_event(self, item, prev):
         self.current_focus = item
-        event = self.events_by_name[item.text()]
+        floor, room, event = self.event_to_location[self.current_focus.text()]
+        # Set Line Edit
         line_edit = self.parent.findChild(QtWidgets.QLineEdit, "eventName")
         line_edit.setText(event.name)
+        # Set Floor type
+        combo_box = self.parent.findChild(
+            QtWidgets.QComboBox, "eventFloorType")
+        combo_box.setCurrentIndex(combo_box.findText(floor.title()))
+        # Set Room type
+        combo_box = self.parent.findChild(
+            QtWidgets.QComboBox, "eventRoomType")
+        combo_box.setCurrentIndex(combo_box.findText(room.title()))
+        # Load dialogues
+        list_widget = self.parent.findChild(
+            QtWidgets.QListWidget, "dialogueList")
+        list_widget.clear()
+        for name in event.dialogues:
+            list_widget.addItem(name)
 
     def update_event_name(self, name):
-        event = self.events_by_name[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.current_focus.text()]
         # Delete previous entry
-        del self.events_by_name[event.name]
+        del self.event_to_location[event.name]
         # Set text on list widget
         self.current_focus.setText(name)
         # Set actual name
         event.name = name
         # Add back to events map
-        self.events_by_name[event.name] = event
+        self.event_to_location[event.name] = (floor, room, event)
 
-    def new_scenario(self, name):
-        return Event(name)
+    def new_event(self):
+        event_name, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Add New Event...', 'Enter event name:')
+
+        if ok:
+            list_widget = self.parent.findChild(
+                QtWidgets.QListWidget, "eventList")
+            if not list_widget.findItems(event_name, QtCore.Qt.MatchExactly):
+                # Create new event
+                new_event = Event(event_name)
+                self.EVENTS["any"]["event"] = new_event
+                # Add to required widgets
+                self.event_to_location[new_event.name] = \
+                    ("any", "event", new_event)
+                list_widget.addItem(event_name)
+                # The last added
+                list_widget.setCurrentRow(list_widget.count()-1)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self.parent,
+                    "Error",
+                    "Event name '%s' already exists." % event_name)
+
+
+
+    def set_enable_layout(self, layout, enable):
+        """Disables or enables all children in the dialogueLayout"""
+        for i in range(layout.count()):
+            if isinstance(layout.itemAt(i), QtWidgets.QLayout):
+                self.set_enable_layout(layout.itemAt(i), enable)
+            else:
+                if hasattr(layout.itemAt(i).widget(), "setEnabled"):
+                    layout.itemAt(i).widget().setEnabled(enable)
