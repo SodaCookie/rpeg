@@ -8,9 +8,7 @@ from engine.game.monster.monster import Monster
 from engine.ui.core.manager import Manager
 from engine.ui.core.zone import Zone
 from engine.game.item.item import Item
-from engine.game.action.action import ACTIONS
 import engine.ui.element as element
-
 
 __all__ = ["ScenarioManager"]
 
@@ -56,10 +54,10 @@ class ScenarioManager(Manager):
                             (255, 255, 255), 480)
         self.renderables.append(body)
         height_counter = body.surface.get_height()+20
-        for choice in dialog.get_choices(game.party):
-            next_dialog = dialog.make_choice(choice)
-            on_click = partial(self.on_choice_click, next_dialog)
-            button = element.Button(choice, 18, self.x+10,
+        for choice in dialog.get_available_choices(game.party):
+            choice = game.current_location.get_dialogue(choice)
+            on_click = partial(self.on_choice_click, choice)
+            button = element.Button(choice.dtext, 18, self.x+10,
                 self.y+height_counter)
             zone = Zone(((self.x+10, self.y+height_counter),
                 button.surface.get_size()), on_click)
@@ -68,7 +66,7 @@ class ScenarioManager(Manager):
             self.renderables.append(button)
             height_counter += zone.rect.h
 
-        if not dialog.get_choices(game.party):
+        if not dialog.get_available_choices(game.party):
             button = element.Button("Next", 18, self.x+10,
                 self.y+height_counter)
             on_click = partial(self.on_no_choice_click, dialog)
@@ -80,6 +78,10 @@ class ScenarioManager(Manager):
 
     @staticmethod
     def on_choice_click(dialog, game):
+        while dialog.fail:
+            if random.randint(0, 99) < dialog.chance:
+                break
+            dialog = game.current_location.get_dialogue(dialog.fail)
         game.current_dialog = dialog
 
     @staticmethod
@@ -90,6 +92,5 @@ class ScenarioManager(Manager):
         game.selected_player = None
         # Parse action
         # action := <type> [<parameter-name>:<parameter> <para...]
-        for action in dialog.action:
-            action_type, parameters = action
-            ACTIONS[action_type](game, **parameters)
+        for action in dialog.get_actions():
+            action.execute(game)

@@ -4,7 +4,6 @@ import math
 import random
 import copy
 
-
 from engine.game.attribute.attribute import Attribute
 
 from engine.game.effect.effect import Effect
