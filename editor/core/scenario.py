@@ -1,11 +1,14 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from engine.game.dungeon.event import Event
+from engine.game.dungeon.dialog import Dialogue
 from engine.serialization.serialization import deserialize
 from editor.core.floor import FloorHandler
+from editor.core.dialogue import DialogueWindow
 
 class ScenarioHandler:
     """Class responsible for handling events/scenarios"""
     EVENTS = {} # Storage variable for events
+    dialogue_window = None
 
     def __init__(self, parent):
         self.parent = parent
@@ -25,6 +28,8 @@ class ScenarioHandler:
         event_button = self.parent.findChild(QtWidgets.QPushButton, "newEvent")
         dialogue_button = self.parent.findChild(
             QtWidgets.QPushButton, "newDialogue")
+        dialogue_widget = self.parent.findChild(
+            QtWidgets.QListWidget, "dialogueList")
 
         # Load floor types
         for floor in self.floor_handler.floors():
@@ -46,6 +51,7 @@ class ScenarioHandler:
         list_widget.currentItemChanged.connect(self.load_event)
         list_widget.currentItemChanged.connect(self.set_dialogue_enable)
         line_edit.textEdited.connect(self.update_event_name)
+        dialogue_widget.itemDoubleClicked.connect(self.update_dialogue)
         event_button.clicked.connect(self.new_event)
         dialogue_button.clicked.connect(self.new_dialogue)
         floor_combo.currentIndexChanged[str].connect(self.update_event_floor)
@@ -128,6 +134,22 @@ class ScenarioHandler:
 
     def new_dialogue(self):
         """Creates a new dialogue for the editor."""
+        # Create a new empty dialogue
+        dialogue = Dialogue("", "", "")
+
+        self.dialogue_window = DialogueWindow(self.parent, dialogue)
+        self.dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
+        self.dialogue_window.show()
+
+    def update_dialogue(self, item):
+        """Creates a new dialogue for the editor."""
+        # Create a new empty dialogue
+        floor, room, event = self.event_to_location[self.current_focus.text()]
+        dialogue = event.dialogues[item.text()]
+
+        self.dialogue_window = DialogueWindow(self.parent, dialogue)
+        self.dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
+        self.dialogue_window.show()
 
     def set_enable_layout(self, layout, enable):
         """Disables or enables all children in the dialogueLayout"""
