@@ -1,6 +1,6 @@
 from engine.game.dungeon.condition import Condition
 
-class HasShard(Condition):
+class HasItem(Condition):
 
     def __init__(self, item):
         super().__init__()

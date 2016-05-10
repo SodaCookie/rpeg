@@ -1,11 +1,14 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from engine.game.dungeon.event import Event
+from engine.game.dungeon.dialog import Dialogue
 from engine.serialization.serialization import deserialize
 from editor.core.floor import FloorHandler
+from editor.core.dialogue import DialogueWindow
 
 class ScenarioHandler:
     """Class responsible for handling events/scenarios"""
     EVENTS = {} # Storage variable for events
+    dialogue_window = None
 
     def __init__(self, parent):
         self.parent = parent
@@ -25,6 +28,8 @@ class ScenarioHandler:
         event_button = self.parent.findChild(QtWidgets.QPushButton, "newEvent")
         dialogue_button = self.parent.findChild(
             QtWidgets.QPushButton, "newDialogue")
+        dialogue_widget = self.parent.findChild(
+            QtWidgets.QListWidget, "dialogueList")
 
         # Load floor types
         for floor in self.floor_handler.floors():
@@ -46,8 +51,9 @@ class ScenarioHandler:
         list_widget.currentItemChanged.connect(self.load_event)
         list_widget.currentItemChanged.connect(self.set_dialogue_enable)
         line_edit.textEdited.connect(self.update_event_name)
+        dialogue_widget.itemDoubleClicked.connect(self.open_update_dialogue)
         event_button.clicked.connect(self.new_event)
-        dialogue_button.clicked.connect(self.new_dialogue)
+        dialogue_button.clicked.connect(self.open_new_dialogue)
         floor_combo.currentIndexChanged[str].connect(self.update_event_floor)
         room_combo.currentIndexChanged[str].connect(self.update_event_room)
 
@@ -113,7 +119,7 @@ class ScenarioHandler:
             if not list_widget.findItems(event_name, QtCore.Qt.MatchExactly):
                 # Create new event
                 new_event = Event(event_name)
-                self.EVENTS["any"]["event"] = new_event
+                self.EVENTS["any"]["event"].append(new_event)
                 # Add to required widgets
                 self.event_to_location[new_event.name] = \
                     ("any", "event", new_event)
@@ -126,8 +132,39 @@ class ScenarioHandler:
                     "Error",
                     "Event name '%s' already exists." % event_name)
 
-    def new_dialogue(self):
+    def open_new_dialogue(self):
         """Creates a new dialogue for the editor."""
+        # Create a new empty dialogue
+        dialogue = Dialogue("", "", "")
+
+        dialogue_window = DialogueWindow(self.parent, dialogue)
+        dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
+        dialogue_window.show()
+
+    def create_dialogue(self, dialogue):
+        list_widget = self.parent.findChild(
+            QtWidgets.QListWidget, "dialogueList")
+        floor, room, event = self.event_to_location[self.current_focus.text()]
+        event.dialogues[dialogue.name] = dialogue
+        list_widget.addItem(dialogue.name)
+
+    def update_dialogue(self, dialogue):
+        list_widget = self.parent.findChild(
+            QtWidgets.QListWidget, "dialogueList")
+        floor, room, event = self.event_to_location[self.current_focus.text()]
+        del event.dialogues[list_widget.currentItem().text()]
+        event.dialogues[dialogue.name] = dialogue
+        list_widget.currentItem().setText(dialogue.name)
+
+    def open_update_dialogue(self, item):
+        """Creates a new dialogue for the editor."""
+        # Create a new empty dialogue
+        floor, room, event = self.event_to_location[self.current_focus.text()]
+        dialogue = event.dialogues[item.text()]
+
+        dialogue_window = DialogueWindow(self.parent, dialogue)
+        dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
+        dialogue_window.show()
 
     def set_enable_layout(self, layout, enable):
         """Disables or enables all children in the dialogueLayout"""
