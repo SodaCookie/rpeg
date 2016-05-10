@@ -239,6 +239,21 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>dialogueName</tabstop>
+  <tabstop>dialogueDText</tabstop>
+  <tabstop>dialogueBody</tabstop>
+  <tabstop>dialogueChance</tabstop>
+  <tabstop>dialogueFail</tabstop>
+  <tabstop>actionList</tabstop>
+  <tabstop>newAction</tabstop>
+  <tabstop>conditionList</tabstop>
+  <tabstop>newCondition</tabstop>
+  <tabstop>choiceList</tabstop>
+  <tabstop>newChoice</tabstop>
+  <tabstop>createButton</tabstop>
+  <tabstop>cancelButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
