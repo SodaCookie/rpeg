@@ -3,29 +3,18 @@ import xml.etree.ElementTree as tree
 import copy
 import math
 
+from engine.serialization.serialization import deserialize
 from engine.game.item.item import Item
 from engine.game.item.built_items import BASE_ITEMS, ITEMS
 from engine.game.attribute.built_item_attributes import RARE_ATTRIBUTES, \
     LEGENDARY_ATTRIBUTES, UNIQUE_ATTRIBUTES
-
-def parse_sets(filename):
-    """Takes a filename and returns a dict of lists containing all sets of
-    item names with keys of monster or floor names"""
-    root = tree.parse(filename).getroot()
-    item_sets = {}
-    for item_set in root:
-        name = item_set.find('name').text
-        item_sets[name] = []
-        for item in item_set.find('items'):
-            item_sets[name].append(item.text)
-    return item_sets
 
 
 class ItemFactory(object):
     """Item factory contains methods that generate items.
     Generation can be done randomly, or statically"""
 
-    ITEM_SETS = parse_sets("data/item_sets.xml")
+    ITEM_SETS = deserialize("data/item/item_sets.p")
 
     DEFAULT_RARITY = {
         "common": 50,
