@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>817</width>
+    <width>875</width>
     <height>689</height>
    </rect>
   </property>
@@ -477,17 +477,17 @@
        <attribute name="title">
         <string>Item</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_9">
+       <layout class="QHBoxLayout" name="horizontalLayout_22">
         <item>
-         <widget class="QGroupBox" name="groupBox_6">
+         <widget class="QGroupBox" name="itemBox">
           <property name="title">
            <string>Item</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QVBoxLayout" name="itemBoxLayout">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <layout class="QHBoxLayout" name="itemBase">
              <item>
-              <widget class="QRadioButton" name="radioButton">
+              <widget class="QRadioButton" name="base">
                <property name="text">
                 <string>Base Item</string>
                </property>
@@ -497,7 +497,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_2">
+              <widget class="QRadioButton" name="nonbase">
                <property name="text">
                 <string>Static Item</string>
                </property>
@@ -527,7 +527,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2"/>
+              <widget class="QLineEdit" name="itemName"/>
              </item>
             </layout>
            </item>
@@ -547,7 +547,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_6">
+              <widget class="QComboBox" name="itemType">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -644,7 +644,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_5">
+              <widget class="QComboBox" name="itemSlot">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -686,39 +686,6 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <widget class="QLabel" name="label_4">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>100</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Floor Type</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
               <widget class="QGroupBox" name="groupBox_7">
@@ -727,7 +694,7 @@
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_10">
                 <item>
-                 <widget class="QTableWidget" name="item_status">
+                 <widget class="QTableWidget" name="itemStats">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
                     <horstretch>0</horstretch>
@@ -857,10 +824,10 @@
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_11">
                 <item>
-                 <widget class="QListWidget" name="listWidget_4"/>
+                 <widget class="QListWidget" name="attrList"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_5">
+                 <widget class="QPushButton" name="attrButton">
                   <property name="text">
                    <string>Add New Attribute...</string>
                   </property>
@@ -874,7 +841,23 @@
           </layout>
          </widget>
         </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QListWidget" name="itemList"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_6">
+            <property name="text">
+             <string>Add New Item...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
        </layout>
+       <zorder>itemBox</zorder>
+       <zorder></zorder>
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -1226,7 +1209,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>817</width>
+     <width>875</width>
      <height>21</height>
     </rect>
    </property>

@@ -11,7 +11,9 @@ class Editor(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.retranslateUi(self)
         self.scenario_handler = core.scenario.ScenarioHandler(self)
+        self.item_handler = core.item.ItemHandler(self)
 
 
 def init():

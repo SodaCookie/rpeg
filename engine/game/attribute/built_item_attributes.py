@@ -11,20 +11,7 @@ RARE_ATTRIBUTES = {}
 LEGENDARY_ATTRIBUTES = {}
 UNIQUE_ATTRIBUTES = {}
 
-# LOAD RARE ATTRIBUTES
-path = "data/item/attributes/rare/"
-for file in os.listdir(path):
-    name = file.split(".")[0].replace("_", " ")
-    RARE_ATTRIBUTES[name] = serial.deserialize(path + file)
-
-# LOAD LEGENDARY ATTRIBTUES
-path = "data/item/attributes/legendary/"
-for file in os.listdir(path):
-    name = file.split(".")[0].replace("_", " ")
-    LEGENDARY_ATTRIBUTES[name] = serial.deserialize(path + file)
-
-# LOAD UNIQUE ATTRIBUTES
-path = "data/item/attributes/unique/"
-for file in os.listdir(path):
-    name = file.split(".")[0].replace("_", " ")
-    UNIQUE_ATTRIBUTES[name] = serial.deserialize(path + file)
+# LOAD ATTRIBUTES
+RARE_ATTRIBUTES = serial.deserialize("data/item/attributes/rare_attributes.p")
+LEGENDARY_ATTRIBUTES = serial.deserialize("data/item/attributes/legendary_attributes.p")
+UNIQUE_ATTRIBUTES = serial.deserialize("data/item/attributes/unique_attributes.p")
