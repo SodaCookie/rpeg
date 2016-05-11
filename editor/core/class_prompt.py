@@ -67,7 +67,7 @@ class ClassPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
         attr_table = self.findChild(QtWidgets.QTableWidget, "attrTable")
         parameters = {}
         for row in range(attr_table.rowCount()):
-            name = attr_table.itemAt(row, 0).text()
+            name = attr_table.item(row, 0).text()
             value = attr_table.item(row, 1).text()
             parameters[name] = eval(value)
         instance = self.current_cls(**parameters)

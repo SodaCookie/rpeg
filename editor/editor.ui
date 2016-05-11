@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="monster_tab">
        <property name="maximumSize">
@@ -686,39 +686,6 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <widget class="QLabel" name="label_4">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>100</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Floor Type</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="itemFloorType">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
               <widget class="QGroupBox" name="groupBox_7">
@@ -857,10 +824,10 @@
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_11">
                 <item>
-                 <widget class="QListWidget" name="listWidget_4"/>
+                 <widget class="QListWidget" name="attrList"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_5">
+                 <widget class="QPushButton" name="attrButton">
                   <property name="text">
                    <string>Add New Attribute...</string>
                   </property>
@@ -890,11 +857,7 @@
         </item>
        </layout>
        <zorder>itemBox</zorder>
-       <zorder>base</zorder>
-       <zorder>nonbase</zorder>
        <zorder></zorder>
-       <zorder>verticalLayoutWidget</zorder>
-       <zorder>verticalLayoutWidget</zorder>
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
