@@ -1,9 +1,0 @@
-<templates>
-    <template rarity="common">[adj] [item]</template>
-    <template rarity="legendary">[adverb] [adj] [item] of [adj] [noun]</template>
-    <template rarity="legendary">[adj] [item] of the [adj] [noun]</template>
-    <template rarity="legendary">[pronoun]'s [item] of [noun]</template>
-    <template rarity="rare">[adj] [item] of [noun]</template>
-    <template rarity="epic">[adj] [item] of [adj] [noun]</template>
-    <template rarity="epic">[adj] [item] of the [noun]</template>
-</templates>
