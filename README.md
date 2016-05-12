@@ -12,7 +12,7 @@ Editor interfarce is currently in development.
 # Examples
 The GUI editor being used to create an event in the game
 
-![alt text](https://github.com/SodaCookie/RPG-Game/edit/master/image/example/exampleGUI.png)
+![alt text](https://github.com/SodaCookie/RPG-Game/blob/master/image/example/exampleGui.png)
 
 An example of scripting used to extended a character move component
 
