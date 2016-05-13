@@ -2,7 +2,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from engine.game.dungeon.event import Event
 from engine.game.dungeon.dialog import Dialogue
 from engine.serialization.serialization import deserialize
-from editor.core.floor import FloorHandler
+from editor.core.floor_handler import FloorHandler
 from editor.core.dialogue import DialogueWindow
 
 class ScenarioHandler:

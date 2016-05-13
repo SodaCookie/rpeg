@@ -43,13 +43,13 @@ class GameManager(Manager):
         game.party = Party([Player("Player "+str(i)) for i in range(3)])
         game.loot = None
         for player in game.party.players:
-            player.add_move(mv.PLAYER_MOVES["attack"])
-            player.add_move(mv.PLAYER_MOVES["magic bolt"])
-            player.add_move(mv.PLAYER_MOVES["stunning blow"])
-            player.add_move(mv.PLAYER_MOVES["blessing"])
-            player.add_move(mv.PLAYER_MOVES["firebolt"])
-            player.add_move(mv.PLAYER_MOVES["arcane blast"])
-            player.add_move(mv.PLAYER_MOVES["backstab"])
+            player.add_move(mv.MOVES["attack"])
+            player.add_move(mv.MOVES["magic bolt"])
+            player.add_move(mv.MOVES["stunning blow"])
+            player.add_move(mv.MOVES["blessing"])
+            player.add_move(mv.MOVES["firebolt"])
+            player.add_move(mv.MOVES["arcane blast"])
+            player.add_move(mv.MOVES["backstab"])
             player.castbar[0] = player.moves[0] # temp
             player.castbar[1] = player.moves[1] # temp
             player.castbar[2] = player.moves[2] # temp
