@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from PyQt5 import QtGui, QtWidgets, QtCore
 
 import assets.moves
@@ -15,11 +17,15 @@ class MoveHandler:
         self.init_moves()
         self.current_focus = None
 
+    @lru_cache(maxsize=16)
+    def _load_icon(self, filename):
+        return QtGui.QPixmap(filename)
+
     def init_moves(self):
         # Get the all components
         move_list = self.parent.findChild(QtWidgets.QListWidget, "moveList")
         new_move = self.parent.findChild(QtWidgets.QPushButton, "newMove")
-        move_icon = self.parent.findChild(QtWidgets.QGraphicsView, "moveIcon")
+        move_icon = self.parent.findChild(QtWidgets.QPushButton, "moveIcon")
         move_name = self.parent.findChild(QtWidgets.QLineEdit, "moveName")
         move_crit = self.parent.findChild(QtWidgets.QSpinBox, "moveCrit")
         move_miss = self.parent.findChild(QtWidgets.QSpinBox, "moveMiss")
@@ -38,6 +44,54 @@ class MoveHandler:
         for move in self.MOVES:
             move_list.addItem(move)
 
+        move_list.currentItemChanged.connect(self.load_move)
+
 
     def load_move(self, item):
-        pass
+        # Get move
+        move = self.MOVES[item.text()]
+
+        # Load name
+        move_name = self.parent.findChild(QtWidgets.QLineEdit, "moveName")
+        move_name.setText(move.name)
+
+        # Load chance, load miss
+        move_crit = self.parent.findChild(QtWidgets.QSpinBox, "moveCrit")
+        move_crit.setValue(100-move.crit_bound) # Inverted
+        move_miss = self.parent.findChild(QtWidgets.QSpinBox, "moveMiss")
+        move_miss.setValue(move.miss_bound)
+
+        # Load stat distribution (for level up)
+        move_stats = self.parent.findChild(QtWidgets.QTableWidget, "moveStats")
+        for i in range(move_stats.rowCount()):
+            if move_stats.verticalHeaderItem(i).text() == "Health":
+                move_stats.item(i,0).setText(str(move.statdist["health"]))
+            elif move_stats.verticalHeaderItem(i).text() == "Attack":
+                move_stats.item(i,0).setText(str(move.statdist["attack"]))
+            elif move_stats.verticalHeaderItem(i).text() == "Defense":
+                move_stats.item(i,0).setText(str(move.statdist["defense"]))
+            elif move_stats.verticalHeaderItem(i).text() == "Magic":
+                move_stats.item(i,0).setText(str(move.statdist["magic"]))
+            elif move_stats.verticalHeaderItem(i).text() == "Resist":
+                move_stats.item(i,0).setText(str(move.statdist["resist"]))
+            elif move_stats.verticalHeaderItem(i).text() == "Speed":
+                move_stats.item(i,0).setText(str(move.statdist["speed"]))
+            elif move_stats.verticalHeaderItem(i).text() == "Action":
+                move_stats.item(i,0).setText(str(move.statdist["action"]))
+
+        # Load description
+        move_desc = self.parent.findChild(QtWidgets.QTextEdit, "moveDesc")
+        move_desc.setText(move.description)
+
+        # Load icon
+        move_icon = self.parent.findChild(QtWidgets.QPushButton, "moveIcon")
+        if move.icon:
+            img = self._load_icon(move.icon).scaled(
+                move_icon.width(), move_icon.height())
+            icon = QtGui.QIcon(img)
+            move_icon.setIcon(icon);
+            move_icon.setIconSize(img.rect().size());
+        else:
+            move_icon.setIcon(QtGui.QIcon());
+
+        # Load components

@@ -857,11 +857,6 @@
        </layout>
        <zorder></zorder>
        <zorder></zorder>
-       <zorder></zorder>
-       <zorder></zorder>
-       <zorder>groupBox_7</zorder>
-       <zorder>groupBox_8</zorder>
-       <zorder></zorder>
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -873,23 +868,59 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_20" stretch="1,0">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_14" stretch="1,0">
+             <layout class="QVBoxLayout" name="verticalLayout_14" stretch="0,0">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,0">
+               <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0">
                 <item>
-                 <widget class="QGraphicsView" name="moveIcon">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>100</horstretch>
-                    <verstretch>100</verstretch>
-                   </sizepolicy>
+                 <widget class="QFrame" name="frame">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
                   </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>100</height>
-                   </size>
+                  <property name="frameShadow">
+                   <enum>QFrame::Sunken</enum>
                   </property>
+                  <property name="lineWidth">
+                   <number>2</number>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_24">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="moveIcon">
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>100</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="autoDefault">
+                      <bool>false</bool>
+                     </property>
+                     <property name="default">
+                      <bool>false</bool>
+                     </property>
+                     <property name="flat">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                 <item>
@@ -937,24 +968,15 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDoubleSpinBox" name="moveCrit">
+                     <widget class="QSpinBox" name="moveCrit">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                         <horstretch>0</horstretch>
                         <verstretch>0</verstretch>
                        </sizepolicy>
                       </property>
-                      <property name="decimals">
-                       <number>0</number>
-                      </property>
-                      <property name="minimum">
-                       <double>0.000000000000000</double>
-                      </property>
                       <property name="maximum">
-                       <double>100.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.000000000000000</double>
+                       <number>100</number>
                       </property>
                      </widget>
                     </item>
@@ -976,24 +998,15 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDoubleSpinBox" name="moveMiss">
+                     <widget class="QSpinBox" name="moveMiss">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                         <horstretch>0</horstretch>
                         <verstretch>0</verstretch>
                        </sizepolicy>
                       </property>
-                      <property name="decimals">
-                       <number>0</number>
-                      </property>
-                      <property name="minimum">
-                       <double>0.000000000000000</double>
-                      </property>
                       <property name="maximum">
-                       <double>100.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.000000000000000</double>
+                       <number>100</number>
                       </property>
                      </widget>
                     </item>
@@ -1010,7 +1023,11 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_20">
                  <item>
-                  <widget class="QTextEdit" name="moveDesc"/>
+                  <widget class="QTextEdit" name="moveDesc">
+                   <property name="lineWidth">
+                    <number>2</number>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -1199,6 +1216,9 @@
                 <property name="text">
                  <string>Add New Modifier...</string>
                 </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
                </widget>
               </item>
              </layout>
@@ -1222,11 +1242,7 @@
          </layout>
         </item>
        </layout>
-       <zorder>groupBox_5</zorder>
-       <zorder>groupBox_9</zorder>
-       <zorder>moveIcon</zorder>
        <zorder></zorder>
-       <zorder>label_12</zorder>
       </widget>
      </widget>
     </item>
