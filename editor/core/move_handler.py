@@ -95,3 +95,17 @@ class MoveHandler:
             move_icon.setIcon(QtGui.QIcon());
 
         # Load components
+        comp_list = self.parent.findChild(QtWidgets.QListWidget, "compList")
+        comp_list.clear()
+        for attr in move.components:
+            comp_list.addItem(type(attr).__name__)
+        # Crit
+        crit_list = self.parent.findChild(QtWidgets.QListWidget, "critList")
+        crit_list.clear()
+        for attr in move.crit_components:
+            crit_list.addItem(type(attr).__name__)
+        # Miss
+        miss_list = self.parent.findChild(QtWidgets.QListWidget, "missList")
+        miss_list.clear()
+        for attr in move.miss_components:
+            miss_list.addItem(type(attr).__name__)

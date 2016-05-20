@@ -1163,7 +1163,7 @@
               <item>
                <widget class="QTabWidget" name="tabWidget_2">
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <widget class="QWidget" name="tab_2">
                  <attribute name="title">
@@ -1171,7 +1171,7 @@
                  </attribute>
                  <layout class="QHBoxLayout" name="horizontalLayout_16">
                   <item>
-                   <widget class="QListWidget" name="listWidget_7"/>
+                   <widget class="QListWidget" name="compList"/>
                   </item>
                  </layout>
                 </widget>
@@ -1181,7 +1181,7 @@
                  </attribute>
                  <layout class="QVBoxLayout" name="verticalLayout_19">
                   <item>
-                   <widget class="QListWidget" name="listWidget_9"/>
+                   <widget class="QListWidget" name="critList"/>
                   </item>
                  </layout>
                 </widget>
@@ -1191,7 +1191,7 @@
                  </attribute>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
                   <item>
-                   <widget class="QListWidget" name="listWidget_10"/>
+                   <widget class="QListWidget" name="missList"/>
                   </item>
                  </layout>
                 </widget>
