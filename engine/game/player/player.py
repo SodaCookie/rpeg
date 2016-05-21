@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from engine.game.move.built_moves import SKILL_TREE, PLAYER_MOVES
+from engine.game.move.built_moves import SKILL_TREE, MOVES
 from random import choice, sample
 
 import engine.game.character.character as character
@@ -106,7 +106,7 @@ class Player(character.Character):
             move_names = sample(available_moves, 3)
         else:
             move_names = sample(available_moves, len(available_moves))
-        self.level_up_moves = [PLAYER_MOVES[name] for name in move_names]
+        self.level_up_moves = [MOVES[name] for name in move_names]
 
     def can_level_up(self, shards):
         """Returns if the party has enough shards to level up"""
