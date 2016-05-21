@@ -1,4 +1,4 @@
-import pickle
+import dill as pickle
 
 def serialize(obj, filename):
         pickle.dump(obj, open(filename, "wb"))

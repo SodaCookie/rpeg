@@ -3,7 +3,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 import sys
 import inspect
 
-import editor.class_design as design
+import editor.design.class_design as design
 import editor.core as core
 
 class ClassPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):

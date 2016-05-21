@@ -9,7 +9,7 @@ import assets.actions
 import assets.conditions
 
 from editor.core.class_prompt import ClassPrompt
-import editor.dialogue_design as design
+import editor.design.dialogue_design as design
 import editor.core as core
 
 class DialogueWindow(QtWidgets.QMainWindow, design.Ui_dialogueWindow):

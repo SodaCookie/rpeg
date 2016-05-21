@@ -3,6 +3,7 @@ from engine.game.move.component import Component
 class Conditional(Component):
     """Component that will execute list of components 1 if given condition is
     True else will execute list of components 2"""
+
     def __init__(self, condition, components1, components2):
         self.condition = condition
         self.components1 = components1

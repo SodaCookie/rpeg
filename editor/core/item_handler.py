@@ -24,14 +24,13 @@ class ItemHandler:
         item_base = self.parent.findChild(QtWidgets.QRadioButton, "base")
         item_name = self.parent.findChild(QtWidgets.QLineEdit, "itemName")
         item_list = self.parent.findChild(QtWidgets.QListWidget, "itemList")
-        item_box = self.parent.findChild(QtWidgets.QGroupBox, "itemBox")
+        item_layout = self.parent.findChild(QtWidgets.QVBoxLayout, "itemBox")
         item_type = self.parent.findChild(QtWidgets.QComboBox, "itemType")
         item_slot = self.parent.findChild(QtWidgets.QComboBox, "itemSlot")
         item_stats = self.parent.findChild(QtWidgets.QTableWidget, "itemStats")
         attr_button = self.parent.findChild(
             QtWidgets.QPushButton, "attrButton")
         attr_list = self.parent.findChild(QtWidgets.QListWidget, "attrList")
-        item_box_layout = item_box.layout()
 
         # Set vertical header to visible
         item_stats.verticalHeader().setVisible(True)
@@ -45,7 +44,7 @@ class ItemHandler:
             item_list.addItem(item)
 
         # Disable item editing by default
-        self.set_enable_layout(item_box_layout, False)
+        self.set_enable_layout(item_layout, False)
 
         # Add key press event
         item_list.keyPressEvent = self.item_key_press
@@ -105,9 +104,8 @@ class ItemHandler:
         attr_list.addItem(type(attribute).__name__)
 
     def set_item_enable(self, next, prev):
-        item_box = self.parent.findChild(QtWidgets.QGroupBox, "itemBox")
-        item_box_layout = item_box.layout()
-        self.set_enable_layout(item_box_layout, True)
+        item_layout = self.parent.findChild(QtWidgets.QVBoxLayout, "itemBox")
+        self.set_enable_layout(item_layout, True)
 
     def update_item_base(self, is_base):
         if is_base:

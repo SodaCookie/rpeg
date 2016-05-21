@@ -16,7 +16,7 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 m = MockGameObject()
 p = Player("Test")
-p.add_move(PLAYER_MOVES["attack"])
+p.add_move(MOVES["attack"])
 p.roll_moves()
 m.selected_player = p
 lum = LevelUpManager(*screen.get_size())

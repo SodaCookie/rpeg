@@ -2,7 +2,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from engine.game.dungeon.event import Event
 from engine.game.dungeon.dialog import Dialogue
 from engine.serialization.serialization import deserialize
-from editor.core.floor import FloorHandler
+from editor.core.floor_handler import FloorHandler
 from editor.core.dialogue import DialogueWindow
 
 class ScenarioHandler:
@@ -56,6 +56,20 @@ class ScenarioHandler:
         dialogue_button.clicked.connect(self.open_new_dialogue)
         floor_combo.currentIndexChanged[str].connect(self.update_event_floor)
         room_combo.currentIndexChanged[str].connect(self.update_event_room)
+
+    def event_key_press(self, event):
+        if event.key() == QtCore.Qt.Key_Delete:
+            item_list = self.parent.findChild(
+                QtWidgets.QListWidget, "eventList")
+            if item_list.selectedItems():
+                reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
+                    "Do you want to delete this event?")
+                if reponse == QtWidgets.QMessageBox.Yes:
+                    if self.BASE_ITEMS.get(self.current_focus.text()):
+                        del self.BASE_ITEMS[self.current_focus.text()]
+                    elif self.ITEMS.get(self.current_focus.text()):
+                        del self.ITEMS[self.current_focus.text()]
+                    item_list.takeItem(item_list.currentRow())
 
     def set_dialogue_enable(self, next, prev):
         if next != None:
