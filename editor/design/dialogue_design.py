@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dialogue.ui'
+# Form implementation generated from reading ui file 'ui\dialogue.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #
@@ -132,6 +132,18 @@ class Ui_dialogueWindow(object):
 
         self.retranslateUi(dialogueWindow)
         QtCore.QMetaObject.connectSlotsByName(dialogueWindow)
+        dialogueWindow.setTabOrder(self.dialogueName, self.dialogueDText)
+        dialogueWindow.setTabOrder(self.dialogueDText, self.dialogueBody)
+        dialogueWindow.setTabOrder(self.dialogueBody, self.dialogueChance)
+        dialogueWindow.setTabOrder(self.dialogueChance, self.dialogueFail)
+        dialogueWindow.setTabOrder(self.dialogueFail, self.actionList)
+        dialogueWindow.setTabOrder(self.actionList, self.newAction)
+        dialogueWindow.setTabOrder(self.newAction, self.conditionList)
+        dialogueWindow.setTabOrder(self.conditionList, self.newCondition)
+        dialogueWindow.setTabOrder(self.newCondition, self.choiceList)
+        dialogueWindow.setTabOrder(self.choiceList, self.newChoice)
+        dialogueWindow.setTabOrder(self.newChoice, self.createButton)
+        dialogueWindow.setTabOrder(self.createButton, self.cancelButton)
 
     def retranslateUi(self, dialogueWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -147,6 +159,6 @@ class Ui_dialogueWindow(object):
         self.newAction.setText(_translate("dialogueWindow", "Add New Action..."))
         self.newCondition.setText(_translate("dialogueWindow", "Add New Condition..."))
         self.newChoice.setText(_translate("dialogueWindow", "Add New Choice..."))
-        self.createButton.setText(_translate("dialogueWindow", "Create"))
+        self.createButton.setText(_translate("dialogueWindow", "OK"))
         self.cancelButton.setText(_translate("dialogueWindow", "Cancel"))
 

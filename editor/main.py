@@ -3,7 +3,7 @@ from PyQt5 import QtGui, QtWidgets
 import sys
 import os
 
-import editor.design as design
+import editor.design.editor_design as design
 import editor.core as core
 
 class Editor(QtWidgets.QMainWindow, design.Ui_MainWindow):
