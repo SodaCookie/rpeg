@@ -20,7 +20,7 @@ class Location(object):
 
 	def get_event(self):
 		"""Returns the event found at this location"""
-		return self.event.dialogues.get("main")
+		return "main"
 
 	def get_dialogue(self, name):
 		return self.event.dialogues.get(name)

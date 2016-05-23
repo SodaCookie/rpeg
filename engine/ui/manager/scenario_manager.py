@@ -35,6 +35,7 @@ class ScenarioManager(Manager):
         if game.current_dialog != self.dialog:
             self.update_dialog(game, game.current_dialog)
             self.dialog = game.current_dialog
+
         super().update(game)
 
     def update_location(self, location):
@@ -48,6 +49,7 @@ class ScenarioManager(Manager):
         self.zones = []
         if dialog == None: # clear and do nothing if no dialog
             return
+        dialog = game.current_location.get_dialogue(dialog)
         self.renderables.append(self.window)
         self.renderables.append(self.title)
         body = element.Text(dialog.body, 18, self.x+10, self.y+10,
@@ -76,20 +78,19 @@ class ScenarioManager(Manager):
             self.zones.append(zone)
             self.renderables.append(button)
 
-    @staticmethod
-    def on_choice_click(dialog, game):
+    def on_choice_click(self, dialog, game):
         while dialog.fail:
             if random.randint(0, 99) < dialog.chance:
                 break
             dialog = game.current_location.get_dialogue(dialog.fail)
-        game.current_dialog = dialog
+        game.current_dialog = dialog.name
 
-    @staticmethod
-    def on_no_choice_click(dialog, game):
+    def on_no_choice_click(self, dialog, game):
         """We are done so we will exit also will execute some action"""
         game.current_dialog = None
         game.focus_window = None
         game.selected_player = None
+        self.dialog = None
         # Parse action
         # action := <type> [<parameter-name>:<parameter> <para...]
         for action in dialog.get_actions():

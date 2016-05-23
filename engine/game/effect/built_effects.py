@@ -1,2 +1,0 @@
-from assets.effects import *
-

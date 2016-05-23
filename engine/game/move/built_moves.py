@@ -1,9 +1,6 @@
 """Compilation of the moves built to be used in the game"""
 
 from engine.game.move.move import Move
-from engine.game.move.built_components import *
-from engine.game.move.built_modifiers import *
-from engine.game.effect.built_effects import *
 from engine.serialization.serialization import deserialize
 
 __all__ = ["MOVES"]

@@ -5,10 +5,13 @@ import math
 
 from engine.serialization.serialization import deserialize
 from engine.game.item.item import Item
-from engine.game.item.built_items import BASE_ITEMS, ITEMS
-from engine.game.attribute.built_item_attributes import RARE_ATTRIBUTES, \
-    LEGENDARY_ATTRIBUTES, UNIQUE_ATTRIBUTES
 
+RARE_ATTRIBUTES = deserialize("data/item/attributes/rare_attributes.p")
+LEGENDARY_ATTRIBUTES = deserialize("data/item/attributes/legendary_attributes.p")
+UNIQUE_ATTRIBUTES = deserialize("data/item/attributes/unique_attributes.p")
+
+BASE_ITEMS = deserialize("data/item/base_items.p")
+ITEMS = deserialize("data/item/items.p")
 
 class ItemFactory(object):
     """Item factory contains methods that generate items.

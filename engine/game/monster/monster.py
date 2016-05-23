@@ -7,8 +7,9 @@ from pygame import image, Surface, SRCALPHA, BLEND_RGBA_MULT
 from pygame.transform import scale
 
 import engine.game.character.character as character
-import engine.game.move.built_moves as built_moves
+from engine.serialization.serialization import deserialize
 
+MOVES = deserialize("data/moves.p")
 
 def parse_monsters(filename):
     """Takes a filename and returns a dict of dicts containing all monster
@@ -61,8 +62,7 @@ class Monster(character.Character):
 
         # add moves
         for movename in monster_def["abilities"]:
-            self.add_move(built_moves.MOVES[movename])
-        # self.add_move(built_moves.MOVES["soul drain"]) # TEMP
+            self.add_move(MOVES[movename])
         self.set_active_moves(self.moves)
 
         for attribute in monster_def["attributes"]:
