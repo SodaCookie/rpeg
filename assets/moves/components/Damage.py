@@ -1,8 +1,12 @@
 from engine.game.move.component import Component
 
 class Damage(Component):
-    """Deals flat damage to given targets"""
+
     def __init__(self, damage, dtype, modifiers=None):
+        """Deal damage to target.
+        damage -> int
+        dtype -> str
+        modifiers -> list Modifier"""
         self.damage = damage
         self.dtype = dtype
         if not modifiers:

@@ -1,8 +1,10 @@
 from engine.game.move.component import Component
 
 class TargetNumberOnly(Component):
-    """Descriptor for targetting a specific number of characters only"""
+
     def __init__(self, number):
+        """Descriptor for targeting a specific number of characters only.
+        number -> int"""
         self.number = number
 
     def valid_cast(self, selected, caster, players, monsters):

@@ -6,6 +6,9 @@ from engine.game.monster.monster import Monster
 class BattleAction(Action):
 
     def __init__(self, challenge=5, monsters=None):
+        """Initiate battle.
+        challenge -> int
+        monsters -> list str"""
         super().__init__()
         self.challenge = challenge
         self.monsters = monsters

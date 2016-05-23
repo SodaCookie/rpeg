@@ -1,8 +1,11 @@
 from engine.game.move.component import Component
 
 class Heal(Component):
-    """Deals flat healing to given targets"""
     def __init__(self, heal, modifiers):
+        """Provides healing for a target.
+        heal -> int
+        modifiers -> list Modifier"""
+
         self.heal = heal
         if not modifiers:
             self.modifiers = []

@@ -1,8 +1,9 @@
 from engine.game.move.component import Component
 
 class Message(Component):
-    """Component that will return a message"""
     def __init__(self, message):
+        """Component that will return a message.
+        message -> str"""
         self.message = message
 
     def on_cast(self, target, caster, players, monsters):

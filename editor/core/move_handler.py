@@ -7,6 +7,9 @@ import assets.moves.components
 import assets.moves.modifiers
 
 from editor.core.class_prompt import ClassPrompt
+from editor.meta.typecheck import typecheck
+from editor.meta.valuecheck import valuecheck
+from editor.meta.types import *
 from engine.serialization.serialization import deserialize
 
 class MoveHandler:
@@ -45,7 +48,6 @@ class MoveHandler:
             move_list.addItem(move)
 
         move_list.currentItemChanged.connect(self.load_move)
-
 
     def load_move(self, item):
         # Get move
@@ -95,17 +97,52 @@ class MoveHandler:
             move_icon.setIcon(QtGui.QIcon());
 
         # Load components
-        comp_list = self.parent.findChild(QtWidgets.QListWidget, "compList")
-        comp_list.clear()
-        for attr in move.components:
-            comp_list.addItem(type(attr).__name__)
-        # Crit
-        crit_list = self.parent.findChild(QtWidgets.QListWidget, "critList")
-        crit_list.clear()
-        for attr in move.crit_components:
-            crit_list.addItem(type(attr).__name__)
-        # Miss
-        miss_list = self.parent.findChild(QtWidgets.QListWidget, "missList")
-        miss_list.clear()
-        for attr in move.miss_components:
-            miss_list.addItem(type(attr).__name__)
+        components_table = self.parent.findChild(
+            QtWidgets.QTreeWidget, "componentList")
+        components_table.clear()
+
+        item = QtWidgets.QTreeWidgetItem(["<Components>"])
+        components_table.addTopLevelItem(item)
+        for component in move.components:
+            self._load_components(item, component)
+        item.setExpanded(True)
+
+        item = QtWidgets.QTreeWidgetItem(["<MissComponents>"])
+        components_table.addTopLevelItem(item)
+        for component in move.miss_components:
+            self._load_components(item, component)
+        item.setExpanded(True)
+
+        item = QtWidgets.QTreeWidgetItem(["<CritComponents>"])
+        components_table.addTopLevelItem(item)
+        for component in move.crit_components:
+            self._load_components(item, component)
+        item.setExpanded(True)
+
+    def _load_components(self, item, component):
+        """Recursive convenience function for loading in components into
+        a higher level component"""
+        component_item = QtWidgets.QTreeWidgetItem([type(component).__name__])
+        item.addChild(component_item)
+        parameters = typecheck(type(component))
+        for parameter, ptype in parameters.items():
+            # Parameter item
+            para_item = QtWidgets.QTreeWidgetItem(
+                ["%s : <%s>" % (parameter, str(ptype))])
+            component_item.addChild(para_item)
+
+            # Attempt to fill in the value
+            value = valuecheck(component, parameter)
+            if value != None:
+                if isinstance(ptype, ListType): # if our type is a list
+                    for subcomponent in value:
+                        self._load_components(para_item, subcomponent)
+                elif isinstance(ptype, LambdaType):
+                    para_item.addChild(QtWidgets.QTreeWidgetItem(
+                        ["<function>"]))
+                else:
+                    para_item.addChild(QtWidgets.QTreeWidgetItem(
+                        [str(value)]))
+            else:
+                para_item.addChild(QtWidgets.QTreeWidgetItem(
+                    [""]))

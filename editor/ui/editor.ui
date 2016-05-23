@@ -862,9 +862,9 @@
        <attribute name="title">
         <string>Moves</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="1,0">
+       <layout class="QHBoxLayout" name="horizontalLayout_16">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_17" stretch="1,0">
+         <layout class="QVBoxLayout" name="verticalLayout_16">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_20" stretch="1,0">
             <item>
@@ -1157,71 +1157,51 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_21">
+           <layout class="QVBoxLayout" name="verticalLayout_15">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_15">
+             <widget class="QTreeWidget" name="componentList">
+              <property name="contextMenuPolicy">
+               <enum>Qt::CustomContextMenu</enum>
+              </property>
+              <attribute name="headerDefaultSectionSize">
+               <number>500</number>
+              </attribute>
+              <attribute name="headerMinimumSectionSize">
+               <number>100</number>
+              </attribute>
+              <attribute name="headerStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>Components</string>
+               </property>
+              </column>
               <item>
-               <widget class="QTabWidget" name="tabWidget_2">
-                <property name="currentIndex">
-                 <number>2</number>
-                </property>
-                <widget class="QWidget" name="tab_2">
-                 <attribute name="title">
-                  <string>Standard</string>
-                 </attribute>
-                 <layout class="QHBoxLayout" name="horizontalLayout_16">
-                  <item>
-                   <widget class="QListWidget" name="compList"/>
-                  </item>
-                 </layout>
-                </widget>
-                <widget class="QWidget" name="tab_3">
-                 <attribute name="title">
-                  <string>Critical</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="verticalLayout_19">
-                  <item>
-                   <widget class="QListWidget" name="critList"/>
-                  </item>
-                 </layout>
-                </widget>
-                <widget class="QWidget" name="tab_4">
-                 <attribute name="title">
-                  <string>Miss</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="verticalLayout_18">
-                  <item>
-                   <widget class="QListWidget" name="missList"/>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
+               <property name="text">
+                <string>&lt;Components&gt;</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
               </item>
               <item>
-               <widget class="QPushButton" name="newComponent">
-                <property name="text">
-                 <string>Add New Component...</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_16">
-              <item>
-               <widget class="QListWidget" name="modifierList"/>
+               <property name="text">
+                <string>&lt;MissComponents&gt;</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
               </item>
               <item>
-               <widget class="QPushButton" name="newModifier">
-                <property name="text">
-                 <string>Add New Modifier...</string>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-               </widget>
+               <property name="text">
+                <string>&lt;CritComponents&gt;</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
               </item>
-             </layout>
+             </widget>
             </item>
            </layout>
           </item>
@@ -1243,6 +1223,7 @@
         </item>
        </layout>
        <zorder></zorder>
+       <zorder>componentList</zorder>
       </widget>
      </widget>
     </item>
