@@ -5,6 +5,10 @@ class StatChangeTilMove(Effect):
     lasts till the next action"""
 
     def __init__(self, name, strength, stype):
+        """Changes the stats based on stat type additively until a move is cast
+        name -> str
+        strength -> int
+        stype -> str"""
         super().__init__(name, Effect.PERMANENT)
         self.strength = strength
         self.stype = stype

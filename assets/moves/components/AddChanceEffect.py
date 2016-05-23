@@ -1,13 +1,16 @@
 from engine.game.move.component import Component
 
 class AddChanceEffect(Component):
-    """Chance to apply effect on target(s)"""
+
     def __init__(self, effect, chance):
+        """Applies an effect with a given percent chance 100 being guaranteed
+        effect -> Effect
+        chance -> int"""
         self.effect = effect
         self.chance = chance
 
     def on_cast(self, target, caster, players, monsters):
-        rand = random.random()
+        rand = random.randint(0, 99)
         if rand > self.chance:
             return ""
         else:

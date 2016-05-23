@@ -5,6 +5,11 @@ class StatChange(Effect):
         duration"""
 
     def __init__(self, name, strength, stype, duration):
+        """Changes the stats based on stat type additively
+        name -> str
+        strength -> int
+        stype -> str
+        duration -> float"""
         super().__init__(name, duration)
         self.strength = strength
         self.stype = stype

@@ -2,8 +2,9 @@ from engine.game.move.component import Component
 from assets.moves.components.AddChanceEffect import AddChanceEffect
 
 class AddEffect(AddChanceEffect):
-    """Applies an effect of target(s)"""
     def __init__(self, effect):
+        """Applies an effect on given target(s)
+        effect -> Effect"""
         super().__init__(effect, 1)
 
     def on_cast(self, target, caster, players, monsters):

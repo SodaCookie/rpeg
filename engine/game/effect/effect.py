@@ -12,8 +12,8 @@ class Effect:
         """
         self.name = name
         self.max_duration = duration
-        self.duration = duration
-        self.tick = tick
+        self.duration = duration # Float in seconds
+        self.tick = tick # Float in seconds
         if not tick:
             self.cur_tick = 0
         else:

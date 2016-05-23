@@ -1,9 +1,11 @@
 from engine.game.move.modifier import Modifier
 
 class ScaleStat(Modifier):
-    """Additively scales value by a percentage of a stat"""
 
     def __init__(self, scaling, stype):
+        """Additively scales value by a percentage of a stat.
+        scaling -> int
+        stype -> str"""
         self.scaling = scaling
         self.stype = stype
 

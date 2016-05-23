@@ -7,6 +7,10 @@ class LootAction(Action):
     HIGH = "high"
 
     def __init__(self, reward_tier="low", shards=None, items=None):
+        """Reward player.
+        reward_tier -> str
+        shards -> int
+        items -> list str"""
         super().__init__()
         self.reward_tier = reward_tier
         self.shards = shards

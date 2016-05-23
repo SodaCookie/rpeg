@@ -1,13 +1,5 @@
 """Defines the base class for Component"""
 
-def annotate(*types):
-    """Decorator function used to annotate """
-    def apply_types(function):
-        """Applies a _editor_types field on to the function object"""
-        function._editor_types = types
-        return function
-    return apply_types
-
 class Component(object):
     """Base Class of All component objects. Describes methods
     that are used in move components"""

@@ -1,11 +1,17 @@
 from engine.game.effect.effect import Effect
 
 class DoT(Effect):
-    """Does heal/damage over time, applies modifiers as well
-    If no damage type is given, we assume the value is a heal"""
 
     def __init__(self, name, value, duration, tick, modifiers=None,
-        dtype=None):
+            dtype="true"):
+        """Does heal/damage over time, applies modifiers as well
+        If no damage type is given, we assume the value is a heal.
+        name -> str
+        value -> int
+        duration -> float
+        tick -> float
+        modifiers -> list Modifier
+        dtype -> str"""
         super().__init__(name, duration, tick)
         self.value = value
         if modifiers:

@@ -1,9 +1,10 @@
 from engine.game.move.modifier import Modifier
 
 class ScaleLevelAdd(Modifier):
-    """Additively scales value by a percentage"""
 
     def __init__(self, scaling):
+        """Additively scales value by a percentage.
+        scaling -> float"""
         self.scaling = scaling
 
     def modify(self, value, target, caster):

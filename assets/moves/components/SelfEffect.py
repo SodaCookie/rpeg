@@ -1,8 +1,10 @@
 from engine.game.move.component import Component
 
 class SelfEffect(Component):
-    """Applies self-effect on cast"""
+
     def __init__(self, effect):
+        """Applies self-effect on cast.
+        effect -> Effect"""
         self.effect = effect
 
     def on_cast(self, target, caster, players, monsters):
