@@ -86,5 +86,5 @@ class Effect:
         pass
 
     def __str__(self):
-        return "%s - Turn(s)%d" % (self.name.replace("-", " ").title(),
+        return "%s - Turn(s) %s" % (self.name.replace("-", " ").title(),
                                    self.duration)

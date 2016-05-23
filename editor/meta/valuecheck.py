@@ -3,6 +3,7 @@ existing object values"""
 
 import inspect
 import re
+import logging
 
 _assign_regex = r"self\.(\w+)\s*=\s*(?:%s)"
 
@@ -20,5 +21,8 @@ def valuecheck(obj, parameter):
                 member = match.group(1)
                 return getattr(obj, member)
         except OSError:
-            print("Error")
+            print("Source file for %s could not be found." % obj)
+            logging.info("Source file for %s could not be found." % obj)
+        except AttributeError:
+            logging.error("Pickled object has been updated and %s could not be found" % member)
     return None

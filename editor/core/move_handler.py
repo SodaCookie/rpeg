@@ -133,10 +133,16 @@ class MoveHandler:
 
             # Attempt to fill in the value
             value = valuecheck(component, parameter)
-            if value:
+            if value != None:
                 if isinstance(ptype, ListType): # if our type is a list
-                    for component in value:
-                        self._load_components(para_item, component)
+                    for subcomponent in value:
+                        self._load_components(para_item, subcomponent)
+                elif isinstance(ptype, LambdaType):
+                    para_item.addChild(QtWidgets.QTreeWidgetItem(
+                        ["<function>"]))
                 else:
                     para_item.addChild(QtWidgets.QTreeWidgetItem(
                         [str(value)]))
+            else:
+                para_item.addChild(QtWidgets.QTreeWidgetItem(
+                    [""]))
