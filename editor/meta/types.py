@@ -1,5 +1,5 @@
 """Defines the types used to typecheck the docstrings of assets"""
-from types import LambdaType
+from types import LambdaType as _LambdaType
 
 from engine.game.move.component import Component
 from engine.game.move.modifier import Modifier
@@ -114,7 +114,7 @@ class LambdaType(EditorType):
 
     def __init__(self, *args):
         """Creates a new LambdaType with parameters as strings"""
-        super().__init__(LambdaType)
+        super().__init__(_LambdaType)
         self.args = args
 
     def __str__(self):

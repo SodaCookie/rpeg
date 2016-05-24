@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="monster_tab">
        <property name="maximumSize">
@@ -36,7 +36,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QGraphicsView" name="graphicsView">
+             <widget class="QGraphicsView" name="monsterImage">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -48,10 +48,10 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
-               <widget class="QListWidget" name="listWidget_2"/>
+               <widget class="QListWidget" name="monsterDropList"/>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_3">
+               <widget class="QPushButton" name="newDrop">
                 <property name="text">
                  <string>Add New Drop...</string>
                 </property>
@@ -89,7 +89,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit"/>
+                <widget class="QLineEdit" name="monsterName"/>
                </item>
               </layout>
              </item>
@@ -115,7 +115,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="comboBox">
+                <widget class="QComboBox" name="monsterFloor">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -135,7 +135,7 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
                   <item>
-                   <widget class="QTableWidget" name="tableWidget">
+                   <widget class="QTableWidget" name="monsterStats">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
                       <horstretch>0</horstretch>
@@ -251,16 +251,16 @@
                <item>
                 <widget class="QGroupBox" name="groupBox_4">
                  <property name="title">
-                  <string>Effects</string>
+                  <string>Attribute</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_7">
                   <item>
-                   <widget class="QListWidget" name="listWidget_3"/>
+                   <widget class="QListWidget" name="monsterAttrList"/>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_4">
+                   <widget class="QPushButton" name="newAttribute">
                     <property name="text">
-                     <string>Add New Effect...</string>
+                     <string>Add New Attribute...</string>
                     </property>
                    </widget>
                   </item>
@@ -274,10 +274,10 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
                   <item>
-                   <widget class="QListView" name="listView_2"/>
+                   <widget class="QListView" name="monsterAbilityList"/>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_2">
+                   <widget class="QPushButton" name="newAbility">
                     <property name="text">
                      <string>Add New Ability...</string>
                     </property>
@@ -296,7 +296,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QListWidget" name="listWidget">
+           <widget class="QListWidget" name="monsterList">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -306,7 +306,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="newMonster">
             <property name="text">
              <string>Create New Monster...</string>
             </property>
@@ -864,7 +864,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_16">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_16">
+         <layout class="QVBoxLayout" name="verticalLayout_16" stretch="0,0">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_20" stretch="1,0">
             <item>

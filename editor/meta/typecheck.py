@@ -48,8 +48,8 @@ def typecheck(cls):
     the parameters by the class"""
     docstring = cls.__init__.__doc__
     signature = inspect.signature(cls)
+    parsed_parameters = {}
     if docstring:
-        parsed_parameters = {}
         for parameter, type_string in re.findall(_type_regex, docstring):
             parsed_parameters[parameter] = _get_type(type_string)
 

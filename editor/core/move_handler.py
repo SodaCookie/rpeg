@@ -8,7 +8,7 @@ import assets.moves.modifiers
 
 from editor.core.class_prompt import ClassPrompt
 from editor.meta.typecheck import typecheck
-from editor.meta.valuecheck import valuecheck
+from editor.meta.valuecheck import valuecheck, value_from_type
 from editor.meta.types import *
 from engine.serialization.serialization import deserialize
 
@@ -130,19 +130,33 @@ class MoveHandler:
             para_item = QtWidgets.QTreeWidgetItem(
                 ["%s : <%s>" % (parameter, str(ptype))])
             component_item.addChild(para_item)
-
             # Attempt to fill in the value
             value = valuecheck(component, parameter)
             if value != None:
-                if isinstance(ptype, ListType): # if our type is a list
-                    for subcomponent in value:
-                        self._load_components(para_item, subcomponent)
-                elif isinstance(ptype, LambdaType):
-                    para_item.addChild(QtWidgets.QTreeWidgetItem(
-                        ["<function>"]))
-                else:
-                    para_item.addChild(QtWidgets.QTreeWidgetItem(
-                        [str(value)]))
+                self._load_parameter(para_item, ptype, value)
             else:
                 para_item.addChild(QtWidgets.QTreeWidgetItem(
                     [""]))
+
+            # Recover type if value is known
+            if type(ptype) == UnknownType and value != None:
+                para_item.takeChildren()
+                derived_type = value_from_type(value)
+                self._load_parameter(para_item, derived_type, value)
+                para_item.setText(0, "%s : <%s>" % (parameter,
+                    str(derived_type)))
+
+    def _load_parameter(self, item, ptype, value):
+        """Convenience function for loading parameters"""
+        if isinstance(ptype, ListType): # if our type is a list
+            for subcomponent in value:
+                self._load_components(item, subcomponent)
+        elif isinstance(ptype, LambdaType):
+            item.addChild(QtWidgets.QTreeWidgetItem(
+                ["<function>"]))
+        elif isinstance(ptype,
+                (EffectType, ComponentType, ModifierType, AttributeType)):
+            self._load_components(item, value)
+        else:
+            item.addChild(QtWidgets.QTreeWidgetItem(
+                [str(value)]))
