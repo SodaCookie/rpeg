@@ -1,7 +1,7 @@
 import dill as pickle
 
-from engine.game.item import built_items
 from engine.game.move.built_moves import MOVES
+from engine.game.monster.monster import Monster
 
 def serialize(obj, filename):
         pickle.dump(obj, open(filename, "wb"))
@@ -18,4 +18,4 @@ if __name__ == "__main__":
     # for key in built_items.ITEMS.keys():
     #     qual_path = path + key.replace(" ", "_") + ".p"
     #     serialize(built_items.ITEMS[key], qual_path)
-    serialize(MOVES, "data/moves.p")
+    serialize(Monster.MONSTERS, "data/monster.p")

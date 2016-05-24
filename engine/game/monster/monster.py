@@ -45,7 +45,7 @@ class Monster(character.Character):
     is responsible for holding a Monster's stats as well as generating
     itself."""
 
-    MONSTERS = parse_monsters("data/monster.xml")
+    MONSTERS = deserialize("data/monster.p")
 
     def __init__(self, name):
         """Basic Monster constructor"""

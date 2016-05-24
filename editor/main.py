@@ -1,7 +1,9 @@
 """Defines the main Editor window"""
-from PyQt5 import QtGui, QtWidgets
 import sys
 import os
+
+import sip
+from PyQt5 import QtGui, QtWidgets
 
 import editor.design.editor_design as design
 import editor.core as core
@@ -15,10 +17,12 @@ class Editor(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.scenario_handler = core.scenario_handler.ScenarioHandler(self)
         self.item_handler = core.item_handler.ItemHandler(self)
         self.move_handler = core.move_handler.MoveHandler(self)
+        self.monster_handler = core.monster_handler.MonsterHandler(self)
 
 
 def init():
     app = QtWidgets.QApplication(sys.argv)
     form = Editor()
     form.show()
-    app.exec_()
+    sip.setdestroyonexit(False) # Fixes a crash bug
+    sys.exit(app.exec_())

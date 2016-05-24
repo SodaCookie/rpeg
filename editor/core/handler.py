@@ -5,6 +5,7 @@ class Handler(object):
     def __init__(self, parent):
         """Base interface for Handlers to extend to interact with the
         Qt Window."""
+        self.focus = None
         self.parent = parent
         self.setup()
 
