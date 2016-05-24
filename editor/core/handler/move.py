@@ -6,7 +6,7 @@ import assets.moves
 import assets.moves.components
 import assets.moves.modifiers
 
-from editor.core.class_prompt import ClassPrompt
+from editor.core.prompt.class_prompt import ClassPrompt
 from editor.meta.typecheck import typecheck
 from editor.meta.valuecheck import valuecheck, value_from_type
 from editor.meta.types import *

@@ -2,8 +2,8 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from engine.game.dungeon.event import Event
 from engine.game.dungeon.dialog import Dialogue
 from engine.serialization.serialization import deserialize
-from editor.core.floor_handler import FloorHandler
-from editor.core.dialogue import DialogueWindow
+from engine.serialization.floor import FloorDataManager
+from editor.core.prompt.dialogue_prompt import DialoguePrompt
 
 class ScenarioHandler:
     """Class responsible for handling events/scenarios"""
@@ -12,7 +12,7 @@ class ScenarioHandler:
 
     def __init__(self, parent):
         self.parent = parent
-        self.floor_handler = FloorHandler()
+        self.floor_dm = FloorDataManager()
         self.init_scenario()
         self.current_focus = None
 
@@ -32,7 +32,7 @@ class ScenarioHandler:
             QtWidgets.QListWidget, "dialogueList")
 
         # Load floor types
-        for floor in self.floor_handler.floors():
+        for floor in self.floor_dm.floors():
             floor_combo.addItem(floor.title())
 
         # Load scenarios to list item
@@ -151,7 +151,7 @@ class ScenarioHandler:
         # Create a new empty dialogue
         dialogue = Dialogue("", "", "")
 
-        dialogue_window = DialogueWindow(self.parent, dialogue)
+        dialogue_window = DialoguePrompt(self.parent, dialogue)
         dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
         dialogue_window.show()
 
@@ -176,7 +176,7 @@ class ScenarioHandler:
         floor, room, event = self.event_to_location[self.current_focus.text()]
         dialogue = event.dialogues[item.text()]
 
-        dialogue_window = DialogueWindow(self.parent, dialogue)
+        dialogue_window = DialoguePrompt(self.parent, dialogue)
         dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
         dialogue_window.show()
 

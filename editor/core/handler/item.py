@@ -1,7 +1,7 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 
 import assets.attributes
-from editor.core.class_prompt import ClassPrompt
+from editor.core.prompt.class_prompt import ClassPrompt
 from engine.game.item import item
 from engine.serialization.serialization import deserialize
 

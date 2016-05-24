@@ -6,9 +6,9 @@ import assets.moves
 import assets.moves.components
 import assets.moves.modifiers
 
-from editor.core.handler import Handler
-from editor.core.floor_handler import FloorHandler
-from editor.core.class_prompt import ClassPrompt
+from editor.core.handler.handler import Handler
+from editor.core.prompt.class_prompt import ClassPrompt
+from engine.serialization.floor import FloorDataManager
 from engine.serialization.serialization import deserialize
 
 class MonsterHandler(Handler):
@@ -18,7 +18,7 @@ class MonsterHandler(Handler):
 
     def setup(self):
         # Load data
-        self.floor = FloorHandler()
+        self.floor = FloorDataManager()
         self.MONSTER_DEFS = deserialize("data/monster.p")
 
         # Get relevant widgets
