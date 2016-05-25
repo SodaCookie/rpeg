@@ -1,22 +1,22 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 
 import assets.attributes
+
+from editor.core.handler.handler import Handler
 from editor.core.prompt.class_prompt import ClassPrompt
 from engine.game.item import item
 from engine.serialization.serialization import deserialize
 
-class ItemHandler:
+class ItemHandler(Handler):
     """Class responsible for handling item editing"""
     BASE_ITEMS = {} # storage for the item data
     ITEMS = {}
     ITEM_SETS = {}
 
     def __init__(self, parent):
-        self.parent = parent
-        self.init_items()
-        self.current_focus = None
+        super().__init__(parent)
 
-    def init_items(self):
+    def setup(self):
         self.BASE_ITEMS = deserialize("data/item/base_items.p")
         self.ITEMS = deserialize("data/item/items.p")
         self.ITEM_SETS = deserialize("data/item/item_sets.p")
@@ -54,7 +54,7 @@ class ItemHandler:
         item_base.toggled.connect(self.update_item_base)
         item_name.textEdited.connect(self.update_item_name)
         item_list.currentItemChanged.connect(self.set_item_enable)
-        item_list.currentItemChanged.connect(self.load_item)
+        item_list.currentItemChanged.connect(self.set_focus)
         item_stats.cellChanged.connect(self.update_item_stats)
         item_type.currentIndexChanged[str].connect(self.update_item_type)
         item_slot.currentIndexChanged[str].connect(self.update_item_slot)
@@ -68,10 +68,10 @@ class ItemHandler:
                 reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
                     "Do you want to delete this item?")
                 if reponse == QtWidgets.QMessageBox.Yes:
-                    if self.BASE_ITEMS.get(self.current_focus.text()):
-                        del self.BASE_ITEMS[self.current_focus.text()]
-                    elif self.ITEMS.get(self.current_focus.text()):
-                        del self.ITEMS[self.current_focus.text()]
+                    if self.BASE_ITEMS.get(self.focus.text()):
+                        del self.BASE_ITEMS[self.focus.text()]
+                    elif self.ITEMS.get(self.focus.text()):
+                        del self.ITEMS[self.focus.text()]
                     item_list.takeItem(item_list.currentRow())
 
     def attribute_key_press(self, event):
@@ -82,10 +82,10 @@ class ItemHandler:
                 reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
                     "Do you want to delete this attribute?")
                 if reponse == QtWidgets.QMessageBox.Yes:
-                    if self.BASE_ITEMS.get(self.current_focus.text()):
-                        item = self.BASE_ITEMS[self.current_focus.text()]
-                    elif self.ITEMS.get(self.current_focus.text()):
-                        item = self.ITEMS[self.current_focus.text()]
+                    if self.BASE_ITEMS.get(self.focus.text()):
+                        item = self.BASE_ITEMS[self.focus.text()]
+                    elif self.ITEMS.get(self.focus.text()):
+                        item = self.ITEMS[self.focus.text()]
                     del item.attributes[attr_list.currentRow()]
                     attr_list.takeItem(attr_list.currentRow())
 
@@ -95,10 +95,10 @@ class ItemHandler:
         prompt.show()
 
     def create_attribute(self, attribute):
-        if self.BASE_ITEMS.get(self.current_focus.text()):
-            item = self.BASE_ITEMS[self.current_focus.text()]
-        elif self.ITEMS.get(self.current_focus.text()):
-            item = self.ITEMS[self.current_focus.text()]
+        if self.BASE_ITEMS.get(self.focus.text()):
+            item = self.BASE_ITEMS[self.focus.text()]
+        elif self.ITEMS.get(self.focus.text()):
+            item = self.ITEMS[self.focus.text()]
         item.attributes.append(attribute)
         attr_list = self.parent.findChild(QtWidgets.QListWidget, "attrList")
         attr_list.addItem(type(attribute).__name__)
@@ -109,63 +109,61 @@ class ItemHandler:
 
     def update_item_base(self, is_base):
         if is_base:
-            if self.ITEMS.get(self.current_focus.text()):
-                item = self.ITEMS[self.current_focus.text()]
-                del self.ITEMS[self.current_focus.text()]
-                self.BASE_ITEMS[self.current_focus.text()] = item
+            if self.ITEMS.get(self.focus.text()):
+                item = self.ITEMS[self.focus.text()]
+                del self.ITEMS[self.focus.text()]
+                self.BASE_ITEMS[self.focus.text()] = item
         else:
-            if self.BASE_ITEMS.get(self.current_focus.text()):
-                item = self.BASE_ITEMS[self.current_focus.text()]
-                del self.BASE_ITEMS[self.current_focus.text()]
-                self.ITEMS[self.current_focus.text()] = item
+            if self.BASE_ITEMS.get(self.focus.text()):
+                item = self.BASE_ITEMS[self.focus.text()]
+                del self.BASE_ITEMS[self.focus.text()]
+                self.ITEMS[self.focus.text()] = item
 
     def update_item_name(self, name):
-        if self.BASE_ITEMS.get(self.current_focus.text()):
-            item = self.BASE_ITEMS[self.current_focus.text()]
+        if self.BASE_ITEMS.get(self.focus.text()):
+            item = self.BASE_ITEMS[self.focus.text()]
             item.name = name
-            del self.BASE_ITEMS[self.current_focus.text()]
-            self.current_focus.setText(name)
+            del self.BASE_ITEMS[self.focus.text()]
+            self.focus.setText(name)
             self.BASE_ITEMS[name] = item
-        elif self.ITEMS.get(self.current_focus.text()):
-            item = self.ITEMS[self.current_focus.text()]
+        elif self.ITEMS.get(self.focus.text()):
+            item = self.ITEMS[self.focus.text()]
             item.name = name
-            del self.ITEMS[self.current_focus.text()]
-            self.current_focus.setText(name)
+            del self.ITEMS[self.focus.text()]
+            self.focus.setText(name)
             self.ITEMS[name] = item
 
     def update_item_stats(self, row, column):
-        if self.BASE_ITEMS.get(self.current_focus.text()):
-            item = self.BASE_ITEMS[self.current_focus.text()]
-        elif self.ITEMS.get(self.current_focus.text()):
-            item = self.ITEMS[self.current_focus.text()]
+        if self.BASE_ITEMS.get(self.focus.text()):
+            item = self.BASE_ITEMS[self.focus.text()]
+        elif self.ITEMS.get(self.focus.text()):
+            item = self.ITEMS[self.focus.text()]
         item_stats = self.parent.findChild(QtWidgets.QTableWidget, "itemStats")
         stype = item_stats.verticalHeaderItem(row).text().lower()
         item.stats[stype] = int(float(item_stats.item(row, column).text()))
 
     def update_item_type(self, itype):
-        if self.BASE_ITEMS.get(self.current_focus.text()):
-            item = self.BASE_ITEMS[self.current_focus.text()]
-        elif self.ITEMS.get(self.current_focus.text()):
-            item = self.ITEMS[self.current_focus.text()]
+        if self.BASE_ITEMS.get(self.focus.text()):
+            item = self.BASE_ITEMS[self.focus.text()]
+        elif self.ITEMS.get(self.focus.text()):
+            item = self.ITEMS[self.focus.text()]
         item.itype = itype
 
     def update_item_slot(self, slot):
-        if self.BASE_ITEMS.get(self.current_focus.text()):
-            item = self.BASE_ITEMS[self.current_focus.text()]
-        elif self.ITEMS.get(self.current_focus.text()):
-            item = self.ITEMS[self.current_focus.text()]
+        if self.BASE_ITEMS.get(self.focus.text()):
+            item = self.BASE_ITEMS[self.focus.text()]
+        elif self.ITEMS.get(self.focus.text()):
+            item = self.ITEMS[self.focus.text()]
         item.slot = slot
 
-    def load_item(self, itemname, prev):
-        self.current_focus = itemname
-
+    def change_focus(self, focus):
         # Technically you can have a name corresponding to both
         # a base and non-base item so this is bad
-        if self.BASE_ITEMS.get(self.current_focus.text()):
-            item = self.BASE_ITEMS[self.current_focus.text()]
+        if self.BASE_ITEMS.get(self.focus.text()):
+            item = self.BASE_ITEMS[self.focus.text()]
             base = True
-        elif self.ITEMS.get(self.current_focus.text()):
-            item = self.ITEMS[self.current_focus.text()]
+        elif self.ITEMS.get(self.focus.text()):
+            item = self.ITEMS[self.focus.text()]
             base = False
 
         if(base):

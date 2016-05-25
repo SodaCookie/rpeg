@@ -1,22 +1,22 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
+
+from editor.core.handler.handler import Handler
 from engine.game.dungeon.event import Event
 from engine.game.dungeon.dialog import Dialogue
 from engine.serialization.serialization import deserialize
 from engine.serialization.floor import FloorDataManager
 from editor.core.prompt.dialogue_prompt import DialoguePrompt
 
-class ScenarioHandler:
+class ScenarioHandler(Handler):
     """Class responsible for handling events/scenarios"""
     EVENTS = {} # Storage variable for events
     dialogue_window = None
 
     def __init__(self, parent):
-        self.parent = parent
-        self.floor_dm = FloorDataManager()
-        self.init_scenario()
-        self.current_focus = None
+        super().__init__(parent)
 
-    def init_scenario(self):
+    def setup(self):
+        self.floor_dm = FloorDataManager()
         self.EVENTS = deserialize("data/scenario.p")
 
         list_widget = self.parent.findChild(QtWidgets.QListWidget, "eventList")
@@ -48,7 +48,7 @@ class ScenarioHandler:
         self.set_enable_layout(layout, False)
 
         # Add slot to list signal
-        list_widget.currentItemChanged.connect(self.load_event)
+        list_widget.currentItemChanged.connect(self.set_focus)
         list_widget.currentItemChanged.connect(self.set_dialogue_enable)
         line_edit.textEdited.connect(self.update_event_name)
         dialogue_widget.itemDoubleClicked.connect(self.open_update_dialogue)
@@ -65,10 +65,10 @@ class ScenarioHandler:
                 reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
                     "Do you want to delete this event?")
                 if reponse == QtWidgets.QMessageBox.Yes:
-                    if self.BASE_ITEMS.get(self.current_focus.text()):
-                        del self.BASE_ITEMS[self.current_focus.text()]
-                    elif self.ITEMS.get(self.current_focus.text()):
-                        del self.ITEMS[self.current_focus.text()]
+                    if self.BASE_ITEMS.get(self.focus.text()):
+                        del self.BASE_ITEMS[self.focus.text()]
+                    elif self.ITEMS.get(self.focus.text()):
+                        del self.ITEMS[self.focus.text()]
                     item_list.takeItem(item_list.currentRow())
 
     def set_dialogue_enable(self, next, prev):
@@ -77,9 +77,9 @@ class ScenarioHandler:
                 QtWidgets.QVBoxLayout, "dialogueLayout")
             self.set_enable_layout(layout, True)
 
-    def load_event(self, item, prev):
-        self.current_focus = item
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+    def change_focus(self, item):
+        self.focus = item
+        floor, room, event = self.event_to_location[self.focus.text()]
         # Set Line Edit
         line_edit = self.parent.findChild(QtWidgets.QLineEdit, "eventName")
         line_edit.setText(event.name)
@@ -99,28 +99,28 @@ class ScenarioHandler:
             list_widget.addItem(name)
 
     def update_event_name(self, name):
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.focus.text()]
         # Delete previous entry
         del self.event_to_location[event.name]
         # Set text on list widget
-        self.current_focus.setText(name)
+        self.focus.setText(name)
         # Set actual name
         event.name = name
         # Add back to events map
         self.event_to_location[event.name] = (floor, room, event)
 
     def update_event_floor(self, floor_type):
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.focus.text()]
         self.EVENTS[floor][room].remove(event)
         self.EVENTS[floor_type.lower()][room].append(event)
-        self.event_to_location[self.current_focus.text()] = \
+        self.event_to_location[self.focus.text()] = \
             (floor_type.lower(), room, event)
 
     def update_event_room(self, room_type):
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.focus.text()]
         self.EVENTS[floor][room].remove(event)
         self.EVENTS[floor][room_type.lower()].append(event)
-        self.event_to_location[self.current_focus.text()] = \
+        self.event_to_location[self.focus.text()] = \
             (floor, room_type.lower(), event)
 
     def new_event(self):
@@ -158,14 +158,14 @@ class ScenarioHandler:
     def create_dialogue(self, dialogue):
         list_widget = self.parent.findChild(
             QtWidgets.QListWidget, "dialogueList")
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.focus.text()]
         event.dialogues[dialogue.name] = dialogue
         list_widget.addItem(dialogue.name)
 
     def update_dialogue(self, dialogue):
         list_widget = self.parent.findChild(
             QtWidgets.QListWidget, "dialogueList")
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.focus.text()]
         del event.dialogues[list_widget.currentItem().text()]
         event.dialogues[dialogue.name] = dialogue
         list_widget.currentItem().setText(dialogue.name)
@@ -173,7 +173,7 @@ class ScenarioHandler:
     def open_update_dialogue(self, item):
         """Creates a new dialogue for the editor."""
         # Create a new empty dialogue
-        floor, room, event = self.event_to_location[self.current_focus.text()]
+        floor, room, event = self.event_to_location[self.focus.text()]
         dialogue = event.dialogues[item.text()]
 
         dialogue_window = DialoguePrompt(self.parent, dialogue)

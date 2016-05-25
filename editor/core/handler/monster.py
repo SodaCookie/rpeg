@@ -1,13 +1,8 @@
 from functools import lru_cache
 
-from PyQt5 import QtGui, QtWidgets, QtCore
-
-import assets.moves
-import assets.moves.components
-import assets.moves.modifiers
+from PyQt5 import QtGui, QtWidgets
 
 from editor.core.handler.handler import Handler
-from editor.core.prompt.class_prompt import ClassPrompt
 from engine.serialization.floor import FloorDataManager
 from engine.serialization.serialization import deserialize
 
