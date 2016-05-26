@@ -18,4 +18,12 @@ if __name__ == "__main__":
     # for key in built_items.ITEMS.keys():
     #     qual_path = path + key.replace(" ", "_") + ".p"
     #     serialize(built_items.ITEMS[key], qual_path)
-    serialize(Monster.MONSTERS, "data/monster.p")
+    class TestObject:
+
+        def __init__(self, value):
+            self.value = value
+
+        def print_value(self):
+            print(value)
+
+    serialize(TestObject("test"), "tests/game/serialize/data/data_test.p")

@@ -48,12 +48,13 @@ def value_from_type(value):
             return ListType(UnknownType())
     elif isinstance(value, Component):
         return ComponentType()
+    elif isinstance(value, Attribute): # Attribute type must be in front
+        # Because Attribute is a subclass of Effect
+        return AttributeType()
     elif isinstance(value, Effect):
         return EffectType()
     elif isinstance(value, Modifier):
         return ModifierType()
-    elif isinstance(value, Attribute):
-        return AttributeType()
     elif isinstance(value, _LambdaType):
         args = [p for p in inspect.signature(value).parameters]
         return LambdaType(*args)

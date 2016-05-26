@@ -1,4 +1,6 @@
 """Defines the DataManager abstract class"""
+import sys
+
 from engine.serialization.serialization import deserialize, serialize
 
 class DataManager(object):
@@ -13,6 +15,12 @@ class DataManager(object):
         if not self.cache.get(filename):
             self.cache[filename] = deserialize(filename)
         self.filename = filename
+
+    def __del__(self):
+        """Deletes cached object if no more references"""
+        if self.cache.get(self.filename) and \
+                sys.getrefcount(self.cache[self.filename]) <= 2:
+            del self.cache[self.filename]
 
     def get(self):
         """Returns the loaded data. None if the filename isn't given"""
