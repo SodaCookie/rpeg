@@ -13,7 +13,7 @@ class FloorDataManager(DataManager):
     def add_floor(self, floorname):
         """Adds a floor type to the floors list"""
         floor = self.get()
-        floot.append(floorname)
+        floor.append(floorname)
 
     def remove_floor(self, floorname):
         """Remvoes a floor type to the floors list"""
