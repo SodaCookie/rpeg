@@ -30,11 +30,11 @@
        <attribute name="title">
         <string>Monster</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout" name="horizontalLayout_23">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+         <layout class="QVBoxLayout" name="verticalLayout_17">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QFrame" name="frame_2">
               <property name="frameShape">
@@ -102,63 +102,94 @@
             <property name="title">
              <string>Monster</string>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout">
+              <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
-                <widget class="QLabel" name="label">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Name</string>
-                 </property>
-                </widget>
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QLabel" name="label">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Name</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="monsterName"/>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLineEdit" name="monsterName"/>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="label_4">
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Rating</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="monsterRating">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
                <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Floor Type</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QComboBox" name="monsterFloor">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <item>
+                  <widget class="QLabel" name="label_2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Floor Type</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="monsterFloor">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </item>
@@ -351,6 +382,8 @@
          </layout>
         </item>
        </layout>
+       <zorder>monsterImage</zorder>
+       <zorder>monsterImage</zorder>
       </widget>
       <widget class="QWidget" name="scenario_tab">
        <attribute name="title">
@@ -1286,9 +1319,7 @@
     </property>
     <addaction name="actionAdd_Floor_Type"/>
     <addaction name="actionAdd_Item"/>
-    <addaction name="actionAdd_Skill"/>
-    <addaction name="actionAdd_Attribute"/>
-    <addaction name="actionAdd_Effect"/>
+    <addaction name="actionAdd_Monster_Attribute"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1307,7 +1338,7 @@
   </action>
   <action name="actionAdd_Item">
    <property name="text">
-    <string>Add Item...</string>
+    <string>Add Item Attribute...</string>
    </property>
   </action>
   <action name="actionAdd_Skill">
@@ -1338,6 +1369,11 @@
   <action name="actionAdd_Effect">
    <property name="text">
     <string>Add Effect...</string>
+   </property>
+  </action>
+  <action name="actionAdd_Monster_Attribute">
+   <property name="text">
+    <string>Add Monster Attribute...</string>
    </property>
   </action>
  </widget>

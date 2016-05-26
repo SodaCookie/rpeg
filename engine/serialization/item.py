@@ -53,7 +53,8 @@ class ItemDataManager(object):
 
     def new_item(self, name, base):
         """Create an empty item object"""
-        item = Item(name, self.DEFAULT_ITEM_TYPE, self.DEFAULT_ITEM_STATS)
+        item = Item(name, self.DEFAULT_ITEM_TYPE,
+            dict(self.DEFAULT_ITEM_STATS))
         if base:
             self.base_items()[name] = item
         else:
