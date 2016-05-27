@@ -4,7 +4,6 @@ import sys
 import inspect
 
 import editor.design.class_design as design
-import editor.core as core
 
 class ClassPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
     """Class used to help create instances of classes from assets folder"""
