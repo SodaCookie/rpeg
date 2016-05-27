@@ -1,7 +1,9 @@
 import dill as pickle
 
 def serialize(obj, filename):
-        pickle.dump(obj, open(filename, "wb"))
+    with open(filename, "wb") as file:
+        pickle.dump(obj, file)
 
 def deserialize(filename):
-        return pickle.load(open(filename, "rb"))
+    with open(filename, "rb") as file:
+        return pickle.load(file)

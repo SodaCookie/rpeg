@@ -8,11 +8,10 @@ from engine.game.dungeon.dialog import Dialogue
 import assets.actions
 import assets.conditions
 
-from editor.core.class_prompt import ClassPrompt
+from editor.core.prompt.class_prompt import ClassPrompt
 import editor.design.dialogue_design as design
-import editor.core as core
 
-class DialogueWindow(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
+class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
 
     return_dialogue = QtCore.pyqtSignal(Dialogue, name="returnDialogue")
 

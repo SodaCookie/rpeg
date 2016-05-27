@@ -1,30 +1,29 @@
 from functools import lru_cache
 
-from PyQt5 import QtGui, QtWidgets, QtCore
+from PyQt5 import QtGui, QtWidgets
 
-import assets.moves
 import assets.moves.components
 import assets.moves.modifiers
 
-from editor.core.class_prompt import ClassPrompt
+from editor.core.handler.handler import Handler
+from editor.core.prompt.class_prompt import ClassPrompt
 from editor.meta.typecheck import typecheck
 from editor.meta.valuecheck import valuecheck, value_from_type
 from editor.meta.types import *
 from engine.serialization.serialization import deserialize
 
-class MoveHandler:
+class MoveHandler(Handler):
 
     def __init__(self, parent):
-        self.parent = parent
-        self.MOVES = deserialize("data/moves.p")
-        self.init_moves()
-        self.current_focus = None
+        super().__init__(parent)
 
     @lru_cache(maxsize=16)
     def _load_icon(self, filename):
         return QtGui.QPixmap(filename)
 
-    def init_moves(self):
+    def setup(self):
+        self.MOVES = deserialize("data/moves.p")
+
         # Get the all components
         move_list = self.parent.findChild(QtWidgets.QListWidget, "moveList")
         new_move = self.parent.findChild(QtWidgets.QPushButton, "newMove")
@@ -47,9 +46,9 @@ class MoveHandler:
         for move in self.MOVES:
             move_list.addItem(move)
 
-        move_list.currentItemChanged.connect(self.load_move)
+        move_list.currentItemChanged.connect(self.set_focus)
 
-    def load_move(self, item):
+    def change_focus(self, item):
         # Get move
         move = self.MOVES[item.text()]
 

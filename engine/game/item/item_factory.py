@@ -9,7 +9,6 @@ from engine.game.item.item import Item
 RARE_ATTRIBUTES = deserialize("data/item/attributes/rare_attributes.p")
 LEGENDARY_ATTRIBUTES = deserialize("data/item/attributes/legendary_attributes.p")
 UNIQUE_ATTRIBUTES = deserialize("data/item/attributes/unique_attributes.p")
-
 BASE_ITEMS = deserialize("data/item/base_items.p")
 ITEMS = deserialize("data/item/items.p")
 
