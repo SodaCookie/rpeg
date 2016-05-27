@@ -5,21 +5,16 @@ import assets.attributes
 from editor.core.handler.handler import Handler
 from editor.core.prompt.class_prompt import ClassPrompt
 from engine.game.item import item
-from engine.serialization.serialization import deserialize
+from engine.serialization.item import ItemDataManager
 
 class ItemHandler(Handler):
     """Class responsible for handling item editing"""
-    BASE_ITEMS = {} # storage for the item data
-    ITEMS = {}
-    ITEM_SETS = {}
 
     def __init__(self, parent):
         super().__init__(parent)
 
     def setup(self):
-        self.BASE_ITEMS = deserialize("data/item/base_items.p")
-        self.ITEMS = deserialize("data/item/items.p")
-        self.ITEM_SETS = deserialize("data/item/item_sets.p")
+        self.itemdm = ItemDataManager()
 
         item_base = self.parent.findChild(QtWidgets.QRadioButton, "base")
         item_name = self.parent.findChild(QtWidgets.QLineEdit, "itemName")
@@ -36,11 +31,11 @@ class ItemHandler(Handler):
         item_stats.verticalHeader().setVisible(True)
 
         # Load base items to itemList
-        for item in self.BASE_ITEMS.keys():
+        for item in self.itemdm.base_items().keys():
             item_list.addItem(item)
 
         # Load other items to itemList
-        for item in self.ITEMS.keys():
+        for item in self.itemdm.items().keys():
             item_list.addItem(item)
 
         # Disable item editing by default
@@ -68,10 +63,7 @@ class ItemHandler(Handler):
                 reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
                     "Do you want to delete this item?")
                 if reponse == QtWidgets.QMessageBox.Yes:
-                    if self.BASE_ITEMS.get(self.focus.text()):
-                        del self.BASE_ITEMS[self.focus.text()]
-                    elif self.ITEMS.get(self.focus.text()):
-                        del self.ITEMS[self.focus.text()]
+                    self.itemdm.delete_item(self.focus.text())
                     item_list.takeItem(item_list.currentRow())
 
     def attribute_key_press(self, event):
@@ -82,11 +74,7 @@ class ItemHandler(Handler):
                 reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
                     "Do you want to delete this attribute?")
                 if reponse == QtWidgets.QMessageBox.Yes:
-                    if self.BASE_ITEMS.get(self.focus.text()):
-                        item = self.BASE_ITEMS[self.focus.text()]
-                    elif self.ITEMS.get(self.focus.text()):
-                        item = self.ITEMS[self.focus.text()]
-                    del item.attributes[attr_list.currentRow()]
+                    self.itemdm.remove_item_attribute(self.focus.text(),attr_list.currentRow())
                     attr_list.takeItem(attr_list.currentRow())
 
     def new_attribute(self):
@@ -95,11 +83,7 @@ class ItemHandler(Handler):
         prompt.show()
 
     def create_attribute(self, attribute):
-        if self.BASE_ITEMS.get(self.focus.text()):
-            item = self.BASE_ITEMS[self.focus.text()]
-        elif self.ITEMS.get(self.focus.text()):
-            item = self.ITEMS[self.focus.text()]
-        item.attributes.append(attribute)
+        self.itemdm.add_item_attribute(self.focus.text(), attribute)
         attr_list = self.parent.findChild(QtWidgets.QListWidget, "attrList")
         attr_list.addItem(type(attribute).__name__)
 
@@ -108,70 +92,36 @@ class ItemHandler(Handler):
         self.set_enable_layout(item_layout, True)
 
     def update_item_base(self, is_base):
-        if is_base:
-            if self.ITEMS.get(self.focus.text()):
-                item = self.ITEMS[self.focus.text()]
-                del self.ITEMS[self.focus.text()]
-                self.BASE_ITEMS[self.focus.text()] = item
-        else:
-            if self.BASE_ITEMS.get(self.focus.text()):
-                item = self.BASE_ITEMS[self.focus.text()]
-                del self.BASE_ITEMS[self.focus.text()]
-                self.ITEMS[self.focus.text()] = item
+        self.itemdm.set_item_base(self.focus.text(), is_base)
 
     def update_item_name(self, name):
-        if self.BASE_ITEMS.get(self.focus.text()):
-            item = self.BASE_ITEMS[self.focus.text()]
-            item.name = name
-            del self.BASE_ITEMS[self.focus.text()]
-            self.focus.setText(name)
-            self.BASE_ITEMS[name] = item
-        elif self.ITEMS.get(self.focus.text()):
-            item = self.ITEMS[self.focus.text()]
-            item.name = name
-            del self.ITEMS[self.focus.text()]
-            self.focus.setText(name)
-            self.ITEMS[name] = item
+        self.itemdm.update_item_name(self.focus.text(), name)
+        self.focus.setText(name)
 
     def update_item_stats(self, row, column):
-        if self.BASE_ITEMS.get(self.focus.text()):
-            item = self.BASE_ITEMS[self.focus.text()]
-        elif self.ITEMS.get(self.focus.text()):
-            item = self.ITEMS[self.focus.text()]
         item_stats = self.parent.findChild(QtWidgets.QTableWidget, "itemStats")
         stype = item_stats.verticalHeaderItem(row).text().lower()
-        item.stats[stype] = int(float(item_stats.item(row, column).text()))
+        value = int(item_stats.item(row, column).text())
+        self.itemdm.update_item_stat(self.focus.text(), stype, value)
 
     def update_item_type(self, itype):
-        if self.BASE_ITEMS.get(self.focus.text()):
-            item = self.BASE_ITEMS[self.focus.text()]
-        elif self.ITEMS.get(self.focus.text()):
-            item = self.ITEMS[self.focus.text()]
-        item.itype = itype
+        self.itemdm.update_item_type(self.focus.text(), itype.lower())
 
     def update_item_slot(self, slot):
-        if self.BASE_ITEMS.get(self.focus.text()):
-            item = self.BASE_ITEMS[self.focus.text()]
-        elif self.ITEMS.get(self.focus.text()):
-            item = self.ITEMS[self.focus.text()]
-        item.slot = slot
+        self.itemdm.update_item_slot(self.focus.text(), slot.lower())
 
     def change_focus(self, focus):
         # Technically you can have a name corresponding to both
         # a base and non-base item so this is bad
-        if self.BASE_ITEMS.get(self.focus.text()):
-            item = self.BASE_ITEMS[self.focus.text()]
-            base = True
-        elif self.ITEMS.get(self.focus.text()):
-            item = self.ITEMS[self.focus.text()]
-            base = False
+        item = self.itemdm.get_item(focus.text())
 
-        if(base):
-            item_base = self.parent.findChild(QtWidgets.QRadioButton, "base")
-            item_base.setChecked(True)
+        if(self.itemdm.is_base(item.name)):
+            item_base = self.parent.findChild(
+                QtWidgets.QRadioButton, "base")
         else:
-            item_base = self.parent.findChild(QtWidgets.QRadioButton, "nonbase")
-            item_base.setChecked(True)
+            item_base = self.parent.findChild(
+                QtWidgets.QRadioButton, "nonbase")
+        item_base.setChecked(True)
 
         item_name = self.parent.findChild(QtWidgets.QLineEdit, "itemName")
         item_name.setText(item.name)
@@ -189,26 +139,5 @@ class ItemHandler(Handler):
 
         item_stats = self.parent.findChild(QtWidgets.QTableWidget, "itemStats")
         for i in range(item_stats.rowCount()):
-            if item_stats.verticalHeaderItem(i).text() == "Health":
-                item_stats.item(i,0).setText(str(item.stats["health"]))
-            elif item_stats.verticalHeaderItem(i).text() == "Attack":
-                item_stats.item(i,0).setText(str(item.stats["attack"]))
-            elif item_stats.verticalHeaderItem(i).text() == "Defense":
-                item_stats.item(i,0).setText(str(item.stats["defense"]))
-            elif item_stats.verticalHeaderItem(i).text() == "Magic":
-                item_stats.item(i,0).setText(str(item.stats["magic"]))
-            elif item_stats.verticalHeaderItem(i).text() == "Resist":
-                item_stats.item(i,0).setText(str(item.stats["resist"]))
-            elif item_stats.verticalHeaderItem(i).text() == "Speed":
-                item_stats.item(i,0).setText(str(item.stats["speed"]))
-            elif item_stats.verticalHeaderItem(i).text() == "Action":
-                item_stats.item(i,0).setText(str(item.stats["action"]))
-
-    def set_enable_layout(self, layout, enable):
-        """Disables or enables all children in the dialogueLayout"""
-        for i in range(layout.count()):
-            if isinstance(layout.itemAt(i), QtWidgets.QLayout):
-                self.set_enable_layout(layout.itemAt(i), enable)
-            else:
-                if hasattr(layout.itemAt(i).widget(), "setEnabled"):
-                    layout.itemAt(i).widget().setEnabled(enable)
+            stype = item_stats.verticalHeaderItem(i).text().lower()
+            item_stats.item(i,0).setText(str(item.stats[stype]))

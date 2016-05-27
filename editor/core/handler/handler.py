@@ -1,4 +1,5 @@
 """Defines the Handler interface"""
+from PyQt5 import QtWidgets
 
 class Handler(object):
 
@@ -24,3 +25,12 @@ class Handler(object):
         specific data about an object."""
         pass
 
+    def set_enable_layout(self, layout, enable):
+        """Convenience function. Disables or enables all children in a
+        given layout"""
+        for i in range(layout.count()):
+            if isinstance(layout.itemAt(i), QtWidgets.QLayout):
+                self.set_enable_layout(layout.itemAt(i), enable)
+            else:
+                if hasattr(layout.itemAt(i).widget(), "setEnabled"):
+                    layout.itemAt(i).widget().setEnabled(enable)
