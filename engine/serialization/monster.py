@@ -70,11 +70,17 @@ class MonsterDataManager(DataManager):
     def update_monster_location(self, name, location):
         self.monsters()[name]["location"] = location
 
-    def add_monster_attribute(self, name, drop):
-        self.monsters()[name]["attributes"].append(drop)
+    def add_monster_attribute(self, name, attribute):
+        self.monsters()[name]["attributes"].append(attribute)
 
-    def remove_monster_attribute(self, name, drop):
-        self.monsters()[name]["attributes"].remove(drop)
+    def remove_monster_attribute(self, name, attribute):
+        changed_attr = None
+        for attr in self.monsters()[name]["attributes"]:
+            if attr == attribute:
+                changed_attr = attr
+                break
+        if changed_attr is not None:
+            self.monsters()[name]["attributes"].remove(changed_attr)
 
     def update_monster_image(self, name, image_type, filename):
         self.monsters()[name]["graphic"][image_type] = filename

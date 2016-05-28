@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, QtCore
 
 from editor.core.handler.handler import Handler
 from engine.serialization.floor import FloorDataManager
@@ -56,6 +56,15 @@ class MonsterHandler(Handler):
         # Set vertical header to visible
         monster_stats.verticalHeader().setVisible(True)
 
+        monster_list.keyPressEvent = self.delete_press_generator(
+            "monster", monster_list, self.delete_monster)
+        monster_attr_list.keyPressEvent = self.delete_press_generator(
+            "attribute", monster_attr_list, self.delete_attribute)
+        monster_ability_list.keyPressEvent = self.delete_press_generator(
+            "ability", monster_ability_list, self.delete_ability)
+        monster_drop_list.keyPressEvent = self.delete_press_generator(
+            "drop", monster_drop_list, self.delete_drop)
+
         # Signals
         monster_list.currentItemChanged.connect(self.set_focus)
         monster_name.editingFinished.connect(self.update_monster_name)
@@ -63,6 +72,10 @@ class MonsterHandler(Handler):
         monster_floor.currentIndexChanged[str].connect(
             self.update_monster_floor)
         monster_rating.valueChanged.connect(self.update_monster_rating)
+        new_monster.clicked.connect(self.new_monster)
+        new_drop.clicked.connect(self.new_monster_drop)
+        new_attribute.clicked.connect(self.new_monster_attribute)
+        new_ability.clicked.connect(self.new_monster_move)
 
     def change_focus(self, focus):
         monster = self.monster_dm.get_monster(focus.text())
@@ -91,7 +104,11 @@ class MonsterHandler(Handler):
         monster_rating.setValue(monster["rating"])
 
         # Load drops
-        # Not yet implemented
+        monster_drops = self.parent.findChild(
+            QtWidgets.QListWidget, "monsterDropList")
+        monster_drops.clear()
+        for drop in monster["drops"]:
+            monster_drops.addItem(drop)
 
         # Load Abilities
         monster_ability_list = self.parent.findChild(
@@ -122,19 +139,45 @@ class MonsterHandler(Handler):
 
     @staticmethod
     def delete_monster(self, widget_list):
-        return NotImplemented
+        self.monster_dm.delete_monster(self.focus.text())
+        widget_list.takeItem(widget_list.currentRow())
 
     @staticmethod
     def delete_drop(self, widget_list):
-        return NotImplemented
+        monster_drops = self.parent.findChild(
+            QtWidgets.QListWidget, "monsterDropList")
+        drop = monster_attr_list.currentItem().text()
+        self.monster_dm.remove_monster_drop(self.focus.text(), drop)
+        widget_list.takeItem(widget_list.currentRow())
 
     @staticmethod
     def delete_attribute(self, widget_list):
-        return NotImplemented
+        monster_attr_list = self.parent.findChild(
+            QtWidgets.QListWidget, "monsterAttrList")
+        attr = monster_attr_list.currentItem().text()
+        self.monster_dm.remove_monster_attribute(self.focus.text(), attr)
+        widget_list.takeItem(widget_list.currentRow())
 
     @staticmethod
     def delete_ability(self, widget_list):
-        return NotImplemented
+        monster_ability_list = self.parent.findChild(
+            QtWidgets.QListWidget, "monsterAbilityList")
+        move = monster_ability_list.currentItem().text()s
+        self.monster_dm.remove_monster_move(self.focus.text(), move)
+        widget_list.takeItem(widget_list.currentRow())
+
+    def new_monster(self):
+        monster, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Add New Monster...', 'Enter monster name:')
+        if ok:
+            monster_list = self.parent.findChild(
+                QtWidgets.QListWidget, "monsterList")
+            if not monster_list.findItems(monster, QtCore.Qt.MatchExactly):
+                monster_list.addItem(monster)
+                self.monster_dm.new_monster(monster)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Error", "Monster name '%s' already exists." % choice)
 
     def update_monster_stats(self, row, column):
         monster_stats = self.parent.findChild(
@@ -163,14 +206,45 @@ class MonsterHandler(Handler):
     def update_monster_image(self):
         return NotImplemented
 
-    def create_monster_move(self):
-        return NotImplemented
+    def new_monster_move(self):
+        move, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Add New Move...', 'Enter move name:')
+        if ok:
+            monster_list = self.parent.findChild(
+                QtWidgets.QListWidget, "monsterAbilityList")
+            if not monster_list.findItems(move, QtCore.Qt.MatchExactly):
+                monster_list.addItem(move)
+                self.monster_dm.add_monster_move(self.focus.text(), move)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Error", "Monster move '%s' already exists." % choice)
 
-    def create_monster_attribute(self):
-        return NotImplemented
+    def new_monster_attribute(self):
+        attribute, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Add New Attribute...', 'Enter attribute name:')
+        if ok:
+            monster_list = self.parent.findChild(
+                QtWidgets.QListWidget, "monsterAttrList")
+            if not monster_list.findItems(attribute, QtCore.Qt.MatchExactly):
+                monster_list.addItem(attribute)
+                self.monster_dm.add_monster_attribute(self.focus.text(),
+                    attribute)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Error", "Monster attribute '%s' already exists." % choice)
 
-    def create_monster_drop(self):
-        return NotImplemented
+    def new_monster_drop(self):
+        drop, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Add New Drop...', 'Enter drop name:')
+        if ok:
+            monster_list = self.parent.findChild(
+                QtWidgets.QListWidget, "monsterDropList")
+            if not monster_list.findItems(drop, QtCore.Qt.MatchExactly):
+                monster_list.addItem(drop)
+                self.monster_dm.add_monster_drop(self.focus.text(), drop)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Error", "Monster drop '%s' already exists." % choice)
 
     @lru_cache(maxsize=16)
     def _load_icon(self, filename):

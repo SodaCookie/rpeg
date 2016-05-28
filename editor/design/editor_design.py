@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui\editor.ui'
+# Form implementation generated from reading ui file 'C:\Users\Eric\Documents\GitHub\RPG-Game\editor\scripts/../ui\editor.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #

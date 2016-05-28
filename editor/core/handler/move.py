@@ -120,7 +120,8 @@ class MoveHandler(Handler):
 
     @staticmethod
     def delete_move(self, widget_list):
-        return NotImplemented
+        self.move_dm.delete_move(self.focus.text())
+        widget_list.takeItem(widget_list.currentRow())
 
     def update_move_name(self):
         return NotImplemented

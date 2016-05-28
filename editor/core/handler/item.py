@@ -82,6 +82,9 @@ class ItemHandler(Handler):
         item_layout = self.parent.findChild(QtWidgets.QVBoxLayout, "itemBox")
         self.set_enable_layout(item_layout, True)
 
+    def update_item_icon(self):
+        return NotImplemented
+
     def update_item_base(self, is_base):
         self.itemdm.set_item_base(self.focus.text(), is_base)
 
