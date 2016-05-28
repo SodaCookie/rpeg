@@ -1,5 +1,5 @@
 """Defines the Handler interface"""
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 class Handler(object):
 
@@ -34,3 +34,15 @@ class Handler(object):
             else:
                 if hasattr(layout.itemAt(i).widget(), "setEnabled"):
                     layout.itemAt(i).widget().setEnabled(enable)
+
+    def delete_press_generator(self, obj_type, widget_list, func):
+        """Generates an on_delete function that executes a given function when
+        delete is pressed."""
+        def on_delete(event):
+            if event.key() == QtCore.Qt.Key_Delete:
+                if widget_list.selectedItems():
+                    reponse = QtWidgets.QMessageBox.question(self.parent,
+                        "Delete", "Do you want to delete this %s?" % obj_type)
+                    if reponse == QtWidgets.QMessageBox.Yes:
+                        func(self, widget_list)
+        return on_delete
