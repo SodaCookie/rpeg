@@ -20,7 +20,7 @@ class MonsterHandler(Handler):
         monster_list = self.parent.findChild(
             QtWidgets.QListWidget, "monsterList")
         monster_image = self.parent.findChild(
-            QtWidgets.QGraphicsView, "monsterImage")
+            QtWidgets.QPushButton, "monsterImage")
         monster_drop_list = self.parent.findChild(
             QtWidgets.QListWidget, "monsterDropList")
         monster_name = self.parent.findChild(
@@ -53,6 +53,10 @@ class MonsterHandler(Handler):
         for floor in self.floor.floors():
             monster_floor.addItem(floor)
 
+        # Disable layout
+        layout = self.parent.findChild(QtWidgets.QVBoxLayout, "monsterLayout")
+        self.set_enable_layout(layout, False)
+
         # Set vertical header to visible
         monster_stats.verticalHeader().setVisible(True)
 
@@ -67,10 +71,12 @@ class MonsterHandler(Handler):
 
         # Signals
         monster_list.currentItemChanged.connect(self.set_focus)
+        monster_list.currentItemChanged.connect(self.set_dialogue_enable)
         monster_name.editingFinished.connect(self.update_monster_name)
         monster_stats.cellChanged.connect(self.update_monster_stats)
         monster_floor.currentIndexChanged[str].connect(
             self.update_monster_floor)
+        monster_image.clicked.connect(self.update_monster_image)
         monster_rating.valueChanged.connect(self.update_monster_rating)
         new_monster.clicked.connect(self.new_monster)
         new_drop.clicked.connect(self.new_monster_drop)
@@ -129,13 +135,20 @@ class MonsterHandler(Handler):
             QtWidgets.QPushButton, "monsterImage")
         if monster["graphic"]:
             img = self._load_icon(monster["graphic"]["neutral"])
-            w = min(img.width(), monster_image.maximumWidth());
-            h = min(img.height(), monster_image.maximumHeight());
-            icon = QtGui.QIcon(img.scaled(w, h))
+            w = min(img.width(), monster_image.width());
+            h = min(img.height(), monster_image.height());
+            img = img.scaled(w, h, QtCore.Qt.KeepAspectRatio)
+            icon = QtGui.QIcon(img)
             monster_image.setIcon(icon);
             monster_image.setIconSize(img.rect().size());
         else:
             monster_image.setIcon(QtGui.QIcon());
+
+    def set_dialogue_enable(self, next, prev):
+        if next != None:
+            layout = self.parent.findChild(
+                QtWidgets.QVBoxLayout, "monsterLayout")
+            self.set_enable_layout(layout, True)
 
     @staticmethod
     def delete_monster(self, widget_list):
@@ -162,7 +175,7 @@ class MonsterHandler(Handler):
     def delete_ability(self, widget_list):
         monster_ability_list = self.parent.findChild(
             QtWidgets.QListWidget, "monsterAbilityList")
-        move = monster_ability_list.currentItem().text()s
+        move = monster_ability_list.currentItem().text()
         self.monster_dm.remove_monster_move(self.focus.text(), move)
         widget_list.takeItem(widget_list.currentRow())
 
@@ -204,7 +217,21 @@ class MonsterHandler(Handler):
             location.lower())
 
     def update_monster_image(self):
-        return NotImplemented
+        file, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self.parent, 'Open image', filter="Images (*.png *.bmp *.jpg)")
+        if file:
+            self.monster_dm.update_monster_image(self.focus.text(),
+                "neutral", file)
+            monster_image = self.parent.findChild(
+                QtWidgets.QPushButton, "monsterImage")
+            monster = self.monster_dm.get_monster(self.focus.text())
+            img = self._load_icon(monster["graphic"]["neutral"])
+            w = min(img.width(), monster_image.width());
+            h = min(img.height(), monster_image.height());
+            img = img.scaled(w, h, QtCore.Qt.KeepAspectRatio)
+            icon = QtGui.QIcon(img)
+            monster_image.setIcon(icon);
+            monster_image.setIconSize(img.rect().size());
 
     def new_monster_move(self):
         move, ok = QtWidgets.QInputDialog.getText(

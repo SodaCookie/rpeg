@@ -8,6 +8,10 @@ class MoveDataManager(DataManager):
     def __init__(self):
         super().__init__("data/moves.p")
 
+    def get_move(self, name):
+        """Convenience function. To get a move object by name"""
+        return self.moves()[name]
+
     def moves(self):
         """Returns a dictionary to data for moves"""
         return self.get()

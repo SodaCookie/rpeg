@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, QtCore
 
 import assets.moves.components
 import assets.moves.modifiers
@@ -10,7 +10,7 @@ from editor.core.prompt.class_prompt import ClassPrompt
 from editor.meta.typecheck import typecheck
 from editor.meta.valuecheck import valuecheck, value_from_type
 from editor.meta.types import *
-from engine.serialization.serialization import deserialize
+from engine.serialization.move import MoveDataManager
 
 class MoveHandler(Handler):
 
@@ -22,7 +22,7 @@ class MoveHandler(Handler):
         return QtGui.QPixmap(filename)
 
     def setup(self):
-        self.MOVES = deserialize("data/moves.p")
+        self.move_dm = MoveDataManager()
 
         # Get the all components
         move_list = self.parent.findChild(QtWidgets.QListWidget, "moveList")
@@ -42,15 +42,28 @@ class MoveHandler(Handler):
         # Set vertical header to visible
         move_stats.verticalHeader().setVisible(True)
 
+        # Disable layout
+        layout = self.parent.findChild(QtWidgets.QVBoxLayout, "moveLayout")
+        self.set_enable_layout(layout, False)
+
         # Populate move list
-        for move in self.MOVES:
+        for move in self.move_dm.moves():
             move_list.addItem(move)
 
         move_list.currentItemChanged.connect(self.set_focus)
+        move_list.currentItemChanged.connect(self.set_dialogue_enable)
+        move_name.editingFinished.connect(self.update_move_name)
+        move_crit.valueChanged.connect(self.update_move_crit_chance)
+        move_miss.valueChanged.connect(self.update_move_miss_chance)
+        move_desc.textChanged.connect(self.update_move_description)
+        move_stats.cellChanged.connect(self.update_move_statdist)
+        move_icon.clicked.connect(self.update_move_icon)
+        # move_components
+        new_move.clicked.connect(self.create_move)
 
     def change_focus(self, item):
         # Get move
-        move = self.MOVES[item.text()]
+        move = self.move_dm.moves()[item.text()]
 
         # Load name
         move_name = self.parent.findChild(QtWidgets.QLineEdit, "moveName")
@@ -118,31 +131,74 @@ class MoveHandler(Handler):
             self._load_components(item, component)
         item.setExpanded(True)
 
+    def set_dialogue_enable(self, next, prev):
+        if next != None:
+            layout = self.parent.findChild(
+                QtWidgets.QVBoxLayout, "moveLayout")
+            self.set_enable_layout(layout, True)
+
     @staticmethod
     def delete_move(self, widget_list):
         self.move_dm.delete_move(self.focus.text())
         widget_list.takeItem(widget_list.currentRow())
 
     def update_move_name(self):
-        return NotImplemented
+        move_name = self.parent.findChild(
+            QtWidgets.QLineEdit, "moveName")
+        self.move_dm.update_move_name(self.focus.text(),
+            move_name.text())
+        self.focus.setText(move_name.text())
 
-    def update_move_crit_chance(self):
-        return NotImplemented
+    def update_move_crit_chance(self, value):
+        self.move_dm.update_move_crit_bound(self.focus.text(), 100 - value)
 
-    def update_move_miss_chance(self):
-        return NotImplemented
+    def update_move_miss_chance(self, value):
+        self.move_dm.update_move_miss_bound(self.focus.text(), value)
 
     def update_move_description(self):
-        return NotImplemented
+        move_desc = self.parent.findChild(QtWidgets.QTextEdit, "moveDesc")
+        self.move_dm.update_move_description(self.focus.text(),
+            move_desc.toPlainText())
 
-    def update_move_statdist(self):
-        return NotImplemented
+    def update_move_statdist(self, row, column):
+        move_stats = self.parent.findChild(
+            QtWidgets.QTableWidget, "moveStats")
+        stype = move_stats.verticalHeaderItem(row).text().lower()
+        value = int(float(move_stats.item(row, column).text()))
+        self.move_dm.update_move_statdist(self.focus.text(), stype, value)
 
     def update_move_icon(self):
-        return NotImplemented
+        file, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self.parent, 'Open image', filter="Images (*.png *.bmp *.jpg)")
+        if file:
+            move_icon = self.parent.findChild(
+                QtWidgets.QPushButton, "moveIcon")
+            move = self.move_dm.get_move(self.focus.text())
+            # Set and draw
+            self.move_dm.update_move_icon(self.focus.text(), file)
+            img = self._load_icon(move.icon).scaled(
+                move_icon.width(), move_icon.height())
+            icon = QtGui.QIcon(img)
+            move_icon.setIcon(icon);
+            move_icon.setIconSize(img.rect().size());
 
     def create_move(self):
-        return NotImplemented
+        move_name, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Add New Move...', 'Enter move name:')
+        if ok:
+            list_widget = self.parent.findChild(
+                QtWidgets.QListWidget, "moveList")
+            if not list_widget.findItems(move_name, QtCore.Qt.MatchExactly):
+                # Create new event
+                self.move_dm.new_move(move_name)
+                # Add to required widgets
+                list_widget.addItem(move_name)
+                list_widget.setCurrentRow(list_widget.count()-1)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self.parent,
+                    "Error",
+                    "Move name '%s' already exists." % move_name)
 
     # HANDLE THE TREE WIDGET???
 
