@@ -18,6 +18,10 @@ class MonsterDataManager(DataManager):
     def __init__(self):
         super().__init__("data/monster.p")
 
+    def get_monster(self, name):
+        """Convenience function. To get a monster"""
+        return self.monsters()[name]
+
     def monsters(self):
         """Convenience function for returning dictionary of monster
         definitions"""
@@ -51,14 +55,20 @@ class MonsterDataManager(DataManager):
     def remove_monster_drop(self, name, drop):
         self.monsters()[name]["drops"].remove(drop)
 
-    def add_monster_moves(self, name, move):
+    def add_monster_move(self, name, move):
         self.monsters()[name]["abilities"].append(move)
 
-    def remove_monster_moves(self, name, move):
+    def remove_monster_move(self, name, move):
         self.monsters()[name]["abilities"].remove(move)
 
     def update_monster_stats(self, name, stype, value):
         self.monsters()[name]["stats"][stype] = value
+
+    def update_monster_rating(self, name, rating):
+        self.monsters()[name]["rating"] = rating
+
+    def update_monster_location(self, name, location):
+        self.monsters()[name]["location"] = location
 
     def add_monster_attribute(self, name, drop):
         self.monsters()[name]["attributes"].append(drop)

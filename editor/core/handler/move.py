@@ -118,6 +118,33 @@ class MoveHandler(Handler):
             self._load_components(item, component)
         item.setExpanded(True)
 
+    @staticmethod
+    def delete_move(self, widget_list):
+        return NotImplemented
+
+    def update_move_name(self):
+        return NotImplemented
+
+    def update_move_crit_chance(self):
+        return NotImplemented
+
+    def update_move_miss_chance(self):
+        return NotImplemented
+
+    def update_move_description(self):
+        return NotImplemented
+
+    def update_move_statdist(self):
+        return NotImplemented
+
+    def update_move_icon(self):
+        return NotImplemented
+
+    def create_move(self):
+        return NotImplemented
+
+    # HANDLE THE TREE WIDGET???
+
     def _load_components(self, item, component):
         """Recursive convenience function for loading in components into
         a higher level component"""

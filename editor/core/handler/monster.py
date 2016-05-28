@@ -4,7 +4,7 @@ from PyQt5 import QtGui, QtWidgets
 
 from editor.core.handler.handler import Handler
 from engine.serialization.floor import FloorDataManager
-from engine.serialization.serialization import deserialize
+from engine.serialization.monster import MonsterDataManager
 
 class MonsterHandler(Handler):
 
@@ -14,7 +14,7 @@ class MonsterHandler(Handler):
     def setup(self):
         # Load data
         self.floor = FloorDataManager()
-        self.MONSTER_DEFS = deserialize("data/monster.p")
+        self.monster_dm = MonsterDataManager()
 
         # Get relevant widgets
         monster_list = self.parent.findChild(
@@ -25,6 +25,8 @@ class MonsterHandler(Handler):
             QtWidgets.QListWidget, "monsterDropList")
         monster_name = self.parent.findChild(
             QtWidgets.QLineEdit, "monsterName")
+        monster_rating = self.parent.findChild(
+            QtWidgets.QSpinBox, "monsterRating")
         monster_floor = self.parent.findChild(
             QtWidgets.QComboBox, "monsterFloor")
         monster_stats = self.parent.findChild(
@@ -43,8 +45,8 @@ class MonsterHandler(Handler):
             QtWidgets.QPushButton, "newMonster")
 
         # Load list
-        for monster_name in self.MONSTER_DEFS:
-            monster_list.addItem(monster_name)
+        for m_name in self.monster_dm.monsters():
+            monster_list.addItem(m_name)
 
         # Load floors
         monster_floor.clear()
@@ -56,9 +58,14 @@ class MonsterHandler(Handler):
 
         # Signals
         monster_list.currentItemChanged.connect(self.set_focus)
+        monster_name.editingFinished.connect(self.update_monster_name)
+        monster_stats.cellChanged.connect(self.update_monster_stats)
+        monster_floor.currentIndexChanged[str].connect(
+            self.update_monster_floor)
+        monster_rating.valueChanged.connect(self.update_monster_rating)
 
     def change_focus(self, focus):
-        monster = self._get_monster_def(focus.text())
+        monster = self.monster_dm.get_monster(focus.text())
 
         # Load name
         monster_name = self.parent.findChild(
@@ -75,24 +82,13 @@ class MonsterHandler(Handler):
         monster_stats = self.parent.findChild(
             QtWidgets.QTableWidget, "monsterStats")
         for i in range(monster_stats.rowCount()):
-            if monster_stats.verticalHeaderItem(i).text() == "Health":
-                monster_stats.item(i,0).setText(
-                    str(monster["stats"]["health"]))
-            elif monster_stats.verticalHeaderItem(i).text() == "Attack":
-                monster_stats.item(i,0).setText(
-                    str(monster["stats"]["attack"]))
-            elif monster_stats.verticalHeaderItem(i).text() == "Defense":
-                monster_stats.item(i,0).setText(
-                    str(monster["stats"]["defense"]))
-            elif monster_stats.verticalHeaderItem(i).text() == "Magic":
-                monster_stats.item(i,0).setText(
-                    str(monster["stats"]["magic"]))
-            elif monster_stats.verticalHeaderItem(i).text() == "Resist":
-                monster_stats.item(i,0).setText(
-                    str(monster["stats"]["resist"]))
-            elif monster_stats.verticalHeaderItem(i).text() == "Speed":
-                monster_stats.item(i,0).setText(
-                    str(monster["stats"]["speed"]))
+            stype = monster_stats.verticalHeaderItem(i).text().lower()
+            monster_stats.item(i,0).setText(str(monster["stats"][stype]))
+
+        # Load Rating
+        monster_rating = self.parent.findChild(
+            QtWidgets.QSpinBox, "monsterRating")
+        monster_rating.setValue(monster["rating"])
 
         # Load drops
         # Not yet implemented
@@ -124,9 +120,57 @@ class MonsterHandler(Handler):
         else:
             monster_image.setIcon(QtGui.QIcon());
 
-    def _get_monster_def(self, name):
-        """Convenience function used to get the monster definition"""
-        return self.MONSTER_DEFS.get(name)
+    @staticmethod
+    def delete_monster(self, widget_list):
+        return NotImplemented
+
+    @staticmethod
+    def delete_drop(self, widget_list):
+        return NotImplemented
+
+    @staticmethod
+    def delete_attribute(self, widget_list):
+        return NotImplemented
+
+    @staticmethod
+    def delete_ability(self, widget_list):
+        return NotImplemented
+
+    def update_monster_stats(self, row, column):
+        monster_stats = self.parent.findChild(
+            QtWidgets.QTableWidget, "monsterStats")
+        stype = monster_stats.verticalHeaderItem(row).text().lower()
+        value = int(float(monster_stats.item(row, column).text()))
+        self.monster_dm.update_monster_stats(self.focus.text(), stype, value)
+
+    def update_monster_name(self):
+        monster_name = self.parent.findChild(
+            QtWidgets.QLineEdit, "monsterName")
+        self.monster_dm.update_monster_name(self.focus.text(),
+            monster_name.text())
+        self.focus.setText(monster_name.text())
+
+    def update_monster_rating(self, value):
+        self.monster_dm.update_monster_rating(self.focus.text(), value)
+
+    def update_monster_floor(self, value):
+        self.monster_dm.update_monster_location(self.focus.text(), value)
+
+    def update_monster_location(self, location):
+        self.monster_dm.update_monster_location(self.focus.text(),
+            location.lower())
+
+    def update_monster_image(self):
+        return NotImplemented
+
+    def create_monster_move(self):
+        return NotImplemented
+
+    def create_monster_attribute(self):
+        return NotImplemented
+
+    def create_monster_drop(self):
+        return NotImplemented
 
     @lru_cache(maxsize=16)
     def _load_icon(self, filename):

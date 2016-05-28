@@ -42,12 +42,14 @@ class ItemHandler(Handler):
         self.set_enable_layout(item_layout, False)
 
         # Add key press event
-        item_list.keyPressEvent = self.item_key_press
-        attr_list.keyPressEvent = self.attribute_key_press
+        item_list.keyPressEvent = self.delete_press_generator(
+            "item", item_list, self.delete_item)
+        attr_list.keyPressEvent = self.delete_press_generator(
+            "attribute", attr_list, self.delete_attribute)
 
         # Add slot to list signal
         item_base.toggled.connect(self.update_item_base)
-        item_name.textEdited.connect(self.update_item_name)
+        item_name.editingFinished.connect(self.update_item_name)
         item_list.currentItemChanged.connect(self.set_item_enable)
         item_list.currentItemChanged.connect(self.set_focus)
         item_stats.cellChanged.connect(self.update_item_stats)
@@ -55,27 +57,16 @@ class ItemHandler(Handler):
         item_slot.currentIndexChanged[str].connect(self.update_item_slot)
         attr_button.clicked.connect(self.new_attribute)
 
-    def item_key_press(self, event):
-        if event.key() == QtCore.Qt.Key_Delete:
-            item_list = self.parent.findChild(
-                QtWidgets.QListWidget, "itemList")
-            if item_list.selectedItems():
-                reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
-                    "Do you want to delete this item?")
-                if reponse == QtWidgets.QMessageBox.Yes:
-                    self.itemdm.delete_item(self.focus.text())
-                    item_list.takeItem(item_list.currentRow())
+    @staticmethod
+    def delete_item(self, widget_list):
+        self.itemdm.delete_item(self.focus.text())
+        widget_list.takeItem(widget_list.currentRow())
 
-    def attribute_key_press(self, event):
-        if event.key() == QtCore.Qt.Key_Delete:
-            attr_list = self.parent.findChild(
-                QtWidgets.QListWidget, "attrList")
-            if attr_list.selectedItems():
-                reponse = QtWidgets.QMessageBox.question(self.parent, "Delete",
-                    "Do you want to delete this attribute?")
-                if reponse == QtWidgets.QMessageBox.Yes:
-                    self.itemdm.remove_item_attribute(self.focus.text(),attr_list.currentRow())
-                    attr_list.takeItem(attr_list.currentRow())
+    @staticmethod
+    def delete_attribute(self, widget_list):
+        self.itemdm.remove_item_attribute(self.focus.text(),
+            widget_list.currentRow())
+        widget_list.takeItem(widget_list.currentRow())
 
     def new_attribute(self):
         prompt = ClassPrompt(self.parent, assets.attributes,
@@ -94,14 +85,15 @@ class ItemHandler(Handler):
     def update_item_base(self, is_base):
         self.itemdm.set_item_base(self.focus.text(), is_base)
 
-    def update_item_name(self, name):
-        self.itemdm.update_item_name(self.focus.text(), name)
-        self.focus.setText(name)
+    def update_item_name(self):
+        item_name = self.parent.findChild(QtWidgets.QLineEdit, "itemName")
+        self.itemdm.update_item_name(self.focus.text(), item_name.text())
+        self.focus.setText(item_name.text())
 
     def update_item_stats(self, row, column):
         item_stats = self.parent.findChild(QtWidgets.QTableWidget, "itemStats")
         stype = item_stats.verticalHeaderItem(row).text().lower()
-        value = int(item_stats.item(row, column).text())
+        value = int(float(item_stats.item(row, column).text()))
         self.itemdm.update_item_stat(self.focus.text(), stype, value)
 
     def update_item_type(self, itype):
