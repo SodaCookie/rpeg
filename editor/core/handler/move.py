@@ -1,4 +1,4 @@
-from functools import lru_cache
+from functools import lru_cache, partial
 import traceback
 import re
 
@@ -14,6 +14,7 @@ from editor.meta.valuecheck import valuecheck, value_from_type, assign_value
 from editor.meta.types import *
 from editor.core.prompt import class_prompt
 from engine.game.move.move import Move
+from engine.game.move.component import Component
 from engine.serialization.move import MoveDataManager
 
 class MoveHandler(Handler):
@@ -271,6 +272,7 @@ class MoveHandler(Handler):
                 item.parent().removeChild(item)
             else:
                 parent_data.remove(item_data)
+                item.parent().removeChild(item)
         elif action.text() == "Modify":
             match = re.match(r"(\w+) : <(.+)>", item.text(0))
             if match:
@@ -328,19 +330,45 @@ class MoveHandler(Handler):
                                 self.parent,
                                 "Python Error",
                                 traceback.format_exc())
-
         else:
-            if isinstance(parent_data, Move):
+            if isinstance(item_data, Move):
                 # Remove component from list
-                if item.parent().text(0) == "<Components>":
-                    parent_data.components.remove(item_data)
-                elif item.parent().text(0) == "<MissComponents>":
-                    parent_data.miss_components.remove(item_data)
-                elif item.parent().text(0) == "<CritComponents>":
-                    parent_data.crit_components.remove(item_data)
-                item.parent().removeChild(item)
+                if item.text(0) == "<Components>":
+                    prompt = ClassPrompt(self.parent, assets.moves.components,
+                        Component, partial(self._add_standard_component, item))
+                    prompt.show()
+                elif item.text(0) == "<MissComponents>":
+                    prompt = ClassPrompt(self.parent, assets.moves.components,
+                        Component, partial(self._add_miss_component, item))
+                    prompt.show()
+                elif item.text(0) == "<CritComponents>":
+                    prompt = ClassPrompt(self.parent, assets.moves.components,
+                        Component, partial(self._add_crit_component, item))
+                    prompt.show()
             else:
-                parent_data.remove(item_data)
+                prompt = ClassPrompt(self.parent, assets.moves.components,
+                    Component, partial(self._add_asset, item, parent_data))
+                prompt.show()
+
+    def _add_standard_component(self, item, component):
+        """Helper function to add objects to lists and what not"""
+        self.move_dm.add_standard_component(self.focus.text(), component)
+        self._load_components(item, component)
+
+    def _add_miss_component(self, item, component):
+        """Helper function to add objects to lists and what not"""
+        self.move_dm.add_miss_component(self.focus.text(), component)
+        self._load_components(item, component)
+
+    def _add_crit_component(self, item, component):
+        """Helper function to add objects to lists and what not"""
+        self.move_dm.add_crit_component(self.focus.text(), component)
+        self._load_components(item, component)
+
+    def _add_asset(self, item, asset_list, asset):
+        """Helper function to add objects to lists and what not"""
+        asset_list.append(asset)
+        self._load_components(item, asset)
 
     def _load_components(self, item, component):
         """Recursive convenience function for loading in components into
@@ -355,6 +383,7 @@ class MoveHandler(Handler):
                 ["%s : <%s>" % (parameter, str(ptype))])
             component_item.addChild(para_item)
             # Attempt to fill in the value
+            print(ptype)
             value = valuecheck(component, parameter)
             if value is not None:
                 self._load_parameter(para_item, ptype, value)
