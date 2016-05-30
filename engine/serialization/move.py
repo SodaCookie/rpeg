@@ -8,6 +8,10 @@ class MoveDataManager(DataManager):
     def __init__(self):
         super().__init__("data/moves.p")
 
+    def get_move(self, name):
+        """Convenience function. To get a move object by name"""
+        return self.moves()[name]
+
     def moves(self):
         """Returns a dictionary to data for moves"""
         return self.get()
@@ -46,17 +50,9 @@ class MoveDataManager(DataManager):
     def add_standard_component(self, name, component):
         self.moves()[name].components.append(component)
 
-    def remove_standard_component(self, name, index):
-        del self.moves()[name].components[index]
-
     def add_miss_component(self, name, component):
         self.moves()[name].miss_components.append(component)
-
-    def remove_miss_component(self, name, index):
-        del self.moves()[name].miss_components[index]
 
     def add_crit_component(self, name, component):
         self.moves()[name].crit_components.append(component)
 
-    def remove_crit_component(self, name, index):
-        del self.moves()[name].crit_components[index]

@@ -173,12 +173,3 @@ class ScenarioHandler(Handler):
         dialogue_window = DialoguePrompt(self.parent, dialogue)
         dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
         dialogue_window.show()
-
-    def set_enable_layout(self, layout, enable):
-        """Disables or enables all children in the dialogueLayout"""
-        for i in range(layout.count()):
-            if isinstance(layout.itemAt(i), QtWidgets.QLayout):
-                self.set_enable_layout(layout.itemAt(i), enable)
-            else:
-                if hasattr(layout.itemAt(i).widget(), "setEnabled"):
-                    layout.itemAt(i).widget().setEnabled(enable)
