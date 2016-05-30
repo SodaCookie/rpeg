@@ -50,17 +50,9 @@ class MoveDataManager(DataManager):
     def add_standard_component(self, name, component):
         self.moves()[name].components.append(component)
 
-    def remove_standard_component(self, name, index):
-        del self.moves()[name].components[index]
-
     def add_miss_component(self, name, component):
         self.moves()[name].miss_components.append(component)
-
-    def remove_miss_component(self, name, index):
-        del self.moves()[name].miss_components[index]
 
     def add_crit_component(self, name, component):
         self.moves()[name].crit_components.append(component)
 
-    def remove_crit_component(self, name, index):
-        del self.moves()[name].crit_components[index]

@@ -13,25 +13,45 @@ from editor.meta.types import *
 
 _assign_regex = r"self\.(\w+)\s*=\s*(?:%s)"
 
-def valuecheck(obj, parameter):
-    """Attempts to return the value of a parameter.
-    Returns None if no value can be found"""
+def _find_member(obj, parameter):
+    """Helper function that attempts to return the name of the member in
+    which the parameter was assigned. If nothing is found then None is
+    returned"""
     if hasattr(obj, parameter):
         """Basic search"""
-        return getattr(obj, parameter)
+        return parameter
     elif hasattr(obj, "__init__"):
         try:
             source = inspect.getsource(obj.__init__)
             match = re.search(_assign_regex % parameter, source)
             if match:
                 member = match.group(1)
-                return getattr(obj, member)
+                return member
         except OSError:
             print("Source file for %s could not be found." % obj)
             logging.info("Source file for %s could not be found." % obj)
-        except AttributeError:
-            logging.error("Pickled object has been updated and %s could not be found" % member)
+
     return None
+
+def valuecheck(obj, parameter):
+    """Attempts to return the value of a parameter.
+    Returns None if no value can be found"""
+    member = _find_member(obj, parameter)
+    try:
+        if member is not None:
+            return getattr(obj, member)
+    except AttributeError:
+        logging.error("Pickled object has been updated and %s could not be found" % member)
+    return None
+
+def assign_value(obj, parameter, value):
+    """Attempts to assign the passed value into the object"""
+    member = _find_member(obj, parameter)
+    try:
+        if member is not None:
+            return setattr(obj, member, value)
+    except AttributeError:
+        logging.error("Pickled object has been updated and %s could not be found" % member)
 
 def value_from_type(value):
     """Given a value attempt to return the EditorType"""

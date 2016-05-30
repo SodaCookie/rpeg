@@ -1,4 +1,6 @@
 from functools import lru_cache
+import traceback
+import re
 
 from PyQt5 import QtGui, QtWidgets, QtCore
 
@@ -8,8 +10,10 @@ import assets.moves.modifiers
 from editor.core.handler.handler import Handler
 from editor.core.prompt.class_prompt import ClassPrompt
 from editor.meta.typecheck import typecheck
-from editor.meta.valuecheck import valuecheck, value_from_type
+from editor.meta.valuecheck import valuecheck, value_from_type, assign_value
 from editor.meta.types import *
+from editor.core.prompt import class_prompt
+from engine.game.move.move import Move
 from engine.serialization.move import MoveDataManager
 
 class MoveHandler(Handler):
@@ -38,6 +42,8 @@ class MoveHandler(Handler):
         new_mod = self.parent.findChild(QtWidgets.QPushButton, "newModifier")
         new_component = self.parent.findChild(
             QtWidgets.QPushButton, "newComponent")
+        components_table = self.parent.findChild(
+            QtWidgets.QTreeWidget, "componentList")
 
         # Set vertical header to visible
         move_stats.verticalHeader().setVisible(True)
@@ -58,7 +64,7 @@ class MoveHandler(Handler):
         move_desc.textChanged.connect(self.update_move_description)
         move_stats.cellChanged.connect(self.update_move_statdist)
         move_icon.clicked.connect(self.update_move_icon)
-        # move_components
+        components_table.customContextMenuRequested.connect(self.load_context)
         new_move.clicked.connect(self.create_move)
 
     def change_focus(self, item):
@@ -114,18 +120,21 @@ class MoveHandler(Handler):
         components_table.clear()
 
         item = QtWidgets.QTreeWidgetItem(["<Components>"])
+        item.setData(0, QtCore.Qt.UserRole, move)
         components_table.addTopLevelItem(item)
         for component in move.components:
             self._load_components(item, component)
         item.setExpanded(True)
 
         item = QtWidgets.QTreeWidgetItem(["<MissComponents>"])
+        item.setData(0, QtCore.Qt.UserRole, move)
         components_table.addTopLevelItem(item)
         for component in move.miss_components:
             self._load_components(item, component)
         item.setExpanded(True)
 
         item = QtWidgets.QTreeWidgetItem(["<CritComponents>"])
+        item.setData(0, QtCore.Qt.UserRole, move)
         components_table.addTopLevelItem(item)
         for component in move.crit_components:
             self._load_components(item, component)
@@ -200,12 +209,144 @@ class MoveHandler(Handler):
                     "Error",
                     "Move name '%s' already exists." % move_name)
 
-    # HANDLE THE TREE WIDGET???
+    def load_context(self, point):
+        """Helper function to load the proper context menu for a component"""
+        components_table = self.parent.findChild(
+            QtWidgets.QTreeWidget, "componentList")
+        global_point = components_table.mapToGlobal(point)
+        item = components_table.itemAt(point)
+        if item is not None:
+            parent_data = None
+            item_data = item.data(0, QtCore.Qt.UserRole)
+
+            menu = QtWidgets.QMenu(self.parent)
+            if item.parent():
+                parent_data = item.parent().data(0, QtCore.Qt.UserRole)
+
+            item_type = value_from_type(item_data)
+            parent_type = value_from_type(parent_data)
+
+            # Add context menu actions
+            if isinstance(item_type, ListType):
+                # Add to list
+                action = QtWidgets.QAction(
+                    "Add " + str(item_type.elemtype).title(), self.parent)
+                action.setData((item_data, parent_data, item))
+                menu.addAction(action)
+            if isinstance(item_data, Move):
+                # Top level widget
+                action = QtWidgets.QAction("Add Component", self.parent)
+                action.setData((item_data, parent_data, item))
+                menu.addAction(action)
+            if isinstance(parent_type, ListType) or \
+                    isinstance(parent_data, Move):
+                # Remove from a list
+                action = QtWidgets.QAction("Remove", self.parent)
+                action.setData((item_data, parent_data, item))
+                menu.addAction(action)
+            # Edge end cases and component lists
+            if isinstance(item_type, (UnknownType, IntType, StrType,
+                    FloatType, LambdaType)) and item_data is not None and \
+                    not isinstance(item_data, Move):
+                # Update value
+                action = QtWidgets.QAction("Modify", self.parent)
+                action.setData((item_data, parent_data, item))
+                menu.addAction(action)
+
+            if menu.actions():
+                menu.triggered.connect(self.dispatch_component_action)
+                menu.exec_(global_point)
+
+    def dispatch_component_action(self, action):
+        item_data, parent_data, item = action.data()
+        if action.text() == "Remove":
+            if isinstance(parent_data, Move):
+                # Remove component from list
+                if item.parent().text(0) == "<Components>":
+                    parent_data.components.remove(item_data)
+                elif item.parent().text(0) == "<MissComponents>":
+                    parent_data.miss_components.remove(item_data)
+                elif item.parent().text(0) == "<CritComponents>":
+                    parent_data.crit_components.remove(item_data)
+                item.parent().removeChild(item)
+            else:
+                parent_data.remove(item_data)
+        elif action.text() == "Modify":
+            match = re.match(r"(\w+) : <(.+)>", item.text(0))
+            if match:
+                parameter = match.group(1)
+                type_hint = match.group(2)
+                if type_hint == "float":
+                    itype = FloatType()
+                elif type_hint == "int":
+                    itype = IntType()
+                elif type_hint == "str":
+                    itype = StrType()
+                else:
+                    itype = value_from_type(item_data)
+
+                if isinstance(itype, UnknownType):
+                    code, ok = QtWidgets.QInputDialog.getText(
+                        self.parent, 'Modify', 'Python code:')
+                    if ok:
+                        try:
+                            value = eval(code)
+                            assign_value(parent_data, parameter, value)
+                        except:
+                            QtWidgets.QMessageBox.warning(
+                                self.parent,
+                                "Python Error",
+                                traceback.format_exc())
+                        item.child(0).setText(0, str(value))
+                elif isinstance(itype, IntType):
+                    value, ok = QtWidgets.QInputDialog.getInt(
+                        self.parent, 'Modify', ' Integer:')
+                    if ok:
+                        assign_value(parent_data, parameter, value)
+                        item.child(0).setText(0, str(value))
+                elif isinstance(itype, FloatType):
+                    value, ok = QtWidgets.QInputDialog.getDouble(
+                        self.parent, 'Modify', ' Float:')
+                    if ok:
+                        assign_value(parent_data, parameter, value)
+                        item.child(0).setText(0, str(value))
+                elif isinstance(itype, StrType):
+                    value, ok = QtWidgets.QInputDialog.getText(
+                        self.parent, 'Modify', ' String:')
+                    if ok:
+                        assign_value(parent_data, parameter, value)
+                        item.child(0).setText(0, str(value))
+                elif isinstance(itype, LambdaType):
+                    code, ok = QtWidgets.QInputDialog.getText(
+                        self.parent, 'Modify', 'Python code:')
+                    if ok:
+                        try:
+                            value = eval(code)
+                            assign_value(parent_data, parameter, value)
+                        except:
+                            QtWidgets.QMessageBox.warning(
+                                self.parent,
+                                "Python Error",
+                                traceback.format_exc())
+
+        else:
+            if isinstance(parent_data, Move):
+                # Remove component from list
+                if item.parent().text(0) == "<Components>":
+                    parent_data.components.remove(item_data)
+                elif item.parent().text(0) == "<MissComponents>":
+                    parent_data.miss_components.remove(item_data)
+                elif item.parent().text(0) == "<CritComponents>":
+                    parent_data.crit_components.remove(item_data)
+                item.parent().removeChild(item)
+            else:
+                parent_data.remove(item_data)
 
     def _load_components(self, item, component):
         """Recursive convenience function for loading in components into
         a higher level component"""
         component_item = QtWidgets.QTreeWidgetItem([type(component).__name__])
+        component_item.setData(0, QtCore.Qt.UserRole, component)
         item.addChild(component_item)
         parameters = typecheck(type(component))
         for parameter, ptype in parameters.items():
@@ -215,7 +356,7 @@ class MoveHandler(Handler):
             component_item.addChild(para_item)
             # Attempt to fill in the value
             value = valuecheck(component, parameter)
-            if value != None:
+            if value is not None:
                 self._load_parameter(para_item, ptype, value)
             else:
                 para_item.addChild(QtWidgets.QTreeWidgetItem(
@@ -231,6 +372,7 @@ class MoveHandler(Handler):
 
     def _load_parameter(self, item, ptype, value):
         """Convenience function for loading parameters"""
+        item.setData(0, QtCore.Qt.UserRole, value)
         if isinstance(ptype, ListType): # if our type is a list
             for subcomponent in value:
                 self._load_components(item, subcomponent)
@@ -243,3 +385,4 @@ class MoveHandler(Handler):
         else:
             item.addChild(QtWidgets.QTreeWidgetItem(
                 [str(value)]))
+
