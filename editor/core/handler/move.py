@@ -346,6 +346,7 @@ class MoveHandler(Handler):
                         Component, partial(self._add_crit_component, item))
                     prompt.show()
             else:
+                # Need to fix
                 prompt = ClassPrompt(self.parent, assets.moves.components,
                     Component, partial(self._add_asset, item, parent_data))
                 prompt.show()
@@ -383,7 +384,6 @@ class MoveHandler(Handler):
                 ["%s : <%s>" % (parameter, str(ptype))])
             component_item.addChild(para_item)
             # Attempt to fill in the value
-            print(ptype)
             value = valuecheck(component, parameter)
             if value is not None:
                 self._load_parameter(para_item, ptype, value)
