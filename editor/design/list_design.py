@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        MainWindow.setWindowModality(QtCore.Qt.WindowModal)
         MainWindow.resize(240, 282)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -21,12 +22,12 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.listWidget)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout.addWidget(self.pushButton_2)
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.newButton = QtWidgets.QPushButton(self.centralwidget)
+        self.newButton.setObjectName("newButton")
+        self.horizontalLayout.addWidget(self.newButton)
+        self.closeButton = QtWidgets.QPushButton(self.centralwidget)
+        self.closeButton.setObjectName("closeButton")
+        self.horizontalLayout.addWidget(self.closeButton)
         self.verticalLayout.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -36,6 +37,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton_2.setText(_translate("MainWindow", "New"))
-        self.pushButton.setText(_translate("MainWindow", "Close"))
+        self.newButton.setText(_translate("MainWindow", "New"))
+        self.closeButton.setText(_translate("MainWindow", "Close"))
 

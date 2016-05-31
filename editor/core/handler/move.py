@@ -6,9 +6,13 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 
 import assets.moves.components
 import assets.moves.modifiers
+import assets.attributes
+import assets.effects
+import assets.actions
 
 from editor.core.handler.handler import Handler
 from editor.core.prompt.class_prompt import ClassPrompt
+from editor.core.prompt.list_prompt import ListPrompt
 from editor.meta.typecheck import typecheck
 from editor.meta.valuecheck import valuecheck, value_from_type, assign_value
 from editor.meta.types import *
@@ -16,6 +20,13 @@ from editor.core.prompt import class_prompt
 from engine.game.move.move import Move
 from engine.game.move.component import Component
 from engine.serialization.move import MoveDataManager
+
+
+from engine.game.move.component import Component
+from engine.game.attribute.attribute import Attribute
+from engine.game.effect.effect import Effect
+from engine.game.dungeon.action import Action
+from engine.game.move.modifier import Modifier
 
 class MoveHandler(Handler):
 
@@ -56,6 +67,9 @@ class MoveHandler(Handler):
         # Populate move list
         for move in self.move_dm.moves():
             move_list.addItem(move)
+
+        move_list.keyPressEvent = self.delete_press_generator("move",
+            move_list, self.delete_move)
 
         move_list.currentItemChanged.connect(self.set_focus)
         move_list.currentItemChanged.connect(self.set_dialogue_enable)
@@ -332,7 +346,7 @@ class MoveHandler(Handler):
                                 traceback.format_exc())
         else:
             if isinstance(item_data, Move):
-                # Remove component from list
+                # Add component to list
                 if item.text(0) == "<Components>":
                     prompt = ClassPrompt(self.parent, assets.moves.components,
                         Component, partial(self._add_standard_component, item))
@@ -346,10 +360,79 @@ class MoveHandler(Handler):
                         Component, partial(self._add_crit_component, item))
                     prompt.show()
             else:
-                # Need to fix
-                prompt = ClassPrompt(self.parent, assets.moves.components,
-                    Component, partial(self._add_asset, item, parent_data))
-                prompt.show()
+                # Adding to component list
+                match = re.match(r"(\w+) : <(.+)>", item.text(0))
+                itype = ListType(UnknownType())
+                if match:
+                    itype = value_from_type(item_data)
+                etype = itype.elemtype
+
+                if isinstance(etype, IntType):
+                    value, ok = QtWidgets.QInputDialog.getInt(
+                        self.parent, 'Modify', ' Integer:')
+                    if ok:
+                        item_data.append(value)
+                        self._load_parameter(item, etype, value)
+                elif isinstance(etype, FloatType):
+                    value, ok = QtWidgets.QInputDialog.getDouble(
+                        self.parent, 'Modify', ' Float:')
+                    if ok:
+                        item_data.append(value)
+                        self._load_parameter(item, etype, value)
+                elif isinstance(etype, StrType):
+                    value, ok = QtWidgets.QInputDialog.getText(
+                        self.parent, 'Modify', ' String:')
+                    if ok:
+                        item_data.append(value)
+                        self._load_parameter(item, etype, value)
+                elif isinstance(etype, LambdaType):
+                    code, ok = QtWidgets.QInputDialog.getText(
+                        self.parent, 'Modify', 'Python code:')
+                    if ok:
+                        try:
+                            value = eval(code)
+                            item_data.append(value)
+                            self._load_parameter(item, etype, value)
+                        except:
+                            QtWidgets.QMessageBox.warning(
+                                self.parent,
+                                "Python Error",
+                                traceback.format_exc())
+                elif isinstance(etype, ListType):
+                    prompt = editor.core.prompt.list_prompt.ListPrompt(
+                        self, etype.elemtype, item_data,
+                        partial(self._add_standard_component, item))
+                    prompt.show()
+                elif isinstance(etype, ComponentType):
+                    prompt = ClassPrompt(self.parent, assets.moves.components,
+                        Component, partial(self._add_standard_component, item))
+                    prompt.show()
+                elif isinstance(etype, AttributeType):
+                    prompt = ClassPrompt(self.parent, assets.attributes,
+                        Attribute, partial(self._add_standard_component, item))
+                    prompt.show()
+                elif isinstance(etype, EffectType):
+                    prompt = ClassPrompt(self.parent, assets.effects,
+                        Effect, partial(self._add_standard_component, item))
+                    prompt.show()
+                elif isinstance(etype, ModifierType):
+                    prompt = ClassPrompt(self.parent, assets.moves.modifiers,
+                        Modifier, partial(self._add_standard_component, item))
+                    prompt.show()
+                elif isinstance(etype, UnknownType):
+                    code, ok = QtWidgets.QInputDialog.getText(
+                        self.parent, 'Modify', 'Python code:')
+                    if ok:
+                        try:
+                            value = eval(code)
+                            assign_value(parent_data, parameter, value)
+                        except:
+                            QtWidgets.QMessageBox.warning(
+                                self.parent,
+                                "Python Error",
+                                traceback.format_exc())
+                        item_data.append(value)
+                        self._load_parameter(item, etype, value)
 
     def _add_standard_component(self, item, component):
         """Helper function to add objects to lists and what not"""
