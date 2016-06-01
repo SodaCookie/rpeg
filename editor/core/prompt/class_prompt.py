@@ -6,6 +6,7 @@ import inspect
 from PyQt5 import QtGui, QtWidgets, QtCore
 
 import editor.design.class_design as design
+import editor.core.prompt.list_prompt
 from editor.meta.typecheck import typecheck
 from editor.meta.types import *
 
@@ -64,7 +65,7 @@ class ClassPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
         attr_table = self.findChild(QtWidgets.QTableWidget, "attrTable")
         parameter_item = attr_table.item(row, column)
         ptype = parameter_item.data(QtCore.Qt.UserRole)
-        if isinstance(ptype, (UnknownType, ListType)):
+        if isinstance(ptype, UnknownType):
             code, ok = QtWidgets.QInputDialog.getText(
                 self, 'Modify', 'Python code:')
             if ok:
@@ -75,7 +76,10 @@ class ClassPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 except:
                     QtWidgets.QMessageBox.warning(
                         self, "Python Error", traceback.format_exc())
-
+        elif isinstance(ptype, ListType):
+            prompt = editor.core.prompt.list_prompt.ListPrompt(self, ptype.elemtype, None, partial(self.set_parameter,
+                    attr_table.item(row, 0).text(), parameter_item))
+            prompt.show()
         elif isinstance(ptype, IntType):
             value, ok = QtWidgets.QInputDialog.getInt(
                 self, 'Modify', ' Integer:')
@@ -107,22 +111,22 @@ class ClassPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         self.parent,
                         "Python Error",
                         traceback.format_exc())
-        elif isinstance(value, ComponentType):
+        elif isinstance(ptype, ComponentType):
             prompt = ClassPrompt(self, assets.moves.components,
                 Component, partial(self.set_parameter,
                     attr_table.item(row, 0).text(), parameter_item))
             prompt.show()
-        elif isinstance(value, AttributeType):
+        elif isinstance(ptype, AttributeType):
             prompt = ClassPrompt(self, assets.attributes,
                 Attribute, partial(self.set_parameter,
                     attr_table.item(row, 0).text(), parameter_item))
             prompt.show()
-        elif isinstance(value, EffectType):
-            prompt = ClassPrompt(self, assets.effect,
+        elif isinstance(ptype, EffectType):
+            prompt = ClassPrompt(self, assets.effects,
                 Effect, partial(self.set_parameter,
                     attr_table.item(row, 0).text(), parameter_item))
             prompt.show()
-        elif isinstance(value, ModifierType):
+        elif isinstance(ptype, ModifierType):
             prompt = ClassPrompt(self, assets.moves.modifiers,
                 Modifier, partial(self.set_parameter,
                     attr_table.item(row, 0).text(), parameter_item))

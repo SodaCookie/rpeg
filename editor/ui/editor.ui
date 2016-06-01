@@ -1320,14 +1320,17 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionSave"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionAdd_Floor_Type"/>
-    <addaction name="actionAdd_Item"/>
+    <addaction name="actionAdd_Floor"/>
+    <addaction name="actionAdd_Rare_Item_Attribute"/>
+    <addaction name="actionAdd_Legendary_Item_Attribute"/>
+    <addaction name="actionAdd_Unique_Item_Attribute"/>
     <addaction name="actionAdd_Monster_Attribute"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -1340,14 +1343,14 @@
    <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
-  <action name="actionAdd_Floor_Type">
+  <action name="actionAdd_Floor">
    <property name="text">
     <string>Add Floor Type...</string>
    </property>
   </action>
-  <action name="actionAdd_Item">
+  <action name="actionAdd_Rare_Item_Attribute">
    <property name="text">
-    <string>Add Item Attribute...</string>
+    <string>Add Rare Item Attribute...</string>
    </property>
   </action>
   <action name="actionAdd_Skill">
@@ -1360,9 +1363,12 @@
     <string>Update</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="actionSave">
    <property name="text">
-    <string>Exit</string>
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string/>
    </property>
   </action>
   <action name="actionAbout">
@@ -1380,9 +1386,24 @@
     <string>Add Effect...</string>
    </property>
   </action>
+  <action name="actionAdd_Legendary_Item_Attribute">
+   <property name="text">
+    <string>Add Legendary Item Attribute...</string>
+   </property>
+  </action>
+  <action name="actionAdd_Unique_Item_Attribute">
+   <property name="text">
+    <string>Add Unique Item Attribute</string>
+   </property>
+  </action>
   <action name="actionAdd_Monster_Attribute">
    <property name="text">
     <string>Add Monster Attribute...</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
