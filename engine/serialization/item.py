@@ -42,6 +42,15 @@ class ItemDataManager(object):
             return True
         return False
 
+    def set_rare_attributes(self, attributes):
+        self.RARE_ATTRIBUTES.set(attribtes)
+
+    def set_legendary_attributes(self, attributes):
+        self.LEGENDARY_ATTRIBUTES.set(attribtes)
+
+    def set_unique_attributes(self, attributes):
+        self.UNIQUE_ATTRIBUTES.set(attribtes)
+
     def items(self):
         return self.ITEMS.get()
 

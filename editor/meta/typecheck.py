@@ -9,7 +9,7 @@ from editor.meta.types import *
 _type_regex = re.compile(r"^\s*\b(\w+)\b\s*->\s*(.+)", re.MULTILINE)
 _int_regex = re.compile(r"^\s*\bint\b", re.MULTILINE)
 _float_regex = re.compile(r"^\s*\bfloat\b", re.MULTILINE)
-_str_regex = re.compile(r"^\s*\bstr\b", re.MULTILINE)
+_str_regex = re.compile(r"^\s*(?:\bstr\b|\bstring\b)", re.MULTILINE)
 _list_regex = re.compile(r"^\s*\blist\b\s*(.*)", re.MULTILINE)
 _component_regex = re.compile(r"^\s*\bComponent\b", re.MULTILINE)
 _effect_regex = re.compile(r"^\s*\bEffect\b", re.MULTILINE)

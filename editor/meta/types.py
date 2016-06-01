@@ -6,8 +6,8 @@ from engine.game.move.modifier import Modifier
 from engine.game.effect.effect import Effect
 from engine.game.attribute.attribute import Attribute
 
-__all__ = ["UnknownType", "IntType", "FloatType", "StrType", "ListType",
-    "ComponentType", "EffectType", "ModifierType", "AttributeType",
+__all__ = ["EditorType", "UnknownType", "IntType", "FloatType", "StrType",
+    "ListType", "ComponentType", "EffectType", "ModifierType", "AttributeType",
     "LambdaType"]
 
 class EditorType:

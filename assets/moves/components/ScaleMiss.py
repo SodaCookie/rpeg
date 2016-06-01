@@ -5,7 +5,7 @@ class ScaleMiss(Component):
     def __init__(self, scaling, stype):
         """Scales a miss chance based on stat type.
         scaling -> float
-        stype -> string"""
+        stype -> str"""
         super().__init__()
         self.scaling = scaling
         self.stype = stype

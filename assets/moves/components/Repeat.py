@@ -3,12 +3,12 @@ from engine.game.move.component import Component
 class Repeat(Component):
     """Component that will complete another component x times"""
 
-    def __init__(self, repeat, components):
+    def __init__(self, repeat, components=None):
         """Repeat the given list of components a given number of times.
         repeat -> int
-        components -> list Components"""
+        components -> list Component"""
         self.repeat = repeat
-        self.components = components
+        self.components = components if components is not None else []
 
     def on_cast(self, target, caster, players, monsters):
         msg = ""

@@ -26,5 +26,14 @@ class DataManager(object):
         """Returns the loaded data. None if the filename isn't given"""
         return self.cache.get(self.filename)
 
+    def set(self, value):
+        self.cache[self.filename] = value
+
     def write(self):
         serialize(self.cache[self.filename], self.filename)
+
+    @classmethod
+    def writeall(self):
+        """Saves all the cached functions at once."""
+        for file in self.cache:
+            serialize(self.cache[file], file)
