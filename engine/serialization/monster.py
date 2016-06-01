@@ -2,7 +2,8 @@
 from engine.serialization.dmanager import DataManager
 
 class MonsterDataManager(DataManager):
-    """Singleton class used to get and assign monster definition"""
+    """Singleton class used to get and assign monster definitions and
+    monster attributes"""
 
     DEFAULT_MONSTER_LOCATION = "location"
     DEFAULT_MONSTER_RATING = 0
@@ -17,6 +18,23 @@ class MonsterDataManager(DataManager):
 
     def __init__(self):
         super().__init__("data/monster.p")
+        self.attribute = DataManager("data/monster_attributes.p")
+
+    def write(self):
+        super().write()
+        self.attribute.write()
+
+    def get_attribute(self, name):
+        for attr in range(self.attribute.get()):
+            if attr.name == name:
+                return attr
+        return None
+
+    def attributes(self):
+        return self.attribute.get()
+
+    def set_attributes(self, attributes):
+        self.attribute.set(attribtes)
 
     def get_monster(self, name):
         """Convenience function. To get a monster"""

@@ -27,9 +27,9 @@ if __name__ == "__main__":
     #     def print_value(self):
     #         print(value)
 
-    # serialize(TestObject("test"), "tests/game/serialize/data/data_test.p")
-    dm = ItemDataManager()
-    base = dm.base_items()
-    for key, value in base.items():
-        value.name = key
-    dm.BASE_ITEMS.write()
+    serialize([], "data/monster_attributes.p")
+    # dm = ItemDataManager()
+    # base = dm.base_items()
+    # for key, value in base.items():
+    #     value.name = key
+    # dm.BASE_ITEMS.write()

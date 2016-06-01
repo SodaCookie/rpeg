@@ -41,6 +41,7 @@ class ListPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
         # Load window
         self.init_window()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.parent = parent # Temp fix for generate_deleter bug
 
     def init_window(self):
         list_widget = self.findChild(QtWidgets.QListWidget, "listWidget")
@@ -48,7 +49,7 @@ class ListPrompt(QtWidgets.QMainWindow, design.Ui_MainWindow):
         close_button = self.findChild(QtWidgets.QPushButton, "closeButton")
 
         for item in self.return_list:
-            self.list_widget.addItem(str(item))
+            list_widget.addItem(str(item))
 
         # Set deleter
         self.listWidget.keyPressEvent = Handler.delete_press_generator(

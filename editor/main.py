@@ -18,6 +18,7 @@ class Editor(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.item_handler = core.ItemHandler(self)
         self.move_handler = core.MoveHandler(self)
         self.monster_handler = core.MonsterHandler(self)
+        self.menu_handler = core.MenuHandler(self)
 
 
 def init():
