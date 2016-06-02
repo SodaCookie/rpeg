@@ -4,10 +4,12 @@ import xml.etree.ElementTree as tree
 import re
 
 import engine.game.dungeon.dialog as dialog
-from data.scenarios import EVENTS
+from engine.serialization.scenario import EventDataManager
 
 class Location(object):
 	"""Location object is the node for each part of a dungeon"""
+
+	event_dm = EventDataManager()
 
 	def __init__(self, room_type, floor_type):
 		# can be event, entrance, exit, shop, alter, item
@@ -48,8 +50,8 @@ class Location(object):
 		on room_type and floor_type"""
 		# Gather a list of available events
 		available = []
-		available.extend(EVENTS["any"][self.room_type])
-		available.extend(EVENTS[self.floor_type][self.room_type])
+		available.extend(self.event_dm.events()["any"][self.room_type])
+		available.extend(self.event_dm.events()[self.floor_type][self.room_type])
 
 		self.event = choice(available)
 

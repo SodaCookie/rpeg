@@ -125,9 +125,9 @@ class ScenarioHandler(Handler):
                 QtWidgets.QListWidget, "eventList")
             if not list_widget.findItems(event_name, QtCore.Qt.MatchExactly):
                 # Create new event
-                self.event_dm.new_event(event_name, "any", "event")
+                new_event = self.event_dm.new_event(event_name, "any", "event")
                 # Add to required widgets
-                self.event_to_location[new_event.name] = \
+                self.event_to_location[event_name] = \
                     ("any", "event", new_event)
                 list_widget.addItem(event_name)
                 # The last added

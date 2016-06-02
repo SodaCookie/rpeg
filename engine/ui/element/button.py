@@ -8,20 +8,37 @@ from engine.ui.core.bindable import Bindable
 from engine.ui.element.window import Window
 from engine.ui.element.text import Text
 
-class Button(Renderable, Bindable):
-    """Clickable Button object. Contains actions for hovering and clicking
-    """
+class Button(Renderable):
+    """Clickable Button object. Contains actions for hovering and clicking"""
 
-    def __init__(self, text, size, x, y, windowed=False):
+    def __init__(self, name, **kwargs):
         super().__init__()
-        self.text = text
-        self.size = size
-        self.x = x
-        self.y = y
-        self.windowed = windowed
-        self.surface = self.draw(self.text, self.size, self.windowed)
-        self.hover = self.draw_hover(self.text, self.size, self.windowed)
-        self.click = self.draw_click(self.text, self.size, self.windowed)
+        defaults = {
+            "text" : ""
+            "size" : 12,
+            "x" : 0,
+            "y" : 0,
+            "flat" : False,
+            "windowed" : True,
+            "on_click" : None,
+            "off_click" : None,
+            "on_hover" : None,
+            "off_hover" : None
+        }
+        defaults.update(kwargs)
+
+        # Set values
+        self.text = defaults["text"]
+        self.size = defaults["size"]
+        self.x = defaults["x"]
+        self.y = defaults["y"]
+        self.windowed = defaults["windowed"]
+
+        if not defaults["flat"]:
+            self.surface = self.draw(self.text, self.size, self.windowed)
+            self.hover = self.draw_hover(self.text, self.size, self.windowed)
+            self.click = self.draw_click(self.text, self.size, self.windowed)
+        self.zone = Zone(self.surface,)
 
     def set_text(self, text):
         """Convenience function that will update the text for the object"""

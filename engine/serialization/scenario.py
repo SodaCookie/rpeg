@@ -14,6 +14,7 @@ class EventDataManager(DataManager):
     def new_event(self, name, floor, room):
         event = Event(name)
         self.events()[floor][room].append(event)
+        return event
 
     def delete_event(self, name, floor, room):
         change_event = None
