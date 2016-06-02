@@ -30,9 +30,7 @@ class ScenarioHandler(Handler):
         dialogue_widget = self.parent.findChild(
             QtWidgets.QListWidget, "dialogueList")
 
-        # Load floor types
-        for floor in self.floor_dm.floors():
-            floor_combo.addItem(floor.title())
+        self.load_floors()
 
         # Load scenarios to list item
         self.event_to_location = {} # map used to find events by name quickly
@@ -173,3 +171,11 @@ class ScenarioHandler(Handler):
         dialogue_window = DialoguePrompt(self.parent, dialogue)
         dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
         dialogue_window.show()
+
+    def load_floors(self):
+        floor_combo = self.parent.findChild(
+            QtWidgets.QComboBox, "eventFloorType")
+        # Load floor types
+        floor_combo.clear()
+        for floor in self.floor_dm.floors():
+            floor_combo.addItem(floor.title())

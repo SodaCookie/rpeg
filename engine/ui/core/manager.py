@@ -17,5 +17,6 @@ class Manager(object):
     def render(self, surface, game):
         """Render will take a surface to be passed onto its renderables
         renderer takes the game object to be passed on as it pleases."""
+        self.update(game)
         for r in self.renderables:
             r.render(surface, game)
