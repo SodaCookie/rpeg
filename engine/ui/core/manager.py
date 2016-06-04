@@ -10,8 +10,8 @@ class Manager(Renderable):
     of renderable objects and the updating of zones. It defines
     update and render methods and renderables and zones as attributes."""
 
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, x, y):
+        super().__init__(name, x, y)
         self.renderables = OrderedDict()
 
     def add_renderable(self, renderable):

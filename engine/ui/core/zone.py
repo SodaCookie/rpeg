@@ -10,18 +10,13 @@ class Zone(object):
     HOVERED = 1
     CLICKED = 2
 
-    def __init__(self, rect, on_click=None, on_hover=None, off_hover=None,
-                 off_click=None):
+    def __init__(self, rect):
         """Takes a pygame rect or any tuple equivalents and a on_click
         the rect describes where the zone is on the screen, and the on_click
         is the function that is given a game object on click.
         on_hover and off hover have also been defined"""
         super(Zone, self).__init__()
         self.rect = pygame.Rect(rect)
-        self.on_click = on_click
-        self.on_hover = on_hover
-        self.off_hover = off_hover
-        self.off_click = off_click
         self.state = Zone.NEUTRAL
 
     def update(self, game):

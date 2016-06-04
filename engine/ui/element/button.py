@@ -2,13 +2,13 @@ from copy import copy
 
 import pygame
 
-from engine.ui.core.renderable import Renderable
+from engine.ui.element.abstractbutton import AbstractButton
 from engine.ui.core.zone import Zone
 from engine.ui.core.bindable import Bindable
 from engine.ui.element.window import Window
 from engine.ui.element.text import Text
 
-class Button(Renderable):
+class Button():
     """Clickable Button object. Contains actions for hovering and clicking"""
 
     def __init__(self, name, **kwargs):
