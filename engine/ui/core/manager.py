@@ -20,7 +20,7 @@ class Manager(Renderable):
             self.renderables[renderable.name] = renderable
         else:
             logging.error("Renderable with the same name has been added to %s"\
-                self.name)
+                % self.name)
 
     def get_renderable(self, name):
         return self.renderables[name]

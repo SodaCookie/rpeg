@@ -3,94 +3,136 @@ from copy import copy
 import pygame
 
 from engine.ui.element.abstractbutton import AbstractButton
-from engine.ui.core.zone import Zone
-from engine.ui.core.bindable import Bindable
-from engine.ui.element.window import Window
-from engine.ui.element.text import Text
+import engine.ui.draw as draw
 
-class Button():
-    """Clickable Button object. Contains actions for hovering and clicking"""
+class Button(AbstractButton):
+    """Implemented AbstractButton to handle nice rendering. Does not
+    feature vertical wordwrap"""
 
-    def __init__(self, name, **kwargs):
-        super().__init__()
+    def __init__(self, name, on_click=None, off_click=None, **kwargs):
         defaults = {
-            "text" : ""
-            "size" : 12,
+            "text" : "",
+            "size" : 16,
+            "justify" : "center",
+            "vjustify" : "center",
+            "width" : None,
+            "height" : None,
             "x" : 0,
             "y" : 0,
-            "flat" : False,
             "windowed" : True,
-            "on_click" : None,
-            "off_click" : None,
-            "on_hover" : None,
-            "off_hover" : None
         }
         defaults.update(kwargs)
-
         # Set values
-        self.text = defaults["text"]
-        self.size = defaults["size"]
-        self.x = defaults["x"]
-        self.y = defaults["y"]
-        self.windowed = defaults["windowed"]
+        for key, value in defaults.items():
+            setattr(self, key, value)
 
-        if not defaults["flat"]:
-            self.surface = self.draw(self.text, self.size, self.windowed)
-            self.hover = self.draw_hover(self.text, self.size, self.windowed)
-            self.click = self.draw_click(self.text, self.size, self.windowed)
-        self.zone = Zone(self.surface,)
+        # Create font
+        self.font = pygame.font.Font("assets/fonts/VT323-Regular.ttf",
+            self.size)
+
+        # Width defaults (width, height > text > None)
+        if self.width and self.height:
+            # For clarity
+            pass
+        elif self.text:
+            width, height = self.font.size(self.text)
+            self.width = width if self.width is None else self.width
+            self.height = height if self.height is None else self.height
+        else:
+            self.width = 100
+            self.height = 100
+
+        rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        super().__init__(name, rect, on_click, off_click)
 
     def set_text(self, text):
         """Convenience function that will update the text for the object"""
         self.text = text
-        self.surface = self.draw(self.text, self.size, windowed)
-        self.hover = self.draw_hover(self.text, self.size, windowed)
-        self.click = self.draw_click(self.text, self.size, windowed)
+        self.set_dirty(True)
 
-    def get_rect(self):
-        """Convenience function returns a tuple of rect values"""
-        return ((self.x, self.y), self.surface.get_size())
-
-    def draw(self, text, size, windowed):
-        SCALE = 4
-        text = Text.draw(text, size, (255, 255, 255), None, Text.LEFT)
-        if windowed:
-            bg = Window.draw(text.get_width()+SCALE*2,
-                text.get_height()+SCALE*2, None)
-            bg.blit(text, (SCALE*2, SCALE*2))
-            return bg
-        return text
-
-    def draw_hover(self, text, size, windowed):
-        """Draw method when hovered"""
-        SCALE = 4
-        text = Text.draw(text, size, (255, 255, 0), None, Text.LEFT)
-        if windowed:
-            bg = Window.draw(text.get_width()+SCALE*2,
-                text.get_height()+SCALE*2, (255, 255, 0))
-            bg.blit(text, (SCALE*2, SCALE*2))
-            return bg
-        return text
-
-    def draw_click(self, text, size, windowed):
-        """Draw method when clicked"""
-        SCALE = 4
-        text = Text.draw(text, size, (0, 255, 0), None, Text.LEFT)
-        if windowed:
-            bg = Window.draw(text.get_width()+SCALE*2,
-                text.get_height()+SCALE*2, (0, 255, 0))
-            bg.blit(text, (SCALE*2, SCALE*2))
-            return bg
-        return text
-
-    def render(self, surface, game):
-        """Only changes if rendered"""
-        if self.bound:
-            if self.bound.state == Zone.NEUTRAL:
-                surface.blit(self.surface, (self.x, self.y))
-            elif self.bound.state == Zone.HOVERED:
-                surface.blit(self.hover, (self.x, self.y))
-            elif self.bound.state == Zone.CLICKED:
-                surface.blit(self.click, (self.x, self.y))
+    def render_neutral(self, game):
+        """Override. Called whenever refresh is called. Expects an image
+        to represent the neutral state."""
+        # Base if any
+        if self.windowed:
+            surface = draw.frame.draw_frame(self.width, self.height)
         else:
-            surface.blit(self.surface, (self.x, self.y))
+            surface = draw.simple.draw_rect(self.width, self.height,
+                (0, 0, 0, 0))
+
+        # Text if any
+        text = None
+        if self.text:
+            text = draw.simple.draw_text(self.text, self.font, (255, 255, 255),
+                self.width, True, self.justify)
+
+        # Apply text
+        if text is not None:
+            mid = (surface.get_width() - text.get_width()) // 2
+            if self.vjustify == "up":
+                surface.blit(text, (mid, 0))
+            elif self.vjustify == "center":
+                surface.blit(text, (mid,
+                    (surface.get_height() - text.get_height()) // 2))
+            elif self.vjustify == "down":
+                surface.blit(text, (mid,
+                    surface.get_height() - text.get_height()))
+        return surface
+
+    def render_hover(self, game):
+        """Override. Called whenever refresh is called. Expects an image
+        to represent the hovered state."""
+        if self.windowed:
+            surface = draw.frame.draw_highlight_frame(self.width, self.height,
+                (255, 255, 255))
+        else:
+            surface = draw.simple.draw_rect(self.width, self.height,
+                (0, 0, 0, 0))
+
+        # Text if any
+        text = None
+        if self.text:
+            text = draw.simple.draw_text(self.text, self.font, (255, 255, 255),
+                self.width, True, self.justify)
+
+        # Apply text
+        if text is not None:
+            mid = (surface.get_width() - text.get_width()) // 2
+            if self.vjustify == "up":
+                surface.blit(text, (mid, 0))
+            elif self.vjustify == "center":
+                surface.blit(text, (mid,
+                    (surface.get_height() - text.get_height()) // 2))
+            elif self.vjustify == "down":
+                surface.blit(text, (mid,
+                    surface.get_height() - text.get_height()))
+        return surface
+
+    def render_clicked(self, game):
+        """Override. Called whenever refresh is called. Expects an image
+        to represent the clicked state."""
+        if self.windowed:
+            surface = draw.frame.draw_highlight_frame(self.width, self.height,
+                (255, 255, 0))
+        else:
+            surface = draw.simple.draw_rect(self.width, self.height,
+                (0, 0, 0, 0))
+
+        # Text if any
+        text = None
+        if self.text:
+            text = draw.simple.draw_text(self.text, self.font, (255, 255, 0),
+                self.width, True, self.justify)
+
+        # Apply text
+        if text is not None:
+            mid = (surface.get_width() - text.get_width()) // 2
+            if self.vjustify == "up":
+                surface.blit(text, (mid, 0))
+            elif self.vjustify == "center":
+                surface.blit(text, (mid,
+                    (surface.get_height() - text.get_height()) // 2))
+            elif self.vjustify == "down":
+                surface.blit(text, (mid,
+                    surface.get_height() - text.get_height()))
+        return surface

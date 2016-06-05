@@ -4,11 +4,11 @@ import math
 
 from engine.ui.core.renderable import Renderable
 
-class Window(Renderable):
-    """Window Object to contain menus with buttons, slots etc."""
+class Frame(Renderable):
+    """Frame Object to contain menus with buttons, slots etc."""
 
     def __init__(self, width, height, x, y, highlight=None):
-        super(Window, self).__init__()
+        super(frame, self).__init__()
         self.width = width
         self.height = height
         self.surface = self.draw(self.width, self.height, highlight)
@@ -16,31 +16,31 @@ class Window(Renderable):
         self.y = y
 
     @classmethod
-    def highlight_window(self, window, highlight):
-        """Highlights the window with a given color"""
+    def highlight_frame(self, frame, highlight):
+        """Highlights the frame with a given color"""
         SCALE = 4
-        window = window.copy()
-        window.fill(highlight, (0, 0, SCALE, window.get_height()))
-        window.fill(highlight, (0, 0, window.get_width(), SCALE))
-        window.fill(highlight,
-            (window.get_width()-SCALE, 0, SCALE, window.get_height()))
-        window.fill(highlight,
-            (0, window.get_height()-SCALE, window.get_width(), SCALE))
-        window.fill((0, 0, 0, 0), (0, 0, SCALE*2, SCALE*2))
-        window.fill((0, 0, 0, 0),
-            (0, window.get_height()-SCALE*2, SCALE*2, SCALE*2))
-        window.fill((0, 0, 0, 0),
-            (window.get_width()-SCALE*2, 0, SCALE*2, SCALE*2))
-        window.fill((0, 0, 0, 0),
-            (window.get_width()-SCALE*2, window.get_height()-SCALE*2, SCALE*2, SCALE*2))
-        window.fill(highlight, (SCALE, SCALE, SCALE, SCALE))
-        window.fill(highlight,
-            (SCALE, window.get_height()-SCALE*2, SCALE, SCALE))
-        window.fill(highlight,
-            (window.get_width()-SCALE*2, SCALE, SCALE, SCALE))
-        window.fill(highlight,
-            (window.get_width()-SCALE*2, window.get_height()-SCALE*2, SCALE, SCALE))
-        return window
+        frame = frame.copy()
+        frame.fill(highlight, (0, 0, SCALE, frame.get_height()))
+        frame.fill(highlight, (0, 0, frame.get_width(), SCALE))
+        frame.fill(highlight,
+            (frame.get_width()-SCALE, 0, SCALE, frame.get_height()))
+        frame.fill(highlight,
+            (0, frame.get_height()-SCALE, frame.get_width(), SCALE))
+        frame.fill((0, 0, 0, 0), (0, 0, SCALE*2, SCALE*2))
+        frame.fill((0, 0, 0, 0),
+            (0, frame.get_height()-SCALE*2, SCALE*2, SCALE*2))
+        frame.fill((0, 0, 0, 0),
+            (frame.get_width()-SCALE*2, 0, SCALE*2, SCALE*2))
+        frame.fill((0, 0, 0, 0),
+            (frame.get_width()-SCALE*2, frame.get_height()-SCALE*2, SCALE*2, SCALE*2))
+        frame.fill(highlight, (SCALE, SCALE, SCALE, SCALE))
+        frame.fill(highlight,
+            (SCALE, frame.get_height()-SCALE*2, SCALE, SCALE))
+        frame.fill(highlight,
+            (frame.get_width()-SCALE*2, SCALE, SCALE, SCALE))
+        frame.fill(highlight,
+            (frame.get_width()-SCALE*2, frame.get_height()-SCALE*2, SCALE, SCALE))
+        return frame
 
     @classmethod
     def draw(self, width, height, highlight):
@@ -110,7 +110,7 @@ class Window(Renderable):
             (0, 0, SCALE, SCALE))
 
         if highlight:
-            return self.highlight_window(surface, highlight)
+            return self.highlight_frame(surface, highlight)
 
         return surface
 

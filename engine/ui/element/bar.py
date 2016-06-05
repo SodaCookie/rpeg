@@ -2,19 +2,24 @@ import pygame
 
 from engine.ui.core.renderable import Renderable
 
-class Bar(Renderable):
-    """A Bar that is filled a certain amount from 0 - 100%"""
+class PercentBar(Renderable):
+    """A Bar takes the output of a draw function and vertically
+    or horizontally cuts the rendering based on percentage"""
 
-    def __init__(self, width, height, colour, x, y):
-        super().__init__()
-        self.x = x
-        self.y = y
+    def __init__(self, name, x, y, image, horizonal=True):
+        super().__init__(name, x, y)
         self.percent = 100
-        self.width = width
-        self.height = height
-        self.surface = pygame.Surface((width, height))
-        self.surface.fill(colour)
+        self.horizonal = horizonal
+        self.image = image
 
-    def render(self, surface, game):
-        surface.blit(self.surface, (self.x, self.y),
-            (0, 0, round(self.width*self.percent/100), self.height))
+    def render(self, surface, game, system):
+        img_width, img_height = self.image.size()
+        if self.horizonal:
+            width = round(self.width * self.percent / 100)
+            height = self.height
+        else:
+            width = self.width
+            self.height = round(self.height * self.percent / 100)
+
+        # Render to the screen
+        surface.blit(self.image, (self.x, self.y), (0, 0, width, height))

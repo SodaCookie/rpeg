@@ -1,7 +1,6 @@
 import pygame
 
 from engine.ui.core.renderable import Renderable
-from engine.ui.core.bindable import Bindable
 from engine.ui.core.zone import Zone
 
 class TravelNode(Renderable, Bindable):

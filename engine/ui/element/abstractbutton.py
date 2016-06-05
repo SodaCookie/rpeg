@@ -16,6 +16,7 @@ class AbstractButton(Renderable):
         # Initialize
         super().__init__(name, rect.x, rect.y)
         self.zone = Zone(rect)
+        self.dirty = True
         self.neutral = None
         self.hover = None
         self.clicked = None
@@ -29,7 +30,17 @@ class AbstractButton(Renderable):
     def move(self, x, y):
         """Moves the renderable to new location"""
         super().move(x, y)
-        self.rect.move_ip(x, y)
+        self.rect.x = x
+        self.rect.y = y
+        self.update_rect(self.rect)
+
+    def set_size(self, width, height):
+        self.rect.w = width
+        self.rect.h = height
+        self.update_rect(self.rect)
+
+    def set_dirty(self, dirty):
+        self.dirty = dirty
 
     def on_click(self, game):
         """Override. Called whenever the button is clicked"""
@@ -56,11 +67,15 @@ class AbstractButton(Renderable):
 
     def refresh(self, game):
         """Redraws all relevant images for the button"""
-        self.neutral = self.render_neutral()
-        self.hover = self.render_hover()
-        self.clicked = self.render_clicked()
+        self.neutral = self.render_neutral(game)
+        self.hover = self.render_hover(game)
+        self.clicked = self.render_clicked(game)
 
     def render(self, surface, game, system):
+        if self.dirty:
+            self.refresh(game)
+            self.dirty = False
+
         prev_state = self.zone.state
         self.zone.update(game)
 
@@ -77,4 +92,6 @@ class AbstractButton(Renderable):
             button_surf = self.hover
         elif self.zone.state == Zone.CLICKED:
             button_surf = self.clicked
-        surface.blit(button_surf, (self.x, self.y))
+
+        if button_surf is not None:
+            surface.blit(button_surf, (self.x, self.y))

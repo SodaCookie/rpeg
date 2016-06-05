@@ -11,5 +11,12 @@ class Image(Renderable):
         self.y = y
         self.surface = image
 
+    def draw(self):
+        """Override. Method used to return the image that this renderable
+        is responsible for"""
+
+    def refresh(self):
+        pass
+
     def render(self, surface, game):
         surface.blit(self.surface, (self.x, self.y))
