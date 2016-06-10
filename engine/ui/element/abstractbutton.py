@@ -42,11 +42,11 @@ class AbstractButton(Renderable):
     def set_dirty(self, dirty):
         self.dirty = dirty
 
-    def on_click(self, game):
+    def on_click(self, game, system):
         """Override. Called whenever the button is clicked"""
         pass
 
-    def off_click(self, game):
+    def off_click(self, game, system):
         """Override. Called whenever the button is unclicked"""
         pass
 
@@ -81,9 +81,9 @@ class AbstractButton(Renderable):
 
         # Handling
         if self.zone.state == Zone.CLICKED and prev_state != Zone.CLICKED:
-            self.on_click(game)
-        elif self.zone.state != Zone.CLICKED and prev_state == Zone.CLICKED:
-            self.off_click(game)
+            self.on_click(game, system)
+        elif self.zone.state == Zone.HOVERED and prev_state == Zone.CLICKED:
+            self.off_click(game, system)
 
         # Rendering
         if self.zone.state == Zone.NEUTRAL:

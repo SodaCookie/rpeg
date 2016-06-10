@@ -39,7 +39,6 @@ class UISystem(System):
         surface.fill((0, 0, 0))
         for manager in self.rendering:
             self.managers[manager].render(surface, game, self.game)
-        pygame.display.flip()
 
     def dispatch(self, message):
         pass

@@ -33,6 +33,7 @@ class Game(object):
             self.prevtime = pygame.time.get_ticks()
             for system in self.systems:
                 self.systems[system].update(delta, game)
+            pygame.display.flip()
             clock.tick(60)
 
         for system in self.systems:

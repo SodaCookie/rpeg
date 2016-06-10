@@ -42,3 +42,11 @@ class GameSystem(System):
 
     def update(self, delta, game):
         self.handle_events(game)
+        messages = self.flush_messages()
+        for message in messages:
+            self.dispatch(message, game)
+
+    def dispatch(self, message, game):
+        """Function for determining what action to call depending on the
+        message"""
+        pass

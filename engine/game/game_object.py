@@ -29,10 +29,6 @@ class GameObject(object):
         self.resolution = (0, 0)
 
         self.selected_player = None
-        self.current_hover = None
-        self.current_object = None
-        self.current_slot = None # Used for click and drag
-        self.hover_x = 0
-        self.hover_y = 0
+        self.hover_data = None
 
         self.render_travel = False
