@@ -27,7 +27,7 @@ class HoverSystem(System):
                     if slot.dropable:
                         slot.set_address(None)
                     else:
-                        slot.set_address(address[0][address[1]])
+                        slot.set_address(slot.address[0][slot.address[1]])
             self.clicked = game.mouse_button[0]
         # Draw to the screen
         if self.clicked and game.hover_data is not None:

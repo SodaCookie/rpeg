@@ -10,12 +10,12 @@ class SoundSystem(System):
     force - force play a sound
     ui - reserved channel for playing ui sounds
     bg - Sets the background music"""
+    cache = {}
 
     def __init__(self, game):
         super().__init__(game, "sound")
 
     def init(self, game):
-        mixer.init()
         mixer.set_num_channels(8)
         mixer.set_reserved(2)
         self.ui_channel = mixer.Channel(0)
@@ -26,10 +26,15 @@ class SoundSystem(System):
         for message in messages:
             self.dispatch(message)
 
+    def load_sound(self, filename):
+        if not self.cache.get(filename):
+            self.cache[filename] = mixer.Sound(filename)
+        return self.cache[filename]
+
     def dispatch(self, message):
         """Function for determining what action to call depending on the
         message"""
-        sound = message.args[0]
+        sound = self.load_sound(message.args[0])
         if message.mtype == "play":
             self.play_sound(sound)
         elif message.mtype == "force":

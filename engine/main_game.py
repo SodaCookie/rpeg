@@ -20,6 +20,8 @@ class Game(object):
         """Run the game"""
 
         # Initiate pygame, screen, game object, clock
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
+        pygame.mixer.init()
         pygame.init()
         screen = pygame.display.set_mode((1280, 720))
         game = GameObject()

@@ -2,6 +2,8 @@ from copy import copy
 
 import pygame
 
+from engine.system import Message
+from engine.ui.core.zone import Zone
 from engine.ui.element.abstractbutton import AbstractButton
 import engine.ui.draw as draw
 
@@ -44,6 +46,14 @@ class Button(AbstractButton):
 
         rect = pygame.Rect(self.x, self.y, self.width, self.height)
         super().__init__(name, rect, on_click, off_click)
+
+    def on_hovered(self, game, system):
+        system.message("sound", Message("ui",
+                "data/sound/menu_select_sfx.wav"))
+
+    def on_clicked(self, game, system):
+        system.message("sound", Message("ui",
+                "data/sound/click.wav"))
 
     def set_text(self, text):
         """Convenience function that will update the text for the object"""

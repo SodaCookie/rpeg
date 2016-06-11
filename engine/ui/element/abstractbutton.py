@@ -32,15 +32,21 @@ class AbstractButton(Renderable):
         super().move(x, y)
         self.rect.x = x
         self.rect.y = y
-        self.update_rect(self.rect)
 
     def set_size(self, width, height):
         self.rect.w = width
         self.rect.h = height
-        self.update_rect(self.rect)
 
     def set_dirty(self, dirty):
         self.dirty = dirty
+
+    def on_hovered(self, game, system):
+        """Override. Called whenever the button is hovered"""
+        pass
+
+    def on_clicked(self, game, system):
+        """Override. Always called whenever the button is hovered"""
+        pass
 
     def on_click(self, game, system):
         """Override. Called whenever the button is clicked"""
@@ -81,9 +87,13 @@ class AbstractButton(Renderable):
 
         # Handling
         if self.zone.state == Zone.CLICKED and prev_state != Zone.CLICKED:
+            self.on_clicked(game, system)
             self.on_click(game, system)
         elif self.zone.state == Zone.HOVERED and prev_state == Zone.CLICKED:
             self.off_click(game, system)
+
+        if self.zone.state != Zone.NEUTRAL and prev_state == Zone.NEUTRAL:
+            self.on_hovered(game, system)
 
         # Rendering
         if self.zone.state == Zone.NEUTRAL:
