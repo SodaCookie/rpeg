@@ -1368,7 +1368,7 @@
     <string>Save</string>
    </property>
    <property name="shortcut">
-    <string/>
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionAbout">

@@ -6,8 +6,6 @@ from engine.game.party.party import Party
 from engine.ui.core.manager import Manager
 import engine.ui.manager as manager
 
-import engine.game.move.built_moves as mv
-
 class GameManager(Manager):
     """GameManager is responsible for rendering and updating
     all the various gameplay related elements in the game
@@ -29,11 +27,10 @@ class GameManager(Manager):
         self.level = manager.LevelUpManager(1280, 720)
         self.shop = None
         self.character = manager.CharacterCardManager(20, 20)
-        self.item = None
 
-    def init(self, game, difficulty):
+    def init(self, game):
         # May need to shift this functionality
-        game.difficulty = difficulty
+        game.difficulty = "normal"
         game.current_dungeon = Dungeon("catacombs", game.difficulty)
         game.floor_type = game.current_dungeon.level
         game.current_location = game.current_dungeon.start
@@ -77,7 +74,6 @@ class GameManager(Manager):
         elif game.focus_window == "scenario":
             self.scenario.render(surface, game)
         self.hover.render(surface, game)
-        # self.item.render(surface, game)
 
     def update(self, game):
         if game.focus_window != "level": # if level up not occurring

@@ -48,10 +48,7 @@ class MonsterHandler(Handler):
         for m_name in self.monster_dm.monsters():
             monster_list.addItem(m_name)
 
-        # Load floors
-        monster_floor.clear()
-        for floor in self.floor.floors():
-            monster_floor.addItem(floor)
+        self.load_floors()
 
         # Disable layout
         layout = self.parent.findChild(QtWidgets.QVBoxLayout, "monsterLayout")
@@ -210,7 +207,8 @@ class MonsterHandler(Handler):
         self.monster_dm.update_monster_rating(self.focus.text(), value)
 
     def update_monster_floor(self, value):
-        self.monster_dm.update_monster_location(self.focus.text(), value)
+        if self.focus:
+            self.monster_dm.update_monster_location(self.focus.text(), value)
 
     def update_monster_location(self, location):
         self.monster_dm.update_monster_location(self.focus.text(),
@@ -272,6 +270,14 @@ class MonsterHandler(Handler):
             else:
                 QtWidgets.QMessageBox.warning(
                     self, "Error", "Monster drop '%s' already exists." % choice)
+
+    def load_floors(self):
+        monster_floor = self.parent.findChild(
+            QtWidgets.QComboBox, "monsterFloor")
+        # Load floors
+        monster_floor.clear()
+        for floor in self.floor.floors():
+            monster_floor.addItem(floor)
 
     @lru_cache(maxsize=16)
     def _load_icon(self, filename):

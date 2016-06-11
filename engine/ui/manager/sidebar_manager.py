@@ -85,6 +85,7 @@ class SidebarManager(Manager):
             width=button_width, justify=element.Text.CENTER)
 
     def render(self, surface, game):
+        self.update(game)
         if not game.encounter:
             if not game.current_dialog:
                 self.travel_window.render(surface, game)

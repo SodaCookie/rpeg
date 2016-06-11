@@ -78,6 +78,6 @@ class CastBarManager(Manager):
                 self.skills[i].container = None
                 self.skills[i].key = None
 
-    def render(self, surface, game):
+    def render(self, surface, game_obj, game):
         if game.selected_player and game.focus_window != "travel":
-            super().render(surface, game)
+            super().render(surface, game_obj, game)

@@ -6,12 +6,20 @@ class Renderable(object):
     experimenting with the idea of having minimal overhead of this
     base class so render will not be expected to return anything."""
 
-    def __init__(self):
+    def __init__(self, name, x, y):
         """Renderable takes no arguments as I want to limit
         the overhead of this abstract class for this iteration."""
-        super(Renderable, self).__init__()
+        super().__init__()
+        self.name = name
+        self.x = x
+        self.y = y
 
-    def render(self, surface, game):
+    def render(self, surface, game, system):
         """Render is given a surface of which to draw on. Game object
         for when the object has to draw according to the game."""
         pass
+
+    def move(self, x, y):
+        """Moves the renderable location absolutely"""
+        self.x = x
+        self.y = y

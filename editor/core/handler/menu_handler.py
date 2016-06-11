@@ -53,6 +53,8 @@ class MenuHandler(Handler):
     def action_add_floor(self):
         def assign_floor(floors):
             self.floor_dm.set(floors)
+            self.parent.scenario_handler.load_floors()
+            self.parent.monster_handler.load_floors()
         prompt = ListPrompt(self.parent, StrType(),
             self.floor_dm.floors(), assign_floor)
         prompt.show()
