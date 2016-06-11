@@ -28,7 +28,7 @@ class GameObject(object):
         self.mouse_y = 0
         self.resolution = (0, 0)
 
-        self.selected_player = None
+        self.current_player = None
         self.hover_data = None
 
         self.render_travel = False

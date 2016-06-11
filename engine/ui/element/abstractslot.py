@@ -19,26 +19,36 @@ class AbstractSlot(AbstractButton):
         super().__init__(name, rect)
         self.stype = stype
         self.address = address # Memory location
-        self.value = address[0][address[1]] # info used to draw
+        self.value = address[0][address[1]] if address else None
         self.cloneable = cloneable
         self.dropable = dropable
         self.swapable = swapable
+
+    def set_new_address(self, address):
+        """Change the current address of the slot"""
+        self.address = address
+        self.set_value(address[0][address[1]])
 
     def on_drop(self, obj):
         """Override. Called whenever drop is invoked. Returns True to
         indicated that the drop is valid. False to indicate that it is not."""
         return True
 
-    def on_change(self, value):
+    def on_set(self, game):
+        """Override. Called whenever set is_attempted. Returns True to
+        indicated that the set is valid. False to indicate that it is not."""
+        return True
+
+    def on_change(self, game, system):
         """Override. Called whenever memory location is updated through
         set_address"""
         pass
 
-    def set_address(self, value):
+    def set_address(self, value, game, system):
         """Set the controlled memory location"""
         self.address[0][self.address[1]] = value
         self.set_value(value)
-        self.on_change(value)
+        self.on_change(game, system)
 
     def set_value(self, value):
         self.value = value
@@ -47,7 +57,7 @@ class AbstractSlot(AbstractButton):
     def on_click(self, game, system):
         """When clicked on will send a message to the hover system and
         determine if self needs to be set"""
-        if self.value is not None:
+        if self.value is not None and self.on_set(game) and self.address:
             system.message("hover", Message("set", self.address, self,
                 self.stype))
             if not self.cloneable:
@@ -57,7 +67,7 @@ class AbstractSlot(AbstractButton):
     def off_click(self, game, system):
         """This off_click needs to be validated by the validator the the
         object will be dropped off"""
-        if game.hover_data is not None:
+        if game.hover_data is not None and self.address is not None:
             address, _, stype = game.hover_data
             other_container, other_key = address
             value = other_container[other_key]

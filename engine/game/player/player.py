@@ -53,6 +53,9 @@ class Player(character.Character):
         # Update new attributes?
         return True
 
+    def set_castbar(self, move, index):
+        self.castbar[index] = move
+
     def get_stat(self, stat_type):
         """Can be only used for health, attack, defense, speed,
         resist, magic takes into account"""

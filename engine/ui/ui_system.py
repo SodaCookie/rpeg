@@ -15,19 +15,20 @@ class UISystem(System):
         self.rendering = []
 
     def init(self, game):
-        self.managers["test"] = manager.PlayerManager("test", 10, 10)
+        width, height = pygame.display.get_surface().get_size()
+        # self.managers["test"] = manager.PlayerManager("test", 10, 10)
         # self.managers["hover"] = manager.MouseHoverManager()
         # self.managers["party"] = manager.PartyManager()
         # self.managers["sidebar"] = manager.SidebarManager()
         # self.managers["encounter"] = manager.EncounterManager()
-        # self.managers["castbar"] = manager.CastBarManager(440)
+        self.managers["castbar"] = manager.CastBarManager(10, 440, 10)
         # self.managers["loot"] = manager.LootManager(450, 20, 300, 400)
         # self.managers["scenario"] = manager.ScenarioManager(20, 60)
         # self.managers["travel"] = manager.TravelManager(
         #     800, 300, 1280//2-800//2, 100)
         # self.managers["level"] = manager.LevelUpManager(1280, 720)
         # self.managers["character"] = manager.CharacterCardManager(20, 20)
-        self.rendering = ["test"]
+        self.rendering = ["castbar"]
 
     def update(self, delta, game):
         messages = self.flush_messages()
