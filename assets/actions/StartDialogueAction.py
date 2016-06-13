@@ -10,4 +10,4 @@ class StartDialogueAction(Action):
 
     def execute(self, game):
         """Starts a new dialogue tree."""
-        game.current_dialog = self.dialogue
+        game.current_dialogue = self.dialogue

@@ -15,6 +15,7 @@ class AbstractButton(Renderable):
 
         # Initialize
         super().__init__(name, rect.x, rect.y)
+        self.rect = rect
         self.zone = Zone(rect)
         self.dirty = True
         self.neutral = None
@@ -86,7 +87,7 @@ class AbstractButton(Renderable):
         self.zone.update(game)
 
         # Handling
-        if self.zone.state == Zone.CLICKED and prev_state != Zone.CLICKED:
+        if self.zone.state == Zone.CLICKED and prev_state == Zone.HOVERED:
             self.on_clicked(game, system)
             self.on_click(game, system)
         elif self.zone.state == Zone.HOVERED and prev_state == Zone.CLICKED:

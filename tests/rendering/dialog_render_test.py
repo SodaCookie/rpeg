@@ -9,7 +9,7 @@ class MockGameObject:
     mouse_y = 0
     mouse_button = (0, 0, 0)
     current_location = None
-    current_dialog = None
+    current_dialogue = None
     party = []
 
 pygame.init()

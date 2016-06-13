@@ -8,12 +8,14 @@ class ItemSlot(AbstractSlot):
     HIGHLIGHTIMAGE = "image/ui/slot_highlight.png"
     DEFAULTICON = "image/icon/blank.png"
 
-    def __init__(self, name, x, y, itemslot, address):
+    def __init__(self, name, x, y, itemslot, address, on_change=None):
         super().__init__(name, (x, y, 54, 54), "item", address,
             cloneable = False,
             dropable = False,
             swapable = True)
         self.itemslot = itemslot
+        if on_change is not None:
+            self.on_change = on_change
 
     def on_drop(self, obj):
         """Returns True if the dropped item's slot and itemslot is the same."""

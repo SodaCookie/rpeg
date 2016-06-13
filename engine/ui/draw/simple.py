@@ -7,8 +7,10 @@ RIGHT = "right"
 CENTER = "center"
 
 @lru_cache()
-def draw_image(filename):
-    return pygame.image.load(filename).convert_alpha()
+def draw_image(filename, scale=1):
+    img = pygame.image.load(filename).convert_alpha()
+    return pygame.transform.scale(
+        img, (img.get_width() * scale, img.get_height() * scale))
 
 def draw_text(text, font, colour, width=None, textwrap=True, justify=LEFT):
     """Returns a drawn surface of a text given a font. """

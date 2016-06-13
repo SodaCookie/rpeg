@@ -20,6 +20,7 @@ class SoundSystem(System):
         mixer.set_reserved(2)
         self.ui_channel = mixer.Channel(0)
         self.bg_channel = mixer.Channel(1)
+        self.set_bg(self.load_sound("data/sound/background/Puzzle-Game.wav"))
 
     def update(self, delta, game):
         messages = self.flush_messages()

@@ -9,6 +9,16 @@ import engine.ui.manager as manager
 class UISystem(System):
     """System responsible for handling game related events"""
 
+    layouts = {
+        "scenario" : ["background", "party", "scenario"],
+        "default" : ["background", "party", "castbar", "sidebar"],
+        "character" : ["background", "party", "castbar", "sidebar",
+                       "character"],
+        # "battle" : ["background", "party", "castbar", "encounter"],
+        # "travel" : ["background", "party", "travel", "sidebar"],
+        # "loot" : ["background", "party", "loot", "sidebar"]
+    }
+
     def __init__(self, game):
         super().__init__(game, "ui")
         self.managers = OrderedDict()
@@ -16,24 +26,27 @@ class UISystem(System):
 
     def init(self, game):
         width, height = pygame.display.get_surface().get_size()
-        # self.managers["test"] = manager.PlayerManager("test", 10, 10)
-        # self.managers["hover"] = manager.MouseHoverManager()
-        # self.managers["party"] = manager.PartyManager()
-        # self.managers["sidebar"] = manager.SidebarManager()
+        self.managers["background"] = manager.BackgroundManager(
+            "image/ui/catacomb-background-COPYRIGHTED.jpg")
+        self.managers["party"] = manager.PartyManager(32, height - 204)
+        self.managers["sidebar"] = manager.SideBarManager(0, 10, width)
         # self.managers["encounter"] = manager.EncounterManager()
-        self.managers["castbar"] = manager.CastBarManager(10, 440, 10)
+        self.managers["castbar"] = manager.CastBarManager(
+            width // 2 - (56 * 10 + 14) // 2, 440, 10)
         # self.managers["loot"] = manager.LootManager(450, 20, 300, 400)
-        # self.managers["scenario"] = manager.ScenarioManager(20, 60)
+        self.managers["scenario"] = manager.ScenarioManager(
+            width // 2 - 300, 52, 600, 400)
         # self.managers["travel"] = manager.TravelManager(
         #     800, 300, 1280//2-800//2, 100)
         # self.managers["level"] = manager.LevelUpManager(1280, 720)
-        # self.managers["character"] = manager.CharacterCardManager(20, 20)
-        self.rendering = ["castbar"]
+        self.managers["character"] = manager.CharacterManager(
+            width // 2 - 400, 72, 800, 348)
+        self.rendering = self.layouts["scenario"]
 
     def update(self, delta, game):
         messages = self.flush_messages()
         for message in messages:
-            self.dispatch(message)
+            self.dispatch(message, game)
 
         # Render Managers
         surface = pygame.display.get_surface()
@@ -41,5 +54,12 @@ class UISystem(System):
         for manager in self.rendering:
             self.managers[manager].render(surface, game, self.game)
 
-    def dispatch(self, message):
-        pass
+    def set_layout(self, layout):
+        self.rendering = self.layouts[layout]
+
+    def dispatch(self, message, game):
+        """Function for determining what action to call depending on the
+        message"""
+        if message.mtype == "layout": # Travels the part
+            layout = message.args[0]
+            self.set_layout(layout)

@@ -21,15 +21,13 @@ class GameSystem(System):
         game.difficulty = "normal"
         game.current_dungeon = Dungeon("catacombs", game.difficulty)
         game.floor_type = game.current_dungeon.level
-        game.current_location = game.current_dungeon.start
-        game.current_location.generate()
-        game.current_dialog = game.current_location.get_event()
-        game.focus_window = "scenario"
-        game.party = Party([Player("Player "+str(i)) for i in range(3)])
+        self.message(Message("travel", game.current_dungeon.start))
+        game.party = Party([Player("Player "+str(i+1)) for i in range(4)])
         game.loot = None
         for player in game.party.players:
-            player.add_move(self.move_dm.get_move("attack"))
-            player.castbar[0] = player.moves[0] # temp
+            if player is not None:
+                player.add_move(self.move_dm.get_move("attack"))
+                player.castbar[0] = player.moves[0] # temp
 
     def handle_events(self, game):
         """Helper function to handle game events"""
@@ -49,4 +47,21 @@ class GameSystem(System):
     def dispatch(self, message, game):
         """Function for determining what action to call depending on the
         message"""
-        pass
+        if message.mtype == "travel": # Travels the part
+            location = message.args[0]
+            game.current_location = location
+            game.current_location.generate()
+            game.current_dialogue = game.current_location.get_event()
+        elif message.mtype == "choice":
+            dialogue = message.args[0]
+            game.current_dialogue = dialogue
+        elif message.mtype == "action":
+            dialogue = message.args[0]
+            for action in dialogue.get_actions():
+                action.execute(game)
+        elif message.mtype == "close-event":
+            game.current_dialogue = None
+            game.current_player = None
+        elif message.mtype == "select-player":
+            player = message.args[0]
+            game.current_player = player

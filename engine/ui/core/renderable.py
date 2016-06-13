@@ -14,6 +14,10 @@ class Renderable(object):
         self.x = x
         self.y = y
 
+    def message(self, game, system, message):
+        """Override. Called when message is passed"""
+        pass
+
     def render(self, surface, game, system):
         """Render is given a surface of which to draw on. Game object
         for when the object has to draw according to the game."""

@@ -33,8 +33,13 @@ class Manager(Renderable):
         """Deletes every Renderable"""
         self.renderables = OrderedDict()
 
+    def update(self, game, system):
+        """Override. Called before rendering"""
+        pass
+
     def render(self, surface, game, system):
         """Render will take a surface to be passed onto its renderables
         renderer takes the game object to be passed on as it pleases."""
+        self.update(game, system)
         for r in self.renderables.values():
             r.render(surface, game, system)

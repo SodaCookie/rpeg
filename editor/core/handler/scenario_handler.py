@@ -47,6 +47,8 @@ class ScenarioHandler(Handler):
         # Add key press event
         list_widget.keyPressEvent = self.delete_press_generator(
             "event", list_widget, self.delete_event)
+        dialogue_widget.keyPressEvent = self.delete_press_generator(
+            "dialogue", dialogue_widget, self.delete_dialogue)
 
         # Add slot to list signal
         list_widget.currentItemChanged.connect(self.set_focus)
@@ -62,6 +64,13 @@ class ScenarioHandler(Handler):
     def delete_event(self, widget_list):
         floor, room, event = self.event_to_location[self.focus.text()]
         self.event_dm.delete_event(event.name, floor, room)
+        widget_list.takeItem(widget_list.currentRow())
+
+    @staticmethod
+    def delete_dialogue(self, widget_list):
+        floor, room, event = self.event_to_location[self.focus.text()]
+        self.event_dm.delete_dialogue(event.name, floor, room,
+            widget_list.item(widget_list.currentRow()).text())
         widget_list.takeItem(widget_list.currentRow())
 
     def set_dialogue_enable(self, next, prev):
@@ -141,7 +150,8 @@ class ScenarioHandler(Handler):
     def open_new_dialogue(self):
         """Creates a new dialogue for the editor."""
         # Create a new empty dialogue
-        dialogue = Dialogue("", "", "")
+        floor, room, event = self.event_to_location[self.focus.text()]
+        dialogue = Dialogue("", "", "", event)
 
         dialogue_window = DialoguePrompt(self.parent, dialogue)
         dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
@@ -158,7 +168,7 @@ class ScenarioHandler(Handler):
         list_widget = self.parent.findChild(
             QtWidgets.QListWidget, "dialogueList")
         floor, room, event = self.event_to_location[self.focus.text()]
-        self.event_dm.delete_dialogue(event.name, floor, room)
+        self.event_dm.delete_dialogue(event.name, floor, room, dialogue.name)
         self.event_dm.add_dialogue(event.name, floor, room, dialogue)
         list_widget.currentItem().setText(dialogue.name)
 
