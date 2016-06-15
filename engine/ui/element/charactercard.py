@@ -54,14 +54,20 @@ class CharacterCard(AbstractButton):
                             game.current_player.target,
                             game.party.players,
                             game.encounter):
-                        game.current_player = self.character
+                        system.message("game", Message("select-player",
+                            self.character))
                     elif game.current_player.selected_move.is_valid_target(
                             game.current_player.target + [self.character],
                             game.party.players,
                             game.encounter):
-                        game.current_player.target.append(self.character)
+                        system.message("battle", Message("select-target",
+                            self.character))
                 else:
-                    game.current_player = self.character
+                    system.message("game", Message("select-player",
+                        self.character))
+            else:
+                system.message("game", Message("select-player",
+                    self.character))
 
     def render_neutral(self, game):
         surface = pygame.Surface((280, 180), pygame.SRCALPHA)

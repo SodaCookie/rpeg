@@ -16,7 +16,7 @@ class LootAction(Action):
         self.shards = shards
         self.items = items
 
-    def execute(self, game):
+    def execute(self, game, system):
         """Creates a loot table
         If shard or items is declared the respective loot will be created.
         Otherwise reward_tier will override generating a random loot table."""
@@ -56,4 +56,3 @@ class LootAction(Action):
         # Assign create loot table to the game
         game.loot = (shards, items)
         game.party.add_shards(shards)
-        game.focus_window = "loot"

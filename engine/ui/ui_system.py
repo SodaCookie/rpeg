@@ -14,9 +14,9 @@ class UISystem(System):
         "default" : ["background", "party", "castbar", "sidebar"],
         "character" : ["background", "party", "castbar", "sidebar",
                        "character"],
-        # "battle" : ["background", "party", "castbar", "encounter"],
+        "battle" : ["background", "party", "castbar", "encounter"],
         "travel" : ["background", "party", "travel", "sidebar"],
-        # "loot" : ["background", "party", "loot", "sidebar"]
+        "loot" : ["background", "party", "loot", "sidebar"]
     }
 
     def __init__(self, game):
@@ -30,10 +30,11 @@ class UISystem(System):
             "image/ui/catacomb-background-COPYRIGHTED.jpg")
         self.managers["party"] = manager.PartyManager(32, height - 204)
         self.managers["sidebar"] = manager.SideBarManager(0, 10, width)
-        # self.managers["encounter"] = manager.EncounterManager()
+        self.managers["encounter"] = manager.EncounterManager(0, 340)
         self.managers["castbar"] = manager.CastBarManager(
             width // 2 - (56 * 10 + 14) // 2, 440, 10)
-        # self.managers["loot"] = manager.LootManager(450, 20, 300, 400)
+        self.managers["loot"] = manager.LootManager(
+            width // 2 - 400, 72, 800, 348)
         self.managers["scenario"] = manager.ScenarioManager(
             width // 2 - 300, 52, 600, 400)
         self.managers["travel"] = manager.TravelManager(

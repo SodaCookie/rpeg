@@ -14,6 +14,7 @@ class SideBarManager(Manager):
 
         # Loot
         self.loot_button = element.Button("loot",
+            self.on_click_loot,
             text = "Loot",
             size = 20,
             x = x + width // 2 - 170,
@@ -42,6 +43,9 @@ class SideBarManager(Manager):
 
     def on_click_travel(self, game, system):
         system.message("ui", Message("layout", "travel"))
+
+    def on_click_loot(self, game, system):
+        system.message("ui", Message("layout", "loot"))
 
     def render(self, surface, game, system):
         if game.loot is not None:

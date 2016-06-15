@@ -1,6 +1,7 @@
 """Defines the monster renderer."""
 import pygame
 
+from engine.system import Message
 from engine.ui.core.manager import Manager
 from engine.ui.core.zone import Zone
 import engine.ui.element as element

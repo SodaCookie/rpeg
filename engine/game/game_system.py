@@ -42,9 +42,9 @@ class GameSystem(System):
         self.handle_events(game)
         messages = self.flush_messages()
         for message in messages:
-            self.dispatch(message, game)
+            self.dispatch(message, game, self.game)
 
-    def dispatch(self, message, game):
+    def dispatch(self, message, game, system):
         """Function for determining what action to call depending on the
         message"""
         if message.mtype == "travel": # Travels the part
@@ -59,10 +59,14 @@ class GameSystem(System):
         elif message.mtype == "action":
             dialogue = message.args[0]
             for action in dialogue.get_actions():
-                action.execute(game)
+                action.execute(game, system)
         elif message.mtype == "close-event":
             game.current_dialogue = None
             game.current_player = None
         elif message.mtype == "select-player":
             player = message.args[0]
             game.current_player = player
+        elif message.mtype == "loot":
+            items, shards = message.args
+            game.loot = (shards, items)
+            game.party.shards += shards

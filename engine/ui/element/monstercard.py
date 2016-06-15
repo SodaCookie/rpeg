@@ -15,7 +15,7 @@ class MonsterCard(AbstractButton):
     """Manager for the character class"""
 
     def __init__(self, name, x, y, monster):
-        super().__init__(name, (x, y, 280, 156))
+        super().__init__(name, (x, y, 240, 156))
         self.font = pygame.font.Font("assets/fonts/VT323-Regular.ttf",
             20)
         self.monster = monster
@@ -33,42 +33,26 @@ class MonsterCard(AbstractButton):
         self.set_dirty(True)
 
     def on_click(self, game, system):
-        pass
-        # In no encounter state
-        # if not game.encounter and not game.current_dialogue:
-        #     if game.current_player == self.character:
-        #         system.message("ui", Message("layout", "default"))
-        #         system.message("game", Message("select-player", None))
-        #     else:
-        #         system.message("ui", Message("layout", "character"))
-        #         system.message("game", Message("select-player",
-        #             self.character))
-        # # During an encounter
-        # elif game.encounter:
-        #     if game.current_player:
-        #         if game.current_player.selected_move:
-        #             if game.current_player.selected_move.is_valid_cast(
-        #                     game.current_player.target,
-        #                     game.party.players,
-        #                     game.encounter):
-        #                 game.current_player = self.character
-        #             elif game.current_player.selected_move.is_valid_target(
-        #                     game.current_player.target + [self.character],
-        #                     game.party.players,
-        #                     game.encounter):
-        #                 game.current_player.target.append(self.character)
-        #         else:
-        #             game.current_player = self.character
+        if game.current_player and game.current_player.selected_move and \
+                not self.monster.fallen:
+            if game.current_player.selected_move.is_valid_target(
+                    game.current_player.target+[self.monster],
+                    game.party.players,
+                    game.encounter):
+                system.message("battle", Message("select-target",
+                    self.monster))
 
     def refresh(self, game):
         super().refresh(game)
         if self.neutral is not None:
+            self.x = self.base_x - self.neutral.get_width() // 2
             self.y = self.base_y - self.neutral.get_height()
+            self.rect.x = self.x
             self.rect.y = self.y + 30
             self.set_size(self.neutral.get_width(),
                           self.neutral.get_height() - 30)
-        self.health.move(self.base_x + self.rect.w // 2 - 80 , self.base_y + 8)
-        self.action.move(self.base_x + self.rect.w // 2 - 80 ,
+        self.health.move(self.x + self.rect.w // 2 - 80 , self.base_y + 8)
+        self.action.move(self.x + self.rect.w // 2 - 80 ,
             self.base_y + 20)
 
     def move(self, x, y):
@@ -85,10 +69,10 @@ class MonsterCard(AbstractButton):
                     filename = self.monster.graphic.get("neutral")
                     monster_image = simple.draw_image(filename, 4)
                 except pygame.error:
-                    monster_image = simple.draw_rect(280, 80, (255, 255, 255))
+                    monster_image = simple.draw_rect(240, 80, (255, 255, 255))
                     logging.warning("Could not load: " + filename)
             else:
-                monster_image = simple.draw_rect(280, 80, (255, 255, 255))
+                monster_image = simple.draw_rect(240, 80, (255, 255, 255))
             surface = pygame.Surface((monster_image.get_width(),
                 monster_image.get_height() + 30), pygame.SRCALPHA)
             surface.fill((0, 0, 0, 0))
@@ -107,10 +91,10 @@ class MonsterCard(AbstractButton):
                     filename = self.monster.graphic.get("hover")
                     monster_image = simple.draw_image(filename, 4)
                 except pygame.error:
-                    monster_image = simple.draw_rect(280, 80, (255, 255, 0))
+                    monster_image = simple.draw_rect(240, 80, (255, 255, 0))
                     logging.warning("Could not load: " + filename)
             else:
-                monster_image = simple.draw_rect(280, 80, (255, 255, 0))
+                monster_image = simple.draw_rect(240, 80, (255, 255, 0))
             surface = pygame.Surface((monster_image.get_width(),
                 monster_image.get_height() + 30), pygame.SRCALPHA)
             surface.fill((0, 0, 0, 0))
@@ -128,6 +112,7 @@ class MonsterCard(AbstractButton):
             super().render(surface, game, system)
             self.health.set_percent(self.monster.get_cur_health() / \
                 self.monster.get_stat("health"))
-            self.action.set_percent(1)
+            self.action.set_percent(self.monster.get_cur_action() / \
+                self.monster.get_stat("action"))
             self.health.render(surface, game, system)
             self.action.render(surface, game, system)

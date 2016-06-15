@@ -29,6 +29,9 @@ class AbstractSlot(AbstractButton):
         self.address = address
         self.set_value(address[0][address[1]])
 
+    def get(self):
+        return self.address[0][self.address[1]]
+
     def on_drop(self, obj):
         """Override. Called whenever drop is invoked. Returns True to
         indicated that the drop is valid. False to indicate that it is not."""

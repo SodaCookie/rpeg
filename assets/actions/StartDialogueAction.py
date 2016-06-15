@@ -8,6 +8,6 @@ class StartDialogueAction(Action):
         super().__init__()
         self.dialogue = dialogue
 
-    def execute(self, game):
+    def execute(self, game, system):
         """Starts a new dialogue tree."""
         game.current_dialogue = self.dialogue

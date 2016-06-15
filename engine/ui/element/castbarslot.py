@@ -31,8 +31,11 @@ class CastBarSlot(AbstractSlot):
             return False
         return True
 
-    def on_change(self, game, system):
-        pass
+    def on_click(self, game, system):
+        super().on_click(game, system)
+        if game.encounter:
+            system.message("sound", Message("ui", "data/sound/click.wav"))
+            system.message("battle", Message("select-move", self.get()))
 
     def render_neutral(self, game):
         surface = pygame.image.load(self.SLOTIMAGE).convert()
