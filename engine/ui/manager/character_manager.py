@@ -13,7 +13,6 @@ class CharacterManager(Manager):
     relevant variables and updates (inventory, moves, etc.)"""
 
     _stat_text = \
-        "Stats:\n" + \
         "Attack: \n" + \
         "Defense: \n" + \
         "Magic: \n" + \
@@ -25,35 +24,127 @@ class CharacterManager(Manager):
         super().__init__("character", x, y)
 
         self.character = None
-        self.name_element = element.Text("name", x + 12, y + 168, "",
-            24, width=140)
-        self.image_element = element.Image("portrait", x + 12, y,
+        self.name_element = element.Text("name", x + 16, y + 188, "",
+            24, width=132)
+        self.image_element = element.Image("portrait", x + 36, y,
             draw_rect(144, 140, (255, 255, 255)))
-        self.stats_element = element.Text("stats", x + 12, y + 196,
-            "", 18, width=140, justify="right")
-        # surface.blit(simple.draw_image(self.character.portrait, 4), (4, 16))
-        self.health = element.PercentBar("player-health", x + 136, y + 36,
+        self.stats_element = element.Text("stats", x + 16, y + 216,
+            "", 18, width=132, justify="right")
+        self.health = element.PercentBar("player-health", x + 20, y + 128,
             draw_rect(128, 8, (50, 255, 50)))
-        self.action = element.PercentBar("player-action", x + 136, y + 56,
+        self.health_text = element.Text("health-text", x + 20, y + 138, "",
+            16, width=132, justify="right")
+        self.action = element.PercentBar("player-action", x + 20, y + 162,
             draw_rect(128, 8, (50, 100, 50)))
-        self.equipment_elements = {}
-        self.move_elements = []
-        self.item_elements = []
+        self.action_text = element.Text("action-text", x + 20, y + 172, "",
+            16, width=132, justify="right")
 
         self.add_renderable(element.Frame("frame", x, y, width,
             height))
+        self.add_renderable(self.health)
+        self.add_renderable(self.health_text)
+        self.add_renderable(self.action)
+        self.add_renderable(self.action_text)
         self.add_renderable(self.name_element)
         self.add_renderable(self.image_element)
         self.add_renderable(self.stats_element)
-        self.add_renderable(element.Text("stat-text", x + 12, y + 196,
-            self._stat_text, 18, width=140))
+        self.add_renderable(element.Text("health-btext", x + 20, y + 138,
+            "Health:", 16, width=132, justify="left"))
+        self.add_renderable(element.Text("action-btext", x + 20, y + 172,
+            "Action:", 16, width=132, justify="left"))
+        self.add_renderable(element.Text("stat-text", x + 16, y + 216,
+            self._stat_text, 18, width=132))
+        self.add_renderable(element.Image("health-border", x + 16, y + 124,
+            "image/ui/player_bar.png", 4))
+        self.add_renderable(element.Image("action-border", x + 16, y + 158,
+            "image/ui/player_bar.png", 4))
+
+        # Equipment Slots
+        self.equipment_elements = {}
+        equipment_x = x + 180
+        equipment_y = y + 16
+        # Hand
+        self.add_renderable(element.Text("text-hand1", equipment_x,
+            equipment_y + 56, "Hand", 16, width=54, justify="center"))
+        self.equipment_elements["hand1"] = element.ItemSlot("equipment-hand1",
+            equipment_x, equipment_y, "any", None)
+
+        # Hand
+        self.add_renderable(element.Text("text-hand2", equipment_x + 60,
+            equipment_y + 56, "Hand", 16, width=54, justify="center"))
+        self.equipment_elements["hand2"] = element.ItemSlot("equipment-hand2",
+            equipment_x + 60, equipment_y, "any", None)
+
+        # Body
+        self.add_renderable(element.Text("text-body", equipment_x,
+            equipment_y + 136, "Body", 16, width=54, justify="center"))
+        self.equipment_elements["body"] = element.ItemSlot("equipment-body",
+            equipment_x, equipment_y + 80, "any", None)
+
+        # Legs
+        self.add_renderable(element.Text("text-legs", equipment_x + 60,
+            equipment_y + 136, "Legs", 16, width=54, justify="center"))
+        self.equipment_elements["legs"] = element.ItemSlot("equipment-legs",
+            equipment_x + 60, equipment_y + 80, "any", None)
+
+        # Feet
+        self.add_renderable(element.Text("text-feet", equipment_x,
+            equipment_y + 216, "Feet", 16, width=54, justify="center"))
+        self.equipment_elements["feet"] = element.ItemSlot("equipment-feet",
+            equipment_x, equipment_y + 160, "any", None)
+
+        # Head
+        self.add_renderable(element.Text("text-head", equipment_x + 60,
+            equipment_y + 216, "Head", 16, width=54, justify="center"))
+        self.equipment_elements["head"] = element.ItemSlot("equipment-head",
+            equipment_x + 60, equipment_y + 160, "any", None)
+
+        # Extra
+        self.add_renderable(element.Text("text-extra1", equipment_x,
+            equipment_y + 296, "Extra", 16, width=54, justify="center"))
+        self.equipment_elements["extra1"] = element.ItemSlot(
+            "equipment-extra1", equipment_x, equipment_y + 240, "any", None)
+
+        # Extra
+        self.add_renderable(element.Text("text-extra2", equipment_x + 60,
+            equipment_y + 296, "Extra", 16, width=54, justify="center"))
+        self.equipment_elements["extra2"] = element.ItemSlot(
+            "equipment-extra2", equipment_x + 60, equipment_y + 240, "any",
+            None)
+
+        for elem in self.equipment_elements.values():
+            self.add_renderable(elem)
+
+        # Item slots
+        item_x = x + 320
+        item_y = y + 40
+        self.item_elements = []
+        self.add_renderable(element.Text("inventory-text", item_x + 4,
+            item_y - 32, "Inventory", 24, width=132, justify="left"))
+        for i in range(4):
+            item_element = element.ItemSlot("item-slot-%d" % i,
+                item_x + (i % 4) * 60, item_y + (i // 4) * 60, "any", None)
+            self.item_elements.append(item_element)
+            self.add_renderable(item_element)
+
+        # Move slots
+        move_x = x + 320
+        move_y = y + 144
+        self.move_elements = []
+        self.add_renderable(element.Text("moves-text", move_x + 4, move_y - 32,
+            "Abilities", 24, width=132, justify="left"))
+        for i in range(12):
+            item_element = element.MoveSlot("move-slot-%d" % i,
+                move_x + (i % 4) * 60, move_y + (i // 4) * 60, None)
+            self.move_elements.append(item_element)
+            self.add_renderable(item_element)
 
     def set_player(self, player):
         self.name_element.set_text(player.name)
-        self.image_element.set_surface(player.portrait, 4)
+        self.image_element.set_surface(player.portrait, 3)
 
         # Set stats
-        stat_values = "\n"
+        stat_values = ""
         stat_values += str(player.get_stat("attack")) + "\n"
         stat_values += str(player.get_stat("defense")) + "\n"
         stat_values += str(player.get_stat("magic")) + "\n"
@@ -62,14 +153,34 @@ class CharacterManager(Manager):
         stat_values += str(player.get_stat("action"))
         self.stats_element.set_text(stat_values)
 
+        # Update equipment
+        for key, elem in self.equipment_elements.items():
+            elem.set_new_address((player.equipment, key))
+
+        # Update inventory
+        for i, elem in enumerate(self.item_elements):
+            elem.set_new_address((player.inventory, i))
+
+        # Update moves
+        for elem, i in zip(self.move_elements, range(len(player.moves))):
+            elem.set_new_address((player.moves, i))
+
     def update(self, game, system):
         if game.current_player is not self.character:
             self.set_player(game.current_player)
             self.character = game.current_player
 
         if self.character is not None:
-            self.health.set_percent(self.character.get_cur_health() / self.character.get_stat("health"))
-            self.action.set_percent(self.character.get_cur_action() / self.character.get_stat("action"))
+            self.health.set_percent(self.character.get_cur_health() /
+                self.character.get_stat("health"))
+            self.action.set_percent(self.character.get_cur_action() /
+                self.character.get_stat("action"))
+            self.health_text.set_text("%d/%d" % \
+                (self.character.get_cur_health(),
+                 self.character.get_stat("health")))
+            self.action_text.set_text("%d/%d" % \
+                (self.character.get_cur_action(),
+                 self.character.get_stat("action")))
 
     # def update(self, game):
     #     """Updates the the character card manager to reflect changes when called."""

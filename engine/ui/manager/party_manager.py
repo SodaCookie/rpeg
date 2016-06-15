@@ -1,7 +1,10 @@
-from engine.ui.core.manager import Manager
+from engine.game.monster.monster import Monster
 
 import engine.ui.element as element
+from engine.ui.core.manager import Manager
 from engine.ui.draw.simple import draw_rect
+
+test = Monster("spider")
 
 class PartyManager(Manager):
 

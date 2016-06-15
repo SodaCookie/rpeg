@@ -23,7 +23,7 @@ class Manager(Renderable):
                 % self.name)
 
     def get_renderable(self, name):
-        return self.renderables[name]
+        return self.renderables.get(name)
 
     def remove_renderable(self, name):
         """Remove the renderable from the maintained group of renderables"""

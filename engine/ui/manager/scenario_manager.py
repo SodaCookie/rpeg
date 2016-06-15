@@ -107,4 +107,5 @@ class ScenarioManager(Manager):
             system.message("ui", Message("layout", "default"))
             system.message("game", Message("close-event"))
             system.message("game", Message("action", dialogue))
+            self.dialogue = None
         return on_click

@@ -2,6 +2,7 @@ from functools import partial
 
 import pygame
 
+from engine.system import Message
 from engine.ui.core.manager import Manager
 import engine.ui.element as element
 
@@ -22,6 +23,7 @@ class SideBarManager(Manager):
 
         # Travel
         self.travel_button = element.Button("travel",
+            self.on_click_travel,
             text = "Travel",
             size = 20,
             x = x + width // 2 - 50,
@@ -37,6 +39,9 @@ class SideBarManager(Manager):
             y = y,
             width = 100,
             height = 50)
+
+    def on_click_travel(self, game, system):
+        system.message("ui", Message("layout", "travel"))
 
     def render(self, surface, game, system):
         if game.loot is not None:

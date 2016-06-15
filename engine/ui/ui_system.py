@@ -15,7 +15,7 @@ class UISystem(System):
         "character" : ["background", "party", "castbar", "sidebar",
                        "character"],
         # "battle" : ["background", "party", "castbar", "encounter"],
-        # "travel" : ["background", "party", "travel", "sidebar"],
+        "travel" : ["background", "party", "travel", "sidebar"],
         # "loot" : ["background", "party", "loot", "sidebar"]
     }
 
@@ -36,8 +36,8 @@ class UISystem(System):
         # self.managers["loot"] = manager.LootManager(450, 20, 300, 400)
         self.managers["scenario"] = manager.ScenarioManager(
             width // 2 - 300, 52, 600, 400)
-        # self.managers["travel"] = manager.TravelManager(
-        #     800, 300, 1280//2-800//2, 100)
+        self.managers["travel"] = manager.TravelManager(
+            width // 2 - 400, 72, 800, 348)
         # self.managers["level"] = manager.LevelUpManager(1280, 720)
         self.managers["character"] = manager.CharacterManager(
             width // 2 - 400, 72, 800, 348)

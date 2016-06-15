@@ -1,99 +1,82 @@
-from functools import partial
-
 import pygame
 
 from engine.ui.core.manager import Manager
-from engine.ui.core.zone import Zone
 import engine.ui.element as element
 
 class TravelManager(Manager):
     """Deals with the travel UI when moving through the Dungeon"""
 
-    def __init__(self, width, height, x, y):
-        super(TravelManager, self).__init__()
-        # cur_dungeon given by game manager, not built yet
-        self.path = []
-        self.dungeon = None
-        self.location = None
-        self.x = x
-        self.y = y
+    def __init__(self, x, y, width, height):
+        """Travel manager handles the movement"""
+        super().__init__("travel", x, y)
         self.width = width
         self.height = height
+        self.path = []
+        self.node_elements = []
+        self.dungeon = None
+        self.location = None
 
         # Window
-        self.window = element.Window(width, height, x, y)
-        self.renderables.append(self.window)
+        self.add_renderable(element.Frame("frame", x, y, width,
+            height))
+
         # Lines
-        surface = pygame.Surface((width, height), pygame.SRCALPHA)
+        surface = pygame.Surface((width - 16, height - 16), pygame.SRCALPHA)
         surface.fill((0, 0, 0, 0))
-        self.lines = element.Image(surface, x+4, y+4)
-        self.renderables.append(self.lines)
+        self.lines = element.Image("lines", x + 8, y + 8, surface)
+        self.add_renderable(self.lines)
+
         # Nodes
         self.nodes = []
-        # Close Button
-        self.close = element.Button("CLOSE", 32, 0, y+height+16, True)
-        self.close.x = x+width//2-self.close.surface.get_width()//2
-        self.close_zone = Zone(((x+width//2-self.close.surface.get_width()//2,
-            y+height+16), self.close.surface.get_size()), self.close_on_click)
-        self.close.bind(self.close_zone)
-        self.zones.append(self.close_zone)
-        self.renderables.append(self.close)
 
-    def update(self, game):
+    def update(self, game, system):
         if self.dungeon != game.current_dungeon:
             self.path = []
             self.dungeon = game.current_dungeon
+            self.update_dungeon()
         if self.location != game.current_location:
             self.path.append(game.current_location)
             self.location = game.current_location
-            self.update_window(self.path)
+            self.update_window()
 
-        super().update(game)
+    def update_dungeon(self):
+        """Update dungeon"""
+        for elem in self.node_elements:
+            self.remove_renderable(elem.name)
 
-    def close_on_click(self, game):
-        game.focus_window = None
+        depth = self.dungeon.depth + 3
 
-    def update_window(self, path):
-        depth = self.dungeon.depth+3
-
-        self.renderables = []
-        self.renderables.append(self.window)
-        self.renderables.append(self.lines)
-        self.renderables.append(self.close)
-
-        self.zones = []
-        self.zones.append(self.close_zone)
-
-        all_potential_nodes = set()
-        for node in self.path:
-            all_potential_nodes.add(node)
-            all_potential_nodes |= set(node.get_neighbours())
-        for i, frame in enumerate(self.dungeon.frame): # Redundant code
+        for i, frame in enumerate(self.dungeon.frame):
             width = len(frame)+1
-            for j, node in enumerate(frame):
-                if node in self.path[:-1]:
-                    render_node = element.TravelNode("visited",
-                        self.x+self.width//depth*(i+1)-10, self.y+\
-                        self.height//width*(j+1)-10)
-                elif node is self.path[-1]:
-                    render_node = element.TravelNode("visited",
-                        self.x+self.width//depth*(i+1)-10, self.y+\
-                        self.height//width*(j+1)-10, True)
-                elif node in self.path[-1].get_neighbours():
-                    render_node = element.TravelNode("unknown",
-                        self.x+self.width//depth*(i+1)-10, self.y+\
-                        self.height//width*(j+1)-10, True)
-                    on_click = partial(self.on_click, node)
-                    zone = Zone(((self.x+self.width//depth*(i+1)-10, self.y+\
-                        self.height//width*(j+1)-10),render_node.surface.get_size()), on_click)
-                    render_node.bind(zone)
-                    self.zones.append(zone)
-                elif node in all_potential_nodes:
-                    render_node = element.TravelNode("unknown",
-                        self.x+self.width//depth*(i+1)-10, self.y+\
-                        self.height//width*(j+1)-10)
-                self.renderables.append(render_node)
+            for j, location in enumerate(frame):
+                x = self.x + self.width // depth * (i + 1) - 10
+                y = self.y + self.height // width * (j + 1) - 4
+                render_node = element.TravelButton("node-%d-%d" % (i, j),
+                    x, y, "unknown", location)
+                self.node_elements.append((location, render_node))
+                self.add_renderable(render_node)
 
+    def update_window(self):
+        """Update the window after a travel call"""
+        depth = self.dungeon.depth + 3
+        # previous
+        if len(self.path) > 1:
+            prev_head = self.path[-2]
+            self._get_node_by_location(prev_head).set_ntype("visited")
+            self._get_node_by_location(prev_head).disable = True
+            for location in prev_head.get_neighbours():
+                self._get_node_by_location(location).set_ntype("unknown")
+                self._get_node_by_location(location).disable = True
+
+        # head
+        head = self.path[-1]
+        self._get_node_by_location(head).visible = True
+        self._get_node_by_location(head).disable = True
+        self._get_node_by_location(head).set_ntype("current")
+        for location in head.get_neighbours():
+            node = self._get_node_by_location(location)
+            node.visible = True
+            node.set_ntype("unknown")
 
         surface = self.lines.surface
         for i, node in enumerate(self.path):
@@ -118,9 +101,9 @@ class TravelManager(Manager):
                 right = (self.width//depth*(i+2), self.height//width*(frame.index(neighbour)+1))
                 pygame.draw.line(surface, (255, 255, 255), left, right, 3)
 
-    @staticmethod
-    def on_click(location, game):
-        game.current_location = location
-        game.focus_window = "scenario"
-        game.selected_player = None
-        game.loot = None
+    def _get_node_by_location(self, location):
+        """Helper function to return node by location"""
+        for location2, node in self.node_elements:
+            if location is location2:
+                return node
+        return None

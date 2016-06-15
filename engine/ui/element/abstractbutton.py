@@ -33,10 +33,12 @@ class AbstractButton(Renderable):
         super().move(x, y)
         self.rect.x = x
         self.rect.y = y
+        self.zone.update_rect(self.rect)
 
     def set_size(self, width, height):
         self.rect.w = width
         self.rect.h = height
+        self.zone.update_rect(self.rect)
 
     def set_dirty(self, dirty):
         self.dirty = dirty

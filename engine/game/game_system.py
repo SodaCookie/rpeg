@@ -52,6 +52,7 @@ class GameSystem(System):
             game.current_location = location
             game.current_location.generate()
             game.current_dialogue = game.current_location.get_event()
+            game.loot = None
         elif message.mtype == "choice":
             dialogue = message.args[0]
             game.current_dialogue = dialogue

@@ -34,10 +34,18 @@ class AbstractSlot(AbstractButton):
         indicated that the drop is valid. False to indicate that it is not."""
         return True
 
+    def on_dropped(self, game, system):
+        """Override. Called whenever a sucessful drop"""
+        pass
+
     def on_set(self, game):
         """Override. Called whenever set is_attempted. Returns True to
         indicated that the set is valid. False to indicate that it is not."""
         return True
+
+    def on_setted(self, game, system):
+        """Override. Called whenever a sucessful set"""
+        pass
 
     def on_change(self, game, system):
         """Override. Called whenever memory location is updated through
@@ -60,6 +68,7 @@ class AbstractSlot(AbstractButton):
         if self.value is not None and self.on_set(game) and self.address:
             system.message("hover", Message("set", self.address, self,
                 self.stype))
+            self.on_setted(game, system)
             if not self.cloneable:
                 self.set_value(None)
                 self.set_dirty(True)
@@ -73,5 +82,6 @@ class AbstractSlot(AbstractButton):
             value = other_container[other_key]
             if stype == self.stype and self.on_drop(value):
                 self.set_value(value)
+                self.on_dropped(game, system)
                 system.message("hover", Message("drop", self))
 

@@ -23,8 +23,10 @@ class CharacterCard(AbstractButton):
         self.y = y
         self.character = None
         self.position = position
-        self.health = PercentBar("player-health", x + 136, y + 36, simple.draw_rect(128, 8, (50, 255, 50)))
-        self.action = PercentBar("player-action", x + 136, y + 56, simple.draw_rect(128, 8, (50, 100, 50)))
+        self.health = PercentBar("player-health", x + 136, y + 36,
+            simple.draw_rect(128, 8, (50, 255, 50)))
+        self.action = PercentBar("player-action", x + 136, y + 56,
+            simple.draw_rect(128, 8, (50, 100, 50)))
 
     def on_hovered(self, game, system):
         system.message("sound", Message("ui",
@@ -61,23 +63,25 @@ class CharacterCard(AbstractButton):
                 else:
                     game.current_player = self.character
 
-    def off_click(self, game, system):
-        pass
-
     def render_neutral(self, game):
         surface = pygame.Surface((280, 180), pygame.SRCALPHA)
         surface.fill((0, 0, 0, 0))
         if self.character is None:
-            surface.blit(simple.draw_text("", self.font, (255, 255, 255), 280,
-                True), (0, 0))
-            surface.blit(frame.draw_frame(280, 156, seed=self.draw_seed), (0, 24))
+            surface.blit(simple.draw_text("", self.font, (255, 255, 255),
+                280, True), (0, 0))
+            surface.blit(frame.draw_frame(280, 156, seed=self.draw_seed),
+                (0, 24))
         else:
-            surface.blit(simple.draw_text(self.character.name, self.font, (255, 255, 255), 280,
-                True), (0, 0))
-            surface.blit(frame.draw_frame(280, 156, seed=self.draw_seed), (0, 24))
-            surface.blit(simple.draw_image(self.character.portrait, 4), (4, 16))
-            surface.blit(simple.draw_image("image/ui/player_bar.png", 4), (132, 32))
-            surface.blit(simple.draw_image("image/ui/player_bar.png", 4), (132, 52))
+            surface.blit(simple.draw_text(self.character.name, self.font,
+                (255, 255, 255), 280, True), (0, 0))
+            surface.blit(frame.draw_frame(280, 156, seed=self.draw_seed),
+                (0, 24))
+            surface.blit(simple.draw_image(self.character.portrait, 4),
+                (4, 16))
+            surface.blit(simple.draw_image("image/ui/player_bar.png", 4),
+                (132, 32))
+            surface.blit(simple.draw_image("image/ui/player_bar.png", 4),
+                (132, 52))
         return surface
 
     def render_hover(self, game):
@@ -89,13 +93,16 @@ class CharacterCard(AbstractButton):
             surface.blit(frame.draw_highlight_frame(280, 156,
                 (255, 255, 255), seed=self.draw_seed), (0, 24))
         else:
-            surface.blit(simple.draw_text(self.character.name, self.font, (255, 255, 255), 280,
-                True), (0, 0))
+            surface.blit(simple.draw_text(self.character.name, self.font,
+                (255, 255, 255), 280, True), (0, 0))
             surface.blit(frame.draw_highlight_frame(280, 156,
                 (255, 255, 255), seed=self.draw_seed), (0, 24))
-            surface.blit(simple.draw_image(self.character.portrait, 4), (4, 16))
-            surface.blit(simple.draw_image("image/ui/player_bar.png", 4), (132, 32))
-            surface.blit(simple.draw_image("image/ui/player_bar.png", 4), (132, 52))
+            surface.blit(simple.draw_image(self.character.portrait, 4),
+                (4, 16))
+            surface.blit(simple.draw_image("image/ui/player_bar.png", 4),
+                (132, 32))
+            surface.blit(simple.draw_image("image/ui/player_bar.png", 4),
+                (132, 52))
         return surface
 
     def render_clicked(self, game):
@@ -107,13 +114,16 @@ class CharacterCard(AbstractButton):
             surface.blit(frame.draw_highlight_frame(280, 156,
                 (255, 255, 0), seed=self.draw_seed), (0, 24))
         else:
-            surface.blit(simple.draw_text(self.character.name, self.font, (255, 255, 0),
-                280, True), (0, 0))
+            surface.blit(simple.draw_text(self.character.name, self.font,
+                (255, 255, 0), 280, True), (0, 0))
             surface.blit(frame.draw_highlight_frame(280, 156,
                 (255, 255, 0), seed=self.draw_seed), (0, 24))
-            surface.blit(simple.draw_image(self.character.portrait, 4), (4, 16))
-            surface.blit(simple.draw_image("image/ui/player_bar.png", 4), (132, 32))
-            surface.blit(simple.draw_image("image/ui/player_bar.png", 4), (132, 52))
+            surface.blit(simple.draw_image(self.character.portrait, 4),
+                (4, 16))
+            surface.blit(simple.draw_image("image/ui/player_bar.png", 4),
+                (132, 32))
+            surface.blit(simple.draw_image("image/ui/player_bar.png", 4),
+                (132, 52))
         return surface
 
     def update(self, game, system):
@@ -128,7 +138,9 @@ class CharacterCard(AbstractButton):
             self.character = game.party.get_player(self.position)
         if self.character is not None:
             super().render(surface, game, system)
-            self.health.set_percent(self.character.get_cur_health() / self.character.get_stat("health"))
-            self.action.set_percent(self.character.get_cur_action() / self.character.get_stat("action"))
+            self.health.set_percent(self.character.get_cur_health() / \
+                self.character.get_stat("health"))
+            self.action.set_percent(self.character.get_cur_action() / \
+                self.character.get_stat("action"))
             self.health.render(surface, game, system)
             self.action.render(surface, game, system)
