@@ -12,7 +12,7 @@ class Heal(Component):
         else:
             self.modifiers = modifiers
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         """Order IMPORTANT in modifying heal:
         Suggested standard is additions, then multiplications"""
         heal = self.heal

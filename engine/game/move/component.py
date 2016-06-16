@@ -20,7 +20,7 @@ class Component(object):
         """Returns the crit bound of the move"""
         return crit
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         """Cast of the component move and returns a log
         with a message from that component"""
         return ""

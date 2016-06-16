@@ -208,6 +208,8 @@ class CharacterManager(Manager):
             system.message("game", Message("shard",
                 -self.character.get_level_required_shard()))
             system.message("game", Message("level", self.character))
+        else:
+            system.message("animation", Message("message", "Insufficient shards to level up", (255, 0, 0)))
 
     # def update(self, game):
     #     """Updates the the character card manager to reflect changes when called."""

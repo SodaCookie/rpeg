@@ -10,10 +10,10 @@ class Repeat(Component):
         self.repeat = repeat
         self.components = components if components is not None else []
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         msg = ""
         for i in range(self.repeat):
             for component in self.components:
                 msg += component.on_cast(
-                    target, caster, players, monsters)+'\n'
+                    target, caster, players, monsters, system)+'\n'
         return msg

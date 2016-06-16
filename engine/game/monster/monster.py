@@ -72,8 +72,8 @@ class Monster(character.Character):
     def set_active_moves(self, moves):
         self.active_moves = list(moves)
 
-    def handle_battle(self, delta, game):
-        super().handle_battle(delta, game)
+    def handle_battle(self, delta, game, system):
+        super().handle_battle(delta, game, system)
         if self.ready:
             if self.active_moves:
                 self.selected_move = random.choice(self.active_moves)

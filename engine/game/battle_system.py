@@ -16,11 +16,11 @@ class BattleSystem(System):
         delta_time = delta/1000
         # Update player
         for player in game.party.players:
-            player.handle_battle(delta_time, game)
+            player.handle_battle(delta_time, game, self.game)
 
         # Update monster
         for monster in game.encounter:
-            monster.handle_battle(delta_time, game)
+            monster.handle_battle(delta_time, game, self.game)
 
         # Check for win or lose conditions
         if all(player.fallen for player in game.party.players):

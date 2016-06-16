@@ -55,7 +55,7 @@ class Move(object):
     def set_caster(self, caster):
         self.caster = caster
 
-    def cast(self, selected, caster, players, monsters):
+    def cast(self, selected, caster, players, monsters, system):
         """Casting the move
         Rule for targets, if targets return empty list than it is
         ignored if list is added If two are given the component that is
@@ -90,7 +90,8 @@ class Move(object):
         total_msg = ""
         for target in targets:
             for component in move:
-                msg = component.on_cast(target, caster, players, monsters)
+                msg = component.on_cast(target, caster, players, monsters,
+                    system)
                 if msg:
                     total_msg += msg + '\n'
         if total_msg.endswith('\n'):

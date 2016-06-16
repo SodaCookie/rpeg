@@ -9,7 +9,7 @@ class AddChanceEffect(Component):
         self.effect = effect
         self.chance = chance
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         rand = random.randint(0, 99)
         if rand > self.chance:
             return ""

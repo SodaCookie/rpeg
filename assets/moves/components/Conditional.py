@@ -13,13 +13,15 @@ class Conditional(Component):
         self.components1 = components1
         self.components2 = components2
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         msg = ""
         if self.predicate(target, caster, players, monsters):
             for component in self.components1:
-                msg += component.on_cast(target, caster, players, monsters)
+                msg += component.on_cast(target, caster, players, monsters,
+                    system)
             return msg
         else:
             for component in self.components2:
-                msg += component.on_cast(target, caster, players, monsters)
+                msg += component.on_cast(target, caster, players, monsters,
+                    system)
             return msg

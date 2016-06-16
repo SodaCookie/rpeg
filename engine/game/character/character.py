@@ -55,7 +55,7 @@ class Character(object):
         """Returns the current action"""
         return self.action
 
-    def handle_battle(self, delta, game):
+    def handle_battle(self, delta, game, system):
         """Handles each characters update loop"""
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs
         self.overflow = (self.overflow+delta)-steps    # Used for carry over
@@ -95,7 +95,7 @@ class Character(object):
 
                 # Call spell
                 status = self.selected_move.cast(self.target,
-                    self, game.party.players, game.encounter)
+                    self, game.party.players, game.encounter, system)
 
                 # Finished casting move
                 self.action = 0

@@ -7,6 +7,6 @@ class SelfEffect(Component):
         effect -> Effect"""
         self.effect = effect
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         damage = caster.add_effect(self.effect)
         return ""

@@ -12,3 +12,4 @@ class StartDialogueAction(Action):
     def execute(self, game, system):
         """Starts a new dialogue tree."""
         system.message("game", Message("dialogue", self.dialogue))
+        system.message("ui", Message("layout", "scenario"))

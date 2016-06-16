@@ -6,6 +6,6 @@ class Message(Component):
         message -> str"""
         self.message = message
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         print(self.message)
         return self.message

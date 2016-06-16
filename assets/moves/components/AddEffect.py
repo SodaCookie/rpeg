@@ -7,7 +7,7 @@ class AddEffect(AddChanceEffect):
         effect -> Effect"""
         super().__init__(effect, 1)
 
-    def on_cast(self, target, caster, players, monsters):
+    def on_cast(self, target, caster, players, monsters, system):
         self.effect.set_caster(caster)
         damage = target.add_effect(self.effect)
         return ""
