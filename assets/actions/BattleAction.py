@@ -1,5 +1,6 @@
 import random
 
+from engine.system import Message
 from engine.game.dungeon.action import Action
 from engine.game.monster.monster import Monster
 
@@ -13,7 +14,7 @@ class BattleAction(Action):
         self.challenge = challenge
         self.monsters = monsters
 
-    def execute(self, game):
+    def execute(self, game, system):
         """Initiates a battle.
         If no monsters are declared for the battle then a random
         set of monsters will be generated at the specified challenge
@@ -55,4 +56,9 @@ class BattleAction(Action):
                 valid_names = [name for name, value in valid_monsters
                                if value <= highest_value]
                 monster_names.append(random.choice(valid_names))
-        game.encounter = [Monster(name) for name in monster_names]
+
+        # Execute
+        system.message("battle", Message("start",
+            [Monster(name) for name in monster_names]))
+        system.message("ui", Message("layout", "battle"))
+        system.message("sound", Message("bg", "data/sound/background/Theyre-Closing-In_looping.wav"))

@@ -19,7 +19,7 @@ class MockGame():
     mouse_button = (0, 0, 0)
     party = []
     encounter = []
-    current_dialog = None
+    current_dialogue = None
     focus_window = None
 
     # mhm

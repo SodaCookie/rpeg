@@ -15,6 +15,7 @@ class AbstractButton(Renderable):
 
         # Initialize
         super().__init__(name, rect.x, rect.y)
+        self.rect = rect
         self.zone = Zone(rect)
         self.dirty = True
         self.neutral = None
@@ -32,10 +33,12 @@ class AbstractButton(Renderable):
         super().move(x, y)
         self.rect.x = x
         self.rect.y = y
+        self.zone.update_rect(self.rect)
 
     def set_size(self, width, height):
         self.rect.w = width
         self.rect.h = height
+        self.zone.update_rect(self.rect)
 
     def set_dirty(self, dirty):
         self.dirty = dirty
@@ -86,7 +89,7 @@ class AbstractButton(Renderable):
         self.zone.update(game)
 
         # Handling
-        if self.zone.state == Zone.CLICKED and prev_state != Zone.CLICKED:
+        if self.zone.state == Zone.CLICKED and prev_state == Zone.HOVERED:
             self.on_clicked(game, system)
             self.on_click(game, system)
         elif self.zone.state == Zone.HOVERED and prev_state == Zone.CLICKED:

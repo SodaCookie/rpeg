@@ -1,4 +1,5 @@
 from engine.game.dungeon.action import Action
+from engine.system import Message
 
 class StartDialogueAction(Action):
 
@@ -8,6 +9,6 @@ class StartDialogueAction(Action):
         super().__init__()
         self.dialogue = dialogue
 
-    def execute(self, game):
+    def execute(self, game, system):
         """Starts a new dialogue tree."""
-        game.current_dialog = self.dialogue
+        system.message("game", Message("dialogue", self.dialogue))

@@ -1,12 +1,17 @@
 import math
+import sys
 import random
 
 import pygame
 
-def draw_highlight_frame(width, height, highlight, scale=4, borderwidth=1):
+# Used to draw seeded frames
+_random_seed = random.randint(0, sys.maxsize)
+
+def draw_highlight_frame(width, height, highlight, scale=4, borderwidth=1,
+        seed=None):
     """draws a highlighted frame with a given colour"""
     scale = 4
-    frame = draw_frame(width, height, scale, borderwidth)
+    frame = draw_frame(width, height, scale, borderwidth, seed)
     frame.fill(highlight, (0, 0, scale, frame.get_height()))
     frame.fill(highlight, (0, 0, frame.get_width(), scale))
     frame.fill(highlight,
@@ -31,7 +36,7 @@ def draw_highlight_frame(width, height, highlight, scale=4, borderwidth=1):
          (scale, scale)))
     return frame
 
-def draw_frame(width, height, scale=4, borderwidth=1):
+def draw_frame(width, height, scale=4, borderwidth=1, seed=None):
     """Method for drawing a frame surface."""
     surface = pygame.Surface((width, height), pygame.SRCALPHA)
     surface.fill((0, 0, 0, 0))
@@ -47,8 +52,10 @@ def draw_frame(width, height, scale=4, borderwidth=1):
     texture_w = int(math.ceil(width / scale)) + 1
     texture_h = int(math.ceil(height / scale)) +1
 
-    start_x = random.randint(-texture.get_width() // scale, 0)
-    start_y = random.randint(-texture.get_height() // scale, 0)
+    if seed is None:
+        seed = random.randint(0, texture.get_width() // scale)
+    start_x = -(seed * _random_seed % texture.get_width())
+    start_y = -(seed * _random_seed % texture.get_height())
 
     # fill in texture
     for i in range(texture_w):

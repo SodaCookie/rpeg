@@ -23,14 +23,18 @@ class Text(Image):
     def set_dirty(self, dirty):
         self.dirty = dirty
 
+    def set_colour(self, colour):
+        self.colour = colour
+        self.set_dirty(True)
+
     def set_text(self, text):
         """Convenience function that will update the text for the object"""
         self.text = text
-        self.set_surface(draw_text(self.text, self.font, self.colour,
-            self.width, True, self.justify))
+        self.set_dirty(True)
 
     def refresh(self, game):
-        self.set_surface(draw_text())
+        self.set_surface(draw_text(self.text, self.font, self.colour,
+            self.width, True, self.justify))
 
     def render(self, surface, game, system):
         if self.dirty:

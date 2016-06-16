@@ -2,7 +2,7 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 import sys
 import os
-from copy import deepcopy
+from copy import copy
 
 from engine.game.dungeon.dialog import Dialogue
 import assets.actions
@@ -18,7 +18,7 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
     def __init__(self, parent, dialogue):
         super().__init__(parent)
         self.setupUi(self)
-        self.dialogue = deepcopy(dialogue)
+        self.dialogue = copy(dialogue)
         self.init_window()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
@@ -160,7 +160,7 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
 
     def on_create_clicked(self):
         if self.dialogue.name:
-            self.return_dialogue.emit(deepcopy(self.dialogue))
+            self.return_dialogue.emit(copy(self.dialogue))
             self.close()
         else:
             QtWidgets.QMessageBox.warning(

@@ -1,4 +1,5 @@
 """Define GameObject"""
+from engine.game.party.party import Party
 
 class GameObject(object):
     """Game object used to hold all the data required for
@@ -12,12 +13,11 @@ class GameObject(object):
         self.floor_level = 1
         self.floor_type = ""
         self.current_location = None
-        self.current_dialog = None
+        self.current_dialogue = None
 
-        self.party = None
+        self.party = Party()
         self.encounter = []
-        self.current_dialog = None
-        self.focus_window = None
+        self.current_dialogue = None
 
         self.shop = None
         self.alter = None
@@ -28,7 +28,7 @@ class GameObject(object):
         self.mouse_y = 0
         self.resolution = (0, 0)
 
-        self.selected_player = None
+        self.current_player = None
         self.hover_data = None
 
         self.render_travel = False

@@ -51,6 +51,10 @@ class Character(object):
         # Reset Action
         self.action = 0
 
+    def get_cur_action(self):
+        """Returns the current action"""
+        return self.action
+
     def handle_battle(self, delta, game):
         """Handles each characters update loop"""
         steps = math.floor(self.overflow+delta)        # Used for buffs/debuffs

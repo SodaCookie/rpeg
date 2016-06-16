@@ -1,5 +1,7 @@
 import pygame
 
+from engine.system import Message
+
 from engine.ui.element.abstractslot import AbstractSlot
 
 class ItemSlot(AbstractSlot):
@@ -17,10 +19,17 @@ class ItemSlot(AbstractSlot):
         if on_change is not None:
             self.on_change = on_change
 
+    def on_dropped(self, game, system):
+        system.message("sound", Message("ui", "data/sound/drop-off.wav"))
+
+    def on_setted(self, game, system):
+        system.message("sound", Message("ui", "data/sound/pick-up.wav"))
+
     def on_drop(self, obj):
         """Returns True if the dropped item's slot and itemslot is the same."""
-        # NotImplemented
-        return True
+        if obj.slot == self.itemslot or self.itemslot == "any":
+            return True
+        return False
 
     def render_neutral(self, game):
         surface = pygame.image.load(ItemSlot.SLOTIMAGE).convert()

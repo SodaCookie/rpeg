@@ -3,81 +3,41 @@ from functools import partial
 
 import pygame
 
-from engine.game.move.move import Move
-from engine.ui.core.zone import Zone
 from engine.ui.core.manager import Manager
 import engine.ui.element as element
+
 
 class CastBarManager(Manager):
     """Responsible for managing the castbar of the Player characters in and out
     of battle."""
 
-    def __init__(self, y):
-        super().__init__()
-        SCALE = 4
+    def __init__(self, x, y, slots):
+        super().__init__("castbar", x, y)
         self.character = None
-        self.y = y
+        self.add_renderable(element.Frame("cast_bar_frame", x, y,
+            56 * slots + 14, 68))
 
-        window_width = 566
-        window_x = pygame.display.get_surface().get_width()//2-window_width//2-SCALE
-        self.renderables.append(element.Window(window_width, 60, window_x, y))
-        self.skills = [None for i in range(10)]
-        for i in range(1, 11):
-            # Removable
-            skill = element.Slot(None, Move, 8+window_x+(i-1)*56, y+7, None,
-                                 None, True)
-            self.skills[i-1] = skill
-            self.renderables.append(skill)
-            self.renderables.append(element.Text(str(i)[-1], 16, 50+window_x+(i-1)*56, y+40))
-            on_click = partial(self.on_click, skill)
-            off_click = partial(element.Slot.off_click, skill,
-                self.drop_validator, True)
-            zone = Zone(((8+window_x+(i-1)*56, y+7),
-                skill.surface.get_size()), on_click, off_click=off_click)
-            skill.bind(zone)
-            self.zones.append(zone)
+        self.skill_elements = []
+        for i in range(slots):
+            skill = element.CastBarSlot("slot-%d" % i, x + 8 + i * 56, y + 7,
+                None)
+            self.skill_elements.append(skill)
+            self.add_renderable(skill)
+            self.add_renderable(element.Text("slot-text-%d" % i,
+                x + i * 56, y + 40, str(i + 1), 16, width=56,
+                justify="right"))
 
-    @staticmethod
-    def on_click(slot, game):
-        element.Slot.on_click(slot, CastBarManager.drag_validator, True, game)
-        if game.encounter:
-            game.selected_player.selected_move = slot.value
-            game.selected_player.target = []
+    def set_player(self, player):
+        for i, slot in enumerate(self.skill_elements):
+            slot.set_new_address((player.castbar, i))
 
-    @staticmethod
-    def drag_validator(slot, game):
-        return not game.encounter
-
-    @staticmethod
-    def drop_validator(slot, game):
-        return not game.encounter
-
-    def update(self, game):
-        if game.selected_player:
-            super().update(game)
-            if game.selected_player is not self.character:
-                self.swap_character(game.selected_player)
-                self.character = game.selected_player
+    def update(self, game, system):
+        if game.current_player:
+            if game.current_player is not self.character:
+                self.set_player(game.current_player)
+                self.character = game.current_player
                 game.selected_move = None
 
-    def swap_character(self, character):
-        """Swaps the castbar menu to another character"""
-        SCALE = 4
-        if character:
-            for i, move in enumerate(character.castbar):
-                self.skills[i].value = move
-                self.skills[i].surface = element.Slot.draw(move)
-                self.skills[i].hover = element.Slot.draw_highlight(move)
-                self.skills[i].container = character.castbar
-                self.skills[i].key = i
-        else:
-            for i in range(10):
-                self.skills[i].move = None
-                self.skills[i].surface = element.Slot.draw(None)
-                self.skills[i].hover = element.Slot.draw_highlight(None)
-                self.skills[i].container = None
-                self.skills[i].key = None
-
-    def render(self, surface, game_obj, game):
-        if game.selected_player and game.focus_window != "travel":
-            super().render(surface, game_obj, game)
+    def render(self, surface, game, system):
+        if game.current_player is not None:
+            super().render(surface, game, system)

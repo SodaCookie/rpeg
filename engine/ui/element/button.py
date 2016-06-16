@@ -1,4 +1,4 @@
-from copy import copy
+import random
 
 import pygame
 
@@ -29,6 +29,7 @@ class Button(AbstractButton):
             setattr(self, key, value)
 
         # Create font
+        self.draw_seed = random.randint(0, 100)
         self.font = pygame.font.Font("assets/fonts/VT323-Regular.ttf",
             self.size)
 
@@ -55,6 +56,12 @@ class Button(AbstractButton):
         system.message("sound", Message("ui",
                 "data/sound/click.wav"))
 
+    def get_width(self):
+        return self.width
+
+    def get_height(self):
+        return self.height
+
     def set_text(self, text):
         """Convenience function that will update the text for the object"""
         self.text = text
@@ -65,7 +72,8 @@ class Button(AbstractButton):
         to represent the neutral state."""
         # Base if any
         if self.windowed:
-            surface = draw.frame.draw_frame(self.width, self.height)
+            surface = draw.frame.draw_frame(self.width, self.height,
+                seed=self.draw_seed)
         else:
             surface = draw.simple.draw_rect(self.width, self.height,
                 (0, 0, 0, 0))
@@ -94,7 +102,7 @@ class Button(AbstractButton):
         to represent the hovered state."""
         if self.windowed:
             surface = draw.frame.draw_highlight_frame(self.width, self.height,
-                (255, 255, 255))
+                (255, 255, 0), seed=self.draw_seed)
         else:
             surface = draw.simple.draw_rect(self.width, self.height,
                 (0, 0, 0, 0))
@@ -102,7 +110,7 @@ class Button(AbstractButton):
         # Text if any
         text = None
         if self.text:
-            text = draw.simple.draw_text(self.text, self.font, (255, 255, 255),
+            text = draw.simple.draw_text(self.text, self.font, (255, 255, 0),
                 self.width, True, self.justify)
 
         # Apply text
@@ -123,7 +131,7 @@ class Button(AbstractButton):
         to represent the clicked state."""
         if self.windowed:
             surface = draw.frame.draw_highlight_frame(self.width, self.height,
-                (255, 255, 0))
+                (50, 255, 50), seed=self.draw_seed)
         else:
             surface = draw.simple.draw_rect(self.width, self.height,
                 (0, 0, 0, 0))
@@ -131,7 +139,7 @@ class Button(AbstractButton):
         # Text if any
         text = None
         if self.text:
-            text = draw.simple.draw_text(self.text, self.font, (255, 255, 0),
+            text = draw.simple.draw_text(self.text, self.font, (50, 255, 50),
                 self.width, True, self.justify)
 
         # Apply text

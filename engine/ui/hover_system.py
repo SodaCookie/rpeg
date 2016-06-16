@@ -20,14 +20,15 @@ class HoverSystem(System):
         # Check for removing
         if self.clicked != game.mouse_button[0]:
             # Drop
-            if self.clicked == 1:
-                if game.hover_data is not None:
-                    _, slot, _ = game.hover_data
-                    game.hover_data = None
+            if self.clicked == 1 and game.hover_data is not None:
+                _, slot, _ = game.hover_data
+                game.hover_data = None
+                if slot.address is not None:
                     if slot.dropable:
-                        slot.set_address(None)
+                        slot.set_address(None, game, self.game)
                     else:
-                        slot.set_address(slot.address[0][slot.address[1]])
+                        slot.set_address(slot.address[0][slot.address[1]],
+                            game, self.game)
             self.clicked = game.mouse_button[0]
         # Draw to the screen
         if self.clicked and game.hover_data is not None:
@@ -49,16 +50,16 @@ class HoverSystem(System):
             other_value = other.address[0][other.address[1]]
 
             # Set values
-            other.set_address(value)
+            other.set_address(value, game, self.game)
             if prev.cloneable and prev.swapable:
                 if other_value is not None:
-                    prev.set_address(other_value)
+                    prev.set_address(other_value, game, self.game)
             elif prev.cloneable and not prev.swapable:
                 pass
             elif not prev.cloneable and prev.swapable:
-                prev.set_address(other_value)
+                prev.set_address(other_value, game, self.game)
             elif not prev.cloneable and not prev.swapable:
-                prev.set_address(None)
+                prev.set_address(None, game, self.game)
 
             # Clear hover data
             game.hover_data = None

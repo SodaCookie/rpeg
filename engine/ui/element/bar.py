@@ -8,18 +8,21 @@ class PercentBar(Renderable):
 
     def __init__(self, name, x, y, image, horizonal=True):
         super().__init__(name, x, y)
-        self.percent = 100
+        self.percent = 1.0
         self.horizonal = horizonal
         self.image = image
 
+    def set_percent(self, value):
+        self.percent = value
+
     def render(self, surface, game, system):
-        img_width, img_height = self.image.size()
+        img_width, img_height = self.image.get_size()
         if self.horizonal:
-            width = round(self.width * self.percent / 100)
-            height = self.height
+            width = round(img_width * self.percent)
+            height = img_height
         else:
-            width = self.width
-            self.height = round(self.height * self.percent / 100)
+            width = img_width
+            height = round(img_height * self.percent)
 
         # Render to the screen
         surface.blit(self.image, (self.x, self.y), (0, 0, width, height))
