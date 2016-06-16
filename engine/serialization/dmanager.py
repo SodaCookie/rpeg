@@ -10,30 +10,37 @@ class DataManager(object):
 
     # Flyweights
     cache = {}
+    # Use our own reference counting system
+    refcounts = {}
 
     def __init__(self, filename):
-        if not self.cache.get(filename):
-            self.cache[filename] = deserialize(filename)
+        if not DataManager.cache.get(filename):
+            DataManager.cache[filename] = deserialize(filename)
+        if filename in DataManager.refcounts:
+            DataManager.refcounts[filename] += 1
+        else:
+            DataManager.refcounts[filename] = 1
         self.filename = filename
 
     def __del__(self):
         """Deletes cached object if no more references"""
-        if self.cache.get(self.filename) and \
-                sys.getrefcount(self.cache[self.filename]) <= 2:
-            del self.cache[self.filename]
+        DataManager.refcounts[self.filename] -= 1
+        if DataManager.refcounts[self.filename] <= 0:
+            del DataManager.cache[self.filename]
+            del DataManager.refcounts[self.filename]
 
     def get(self):
         """Returns the loaded data. None if the filename isn't given"""
-        return self.cache.get(self.filename)
+        return DataManager.cache[self.filename]
 
     def set(self, value):
-        self.cache[self.filename] = value
+        DataManager.cache[self.filename] = value
 
     def write(self):
-        serialize(self.cache[self.filename], self.filename)
+        serialize(DataManager.cache[self.filename], self.filename)
 
     @classmethod
     def writeall(self):
         """Saves all the cached functions at once."""
-        for file in self.cache:
-            serialize(self.cache[file], file)
+        for file, data in DataManager.cache.items():
+            serialize(data, file)

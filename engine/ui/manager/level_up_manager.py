@@ -100,3 +100,4 @@ class LevelUpManager(Manager):
     # def on_move_off_hover(manager, game):
     #     manager.set_hover(False)
     #     manager.confirm_move = False
+

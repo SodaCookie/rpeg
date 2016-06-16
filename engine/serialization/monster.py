@@ -34,7 +34,7 @@ class MonsterDataManager(DataManager):
         return self.attribute.get()
 
     def set_attributes(self, attributes):
-        self.attribute.set(attribtes)
+        self.attribute.set(attributes)
 
     def get_monster(self, name):
         """Convenience function. To get a monster"""

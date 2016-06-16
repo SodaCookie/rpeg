@@ -28,6 +28,8 @@ class ItemDataManager(object):
         self.UNIQUE_ATTRIBUTES = DataManager(
             "data/item/attributes/unique_attributes.p")
 
+    # NOTE: Can have duplicate item names across items and base items
+    # Retrieving a duplicate name will always result in non-base item
     def get_item(self, name):
         """Convenience function for getting an item by name"""
         if self.base_items().get(name):
@@ -43,13 +45,13 @@ class ItemDataManager(object):
         return False
 
     def set_rare_attributes(self, attributes):
-        self.RARE_ATTRIBUTES.set(attribtes)
+        self.RARE_ATTRIBUTES.set(attributes)
 
     def set_legendary_attributes(self, attributes):
-        self.LEGENDARY_ATTRIBUTES.set(attribtes)
+        self.LEGENDARY_ATTRIBUTES.set(attributes)
 
     def set_unique_attributes(self, attributes):
-        self.UNIQUE_ATTRIBUTES.set(attribtes)
+        self.UNIQUE_ATTRIBUTES.set(attributes)
 
     def items(self):
         return self.ITEMS.get()
