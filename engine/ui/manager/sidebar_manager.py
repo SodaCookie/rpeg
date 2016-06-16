@@ -43,9 +43,11 @@ class SideBarManager(Manager):
 
     def on_click_travel(self, game, system):
         system.message("ui", Message("layout", "travel"))
+        system.message("game", Message("select-player", None))
 
     def on_click_loot(self, game, system):
         system.message("ui", Message("layout", "loot"))
+        system.message("game", Message("select-player", None))
 
     def render(self, surface, game, system):
         if game.loot is not None:

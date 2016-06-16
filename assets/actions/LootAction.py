@@ -1,3 +1,6 @@
+import random
+
+from engine.system import Message
 from engine.game.dungeon.action import Action
 from engine.game.item.item_factory import ItemFactory
 
@@ -27,25 +30,24 @@ class LootAction(Action):
         # Handle no shards or items
         if not self.shards and not self.items:
             # Generate shards
-            if self.reward_tier == Loot.LOW:
+            if self.reward_tier == LootAction.LOW:
                 shards = game.floor_level * random.randint(15, 20)
-            elif self.reward_tier == Loot.MEDUIM:
+            elif self.reward_tier == LootAction.MEDUIM:
                 shards = game.floor_level * random.randint(30, 35)
-            elif self.reward_tier == Loot.HIGH:
+            elif self.reward_tier == LootAction.HIGH:
                 shards = game.floor_level * random.randint(50, 70)
 
             # Generate items
-            if self.reward_tier == Loot.MEDUIM:
+            if self.reward_tier == LootAction.MEDUIM:
                 # 30% change of getting an item of "medium" reward tier
                 if random.randint(0, 99) < 30:
-                    self.items = [ItemFactory.generate(
+                    items = [ItemFactory.generate(
                         game.encounter, game.floor_type)]
-            elif self.reward_tier == Loot.HIGH:
+            elif self.reward_tier == LootAction.HIGH:
                 # 70% change of getting an item of "high" reward tier
                 if random.randint(0, 99) < 70:
-                    self.items = [ItemFactory.generate(
+                    items = [ItemFactory.generate(
                         game.encounter, game.floor_type)]
-
         else:
             if self.shards:
                 shards = self.shards
@@ -54,5 +56,4 @@ class LootAction(Action):
                     for name in self.items]
 
         # Assign create loot table to the game
-        game.loot = (shards, items)
-        game.party.add_shards(shards)
+        system.message("game", Message("loot", items, shards))

@@ -68,5 +68,5 @@ class GameSystem(System):
             game.current_player = player
         elif message.mtype == "loot":
             items, shards = message.args
-            game.loot = (shards, items)
+            game.loot = (items, shards)
             game.party.shards += shards

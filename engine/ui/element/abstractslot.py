@@ -30,7 +30,7 @@ class AbstractSlot(AbstractButton):
         self.set_value(address[0][address[1]])
 
     def get(self):
-        return self.address[0][self.address[1]]
+        return self.address[0][self.address[1]] if self.address else None
 
     def on_drop(self, obj):
         """Override. Called whenever drop is invoked. Returns True to

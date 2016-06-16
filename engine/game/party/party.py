@@ -3,6 +3,7 @@ class Party(object):
     Party is composed of the players, shards and items in the party."""
 
     def __init__(self, players=[]):
+        self.inventory = [None for i in range(16)]
         self.players = [None for i in range(4)]
         for i, player in enumerate(players):
             self.players[i] = player

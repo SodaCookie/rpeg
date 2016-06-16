@@ -59,77 +59,76 @@ class CharacterManager(Manager):
         self.add_renderable(element.Image("action-border", x + 16, y + 158,
             "image/ui/player_bar.png", 4))
 
+        # Level up
+        self.add_renderable(element.Button("level-up",
+            text = "Level Up",
+            size = 20,
+            x = x + 168,
+            y = y + 16,
+            width = 100,
+            height = 50))
+
         # Equipment Slots
         self.equipment_elements = {}
-        equipment_x = x + 180
+        equipment_x = x + 420
         equipment_y = y + 16
         # Hand
         self.add_renderable(element.Text("text-hand1", equipment_x,
             equipment_y + 56, "Hand", 16, width=54, justify="center"))
         self.equipment_elements["hand1"] = element.ItemSlot("equipment-hand1",
-            equipment_x, equipment_y, "any", None)
+            equipment_x, equipment_y, "hand", None, self.update_stats())
 
         # Hand
         self.add_renderable(element.Text("text-hand2", equipment_x + 60,
             equipment_y + 56, "Hand", 16, width=54, justify="center"))
         self.equipment_elements["hand2"] = element.ItemSlot("equipment-hand2",
-            equipment_x + 60, equipment_y, "any", None)
+            equipment_x + 60, equipment_y, "hand", None, self.update_stats())
 
         # Body
         self.add_renderable(element.Text("text-body", equipment_x,
             equipment_y + 136, "Body", 16, width=54, justify="center"))
         self.equipment_elements["body"] = element.ItemSlot("equipment-body",
-            equipment_x, equipment_y + 80, "any", None)
+            equipment_x, equipment_y + 80, "body", None, self.update_stats())
 
         # Legs
         self.add_renderable(element.Text("text-legs", equipment_x + 60,
             equipment_y + 136, "Legs", 16, width=54, justify="center"))
         self.equipment_elements["legs"] = element.ItemSlot("equipment-legs",
-            equipment_x + 60, equipment_y + 80, "any", None)
+            equipment_x + 60, equipment_y + 80, "legs", None,
+            self.update_stats())
 
         # Feet
         self.add_renderable(element.Text("text-feet", equipment_x,
             equipment_y + 216, "Feet", 16, width=54, justify="center"))
         self.equipment_elements["feet"] = element.ItemSlot("equipment-feet",
-            equipment_x, equipment_y + 160, "any", None)
+            equipment_x, equipment_y + 160, "feet", None, self.update_stats())
 
         # Head
         self.add_renderable(element.Text("text-head", equipment_x + 60,
             equipment_y + 216, "Head", 16, width=54, justify="center"))
         self.equipment_elements["head"] = element.ItemSlot("equipment-head",
-            equipment_x + 60, equipment_y + 160, "any", None)
+            equipment_x + 60, equipment_y + 160, "head", None,
+            self.update_stats())
 
         # Extra
         self.add_renderable(element.Text("text-extra1", equipment_x,
             equipment_y + 296, "Extra", 16, width=54, justify="center"))
         self.equipment_elements["extra1"] = element.ItemSlot(
-            "equipment-extra1", equipment_x, equipment_y + 240, "any", None)
+            "equipment-extra1", equipment_x, equipment_y + 240, "extra", None, self.update_stats())
 
         # Extra
         self.add_renderable(element.Text("text-extra2", equipment_x + 60,
             equipment_y + 296, "Extra", 16, width=54, justify="center"))
         self.equipment_elements["extra2"] = element.ItemSlot(
-            "equipment-extra2", equipment_x + 60, equipment_y + 240, "any",
-            None)
+            "equipment-extra2", equipment_x + 60, equipment_y + 240, "extra",
+            None, self.update_stats())
 
         for elem in self.equipment_elements.values():
             self.add_renderable(elem)
 
-        # Item slots
-        item_x = x + 320
-        item_y = y + 40
-        self.item_elements = []
-        self.add_renderable(element.Text("inventory-text", item_x + 4,
-            item_y - 32, "Inventory", 24, width=132, justify="left"))
-        for i in range(4):
-            item_element = element.ItemSlot("item-slot-%d" % i,
-                item_x + (i % 4) * 60, item_y + (i // 4) * 60, "any", None)
-            self.item_elements.append(item_element)
-            self.add_renderable(item_element)
-
         # Move slots
-        move_x = x + 320
-        move_y = y + 144
+        move_x = x + 168
+        move_y = y + 152
         self.move_elements = []
         self.add_renderable(element.Text("moves-text", move_x + 4, move_y - 32,
             "Abilities", 24, width=132, justify="left"))
@@ -157,10 +156,6 @@ class CharacterManager(Manager):
         for key, elem in self.equipment_elements.items():
             elem.set_new_address((player.equipment, key))
 
-        # Update inventory
-        for i, elem in enumerate(self.item_elements):
-            elem.set_new_address((player.inventory, i))
-
         # Update moves
         for elem, i in zip(self.move_elements, range(len(player.moves))):
             elem.set_new_address((player.moves, i))
@@ -181,6 +176,18 @@ class CharacterManager(Manager):
             self.action_text.set_text("%d/%d" % \
                 (self.character.get_cur_action(),
                  self.character.get_stat("action")))
+
+    def update_stats(self):
+        def on_change(game, system):
+            stat_values = ""
+            stat_values += str(self.character.get_stat("attack")) + "\n"
+            stat_values += str(self.character.get_stat("defense")) + "\n"
+            stat_values += str(self.character.get_stat("magic")) + "\n"
+            stat_values += str(self.character.get_stat("health")) + "\n"
+            stat_values += str(self.character.get_stat("resist")) + "\n"
+            stat_values += str(self.character.get_stat("action"))
+            self.stats_element.set_text(stat_values)
+        return on_change
 
     # def update(self, game):
     #     """Updates the the character card manager to reflect changes when called."""

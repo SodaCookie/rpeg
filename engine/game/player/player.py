@@ -37,7 +37,6 @@ class Player(character.Character):
         self.equipment["head"] = None
         self.equipment["extra1"] = None
         self.equipment["extra2"] = None
-        self.inventory = [None, None, None, None]
         self.level_up_moves = None
         if self.gender == "male":
             self.portrait = choice(Player.MALE_PORTRAITS)
@@ -82,14 +81,6 @@ class Player(character.Character):
                     player.equip(None, key)
                     return True
         return False
-
-    def give_experience(self, experience):
-        """Grants experience to a player"""
-        if self.level < Player.MAX_LEVEL:
-            if self.level*100+experience > Player.MAX_LEVEL*100:
-                experience = (self.level*100+experience)-Player.MAX_LEVEL*100
-            self.experience += experience
-        return experience
 
     def get_level(self):
         return self.level

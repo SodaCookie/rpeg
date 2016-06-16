@@ -13,10 +13,10 @@ class UISystem(System):
         "scenario" : ["background", "party", "scenario"],
         "default" : ["background", "party", "castbar", "sidebar"],
         "character" : ["background", "party", "castbar", "sidebar",
-                       "character"],
+                       "character", "party-info"],
         "battle" : ["background", "party", "castbar", "encounter"],
         "travel" : ["background", "party", "travel", "sidebar"],
-        "loot" : ["background", "party", "loot", "sidebar"]
+        "loot" : ["background", "party", "loot", "sidebar", "party-info"]
     }
 
     def __init__(self, game):
@@ -34,14 +34,16 @@ class UISystem(System):
         self.managers["castbar"] = manager.CastBarManager(
             width // 2 - (56 * 10 + 14) // 2, 440, 10)
         self.managers["loot"] = manager.LootManager(
-            width // 2 - 400, 72, 800, 348)
+            width // 2 - 400, 72, 552, 348)
         self.managers["scenario"] = manager.ScenarioManager(
             width // 2 - 300, 52, 600, 400)
         self.managers["travel"] = manager.TravelManager(
             width // 2 - 400, 72, 800, 348)
         # self.managers["level"] = manager.LevelUpManager(1280, 720)
         self.managers["character"] = manager.CharacterManager(
-            width // 2 - 400, 72, 800, 348)
+            width // 2 - 400, 72, 552, 348)
+        self.managers["party-info"] = manager.PartyInfoManager(
+            width // 2 + 162, 72, 260, 348, game)
         self.rendering = self.layouts["scenario"]
 
     def update(self, delta, game):
@@ -64,3 +66,9 @@ class UISystem(System):
         if message.mtype == "layout": # Travels the part
             layout = message.args[0]
             self.set_layout(layout)
+        elif message.mtype == "toggle":
+            manager = message.args[0]
+            if manager in self.rendering:
+                self.rendering.remove(manager)
+            else:
+                self.rendering.append(manager)

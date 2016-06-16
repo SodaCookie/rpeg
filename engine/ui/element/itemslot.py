@@ -27,8 +27,9 @@ class ItemSlot(AbstractSlot):
 
     def on_drop(self, obj):
         """Returns True if the dropped item's slot and itemslot is the same."""
-        # NotImplemented
-        return True
+        if obj.slot == self.itemslot or self.itemslot == "any":
+            return True
+        return False
 
     def render_neutral(self, game):
         surface = pygame.image.load(ItemSlot.SLOTIMAGE).convert()
