@@ -5,7 +5,7 @@ from engine.ui.manager.scenario_manager import ScenarioManager
 from engine.ui.manager.travel_manager import TravelManager
 from engine.ui.manager.sidebar_manager import SideBarManager
 from engine.ui.manager.loot_manager import LootManager
-# from engine.ui.manager.level_up_manager import LevelUpManager
+from engine.ui.manager.level_up_manager import LevelUpManager
 from engine.ui.manager.party_manager import PartyManager
 from engine.ui.manager.partyinfo_manager import PartyInfoManager
 from engine.ui.manager.background_manager import BackgroundManager

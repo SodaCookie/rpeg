@@ -27,7 +27,11 @@ class AbstractSlot(AbstractButton):
     def set_new_address(self, address):
         """Change the current address of the slot"""
         self.address = address
-        self.set_value(address[0][address[1]])
+        self.set_dirty(True)
+        if self.address:
+            self.set_value(address[0][address[1]])
+        else:
+            self.value = None
 
     def get(self):
         return self.address[0][self.address[1]] if self.address else None

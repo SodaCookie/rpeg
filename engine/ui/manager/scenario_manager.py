@@ -98,7 +98,7 @@ class ScenarioManager(Manager):
 
     def on_choice_click(self, dialogue):
         def on_click(game, system):
-            system.message("game", Message("choice", dialogue))
+            system.message("game", Message("dialogue", dialogue))
         return on_click
 
     def on_no_choice_click(self, dialogue):

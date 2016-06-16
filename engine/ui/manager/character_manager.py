@@ -4,6 +4,8 @@
 
 import pygame
 
+from engine.system import Message
+
 from engine.ui.draw.simple import draw_rect
 from engine.ui.core.manager import Manager
 import engine.ui.element as element
@@ -60,7 +62,13 @@ class CharacterManager(Manager):
             "image/ui/player_bar.png", 4))
 
         # Level up
+        self.shard_element = element.Text("required-shard", x + 280, y + 36,
+            "", 20, width=200)
+        self.add_renderable(self.shard_element)
+        self.add_renderable(element.Text("required-text", x + 280, y + 16,
+            "Shards Required: ", 20, width=200))
         self.add_renderable(element.Button("level-up",
+            self.level_up,
             text = "Level Up",
             size = 20,
             x = x + 168,
@@ -141,6 +149,7 @@ class CharacterManager(Manager):
     def set_player(self, player):
         self.name_element.set_text(player.name)
         self.image_element.set_surface(player.portrait, 3)
+        self.shard_element.set_text(str(player.get_level_required_shard()))
 
         # Set stats
         stat_values = ""
@@ -157,8 +166,11 @@ class CharacterManager(Manager):
             elem.set_new_address((player.equipment, key))
 
         # Update moves
-        for elem, i in zip(self.move_elements, range(len(player.moves))):
-            elem.set_new_address((player.moves, i))
+        for i in range(len(self.move_elements)):
+            if i < len(player.moves):
+                self.move_elements[i].set_new_address((player.moves, i))
+            else:
+                self.move_elements[i].set_new_address(None)
 
     def update(self, game, system):
         if game.current_player is not self.character:
@@ -188,6 +200,14 @@ class CharacterManager(Manager):
             stat_values += str(self.character.get_stat("action"))
             self.stats_element.set_text(stat_values)
         return on_change
+
+    def level_up(self, game, system):
+        if game.party.shards >= self.character.get_level_required_shard():
+            system.message("ui", Message("push-bg", (50, 50, 50)))
+            system.message("ui", Message("layout", "level"))
+            system.message("game", Message("shard",
+                -self.character.get_level_required_shard()))
+            system.message("game", Message("level", self.character))
 
     # def update(self, game):
     #     """Updates the the character card manager to reflect changes when called."""

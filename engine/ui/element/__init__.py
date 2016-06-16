@@ -10,3 +10,4 @@ from engine.ui.element.castbarslot import CastBarSlot
 from engine.ui.element.travelbutton import TravelButton
 from engine.ui.element.charactercard import CharacterCard
 from engine.ui.element.monstercard import MonsterCard
+from engine.ui.element.movecard import MoveCard

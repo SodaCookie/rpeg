@@ -1,4 +1,5 @@
 """Implements the UI System"""
+import logging
 from collections import OrderedDict
 
 import pygame
@@ -16,12 +17,14 @@ class UISystem(System):
                        "character", "party-info"],
         "battle" : ["background", "party", "castbar", "encounter"],
         "travel" : ["background", "party", "travel", "sidebar"],
-        "loot" : ["background", "party", "loot", "sidebar", "party-info"]
+        "loot" : ["background", "party", "loot", "sidebar", "party-info"],
+        "level" : ["background", "level"]
     }
 
     def __init__(self, game):
         super().__init__(game, "ui")
         self.managers = OrderedDict()
+        self.image_stack = []
         self.rendering = []
 
     def init(self, game):
@@ -39,7 +42,7 @@ class UISystem(System):
             width // 2 - 300, 52, 600, 400)
         self.managers["travel"] = manager.TravelManager(
             width // 2 - 400, 72, 800, 348)
-        # self.managers["level"] = manager.LevelUpManager(1280, 720)
+        self.managers["level"] = manager.LevelUpManager()
         self.managers["character"] = manager.CharacterManager(
             width // 2 - 400, 72, 552, 348)
         self.managers["party-info"] = manager.PartyInfoManager(
@@ -72,3 +75,25 @@ class UISystem(System):
                 self.rendering.remove(manager)
             else:
                 self.rendering.append(manager)
+        elif message.mtype == "load-moves":
+            moves = message.args[0]
+            self.managers["level"].load_moves(moves)
+        elif message.mtype == "refresh-character":
+            self.managers["character"].set_player(
+                self.managers["character"].character)
+        elif message.mtype == "push-bg":
+            surface = self.managers["background"].get_image()
+            self.image_stack.append(surface)
+            new_surface = pygame.display.get_surface().copy()
+            if len(message.args) == 1:
+                new_surface.fill(message.args[0],
+                    special_flags=pygame.BLEND_ADD)
+            elif len(message.args) == 2:
+                new_surface.fill(message.args[0],
+                    special_flags=message.args[1])
+            self.managers["background"].set_image(new_surface)
+        elif message.mtype == "pop-bg":
+            if len(self.image_stack) > 0:
+                self.managers["background"].set_image(self.image_stack.pop(-1))
+            else:
+                logging.warning("Background was popped with an empty stack")

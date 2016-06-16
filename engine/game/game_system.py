@@ -53,7 +53,7 @@ class GameSystem(System):
             game.current_location.generate()
             game.current_dialogue = game.current_location.get_event()
             game.loot = None
-        elif message.mtype == "choice":
+        elif message.mtype == "dialogue":
             dialogue = message.args[0]
             game.current_dialogue = dialogue
         elif message.mtype == "action":
@@ -69,4 +69,15 @@ class GameSystem(System):
         elif message.mtype == "loot":
             items, shards = message.args
             game.loot = (items, shards)
+            system.message("game", Message("shard", shards))
+        elif message.mtype == "shard":
+            shards = message.args[0]
             game.party.shards += shards
+        elif message.mtype == "level":
+            player = message.args[0]
+            player.roll_moves()
+            system.message("ui", Message("load-moves", player.level_up_moves))
+        elif message.mtype == "level-player":
+            move = message.args[0]
+            game.current_player.level_up(move)
+

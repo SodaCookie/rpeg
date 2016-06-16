@@ -14,6 +14,9 @@ class BackgroundManager(Manager):
     def set_image(self, image):
         self.img_element.set_surface(image)
 
+    def get_image(self):
+        return self.img_element.surface
+
     def message(self, game, system, message):
         if message.mtype == "change":
             image = message.args[0]

@@ -85,6 +85,9 @@ class Player(character.Character):
     def get_level(self):
         return self.level
 
+    def get_level_required_shard(self):
+        return self.level * 20
+
     def roll_moves(self):
         """Rolls moves"""
         if self.level_up_moves:
@@ -130,6 +133,7 @@ class Player(character.Character):
         self.add_move(move)
         self.level += 1
         self.full_heal()
+        self.level_up_moves = None
 
     def get_equip(self, slot):
         return self.equipment[slot]
