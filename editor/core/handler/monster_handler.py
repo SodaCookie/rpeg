@@ -275,6 +275,7 @@ class MonsterHandler(Handler):
         monster_floor = self.parent.findChild(
             QtWidgets.QComboBox, "monsterFloor")
         # Load floors
+        tmp_focus = self.focus
         monster_floor.clear()
         for floor in self.floor.floors():
             monster_floor.addItem(floor)

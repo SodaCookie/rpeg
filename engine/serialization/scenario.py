@@ -33,6 +33,9 @@ class EventDataManager(DataManager):
                 break
 
     def update_event_floor(self, name, floor, room, new_floor):
+        if not new_floor or not floor:
+            return
+
         change_event = None
         for event in self.events()[floor][room]:
             if event.name == name:
@@ -73,3 +76,6 @@ class EventDataManager(DataManager):
             "entrance" : [],
             "exit" : []
         }
+
+    def remove_floor_type(self, floor):
+        del self.events()[floor]

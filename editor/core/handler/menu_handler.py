@@ -7,6 +7,7 @@ from editor.core.prompt.list_prompt import ListPrompt
 from editor.meta.types import StrType, AttributeType
 from engine.serialization.item import ItemDataManager
 from engine.serialization.floor import FloorDataManager
+from engine.serialization.scenario import EventDataManager
 from engine.serialization.monster import MonsterDataManager
 from engine.serialization.dmanager import DataManager
 
@@ -21,6 +22,7 @@ class MenuHandler(Handler):
         self.floor_dm = FloorDataManager()
         self.item_dm = ItemDataManager()
         self.monster_dm = MonsterDataManager()
+        self.event_dm = EventDataManager()
 
         menubar = self.parent.menuBar()
         menubar.triggered.connect(self.dispatch_action)
@@ -51,10 +53,19 @@ class MenuHandler(Handler):
         self.parent.close()
 
     def action_add_floor(self):
+        previous_floors = set(self.floor_dm.floors())
         def assign_floor(floors):
             self.floor_dm.set(floors)
+            new_floors = set(self.floor_dm.floors())
+            remove = previous_floors - new_floors
+            add = new_floors - previous_floors
+            for floor in remove:
+                self.event_dm.remove_floor_type(floor)
+            for floor in add:
+                self.event_dm.add_floor_type(floor)
             self.parent.scenario_handler.load_floors()
             self.parent.monster_handler.load_floors()
+
         prompt = ListPrompt(self.parent, StrType(),
             self.floor_dm.floors(), assign_floor)
         prompt.show()

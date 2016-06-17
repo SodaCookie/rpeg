@@ -1,5 +1,6 @@
 """Implements the FloorDataManager class"""
 from engine.serialization.dmanager import DataManager
+from engine.serialization.scenario import EventDataManager
 
 class FloorDataManager(DataManager):
     """Singleton class used to get and assign floor data"""

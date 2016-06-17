@@ -112,11 +112,12 @@ class ScenarioHandler(Handler):
         self.event_to_location[name] = (floor, room, event)
 
     def update_event_floor(self, floor_type):
-        floor, room, event = self.event_to_location[self.focus.text()]
-        self.event_dm.update_event_floor(event.name, floor, room,
-            floor_type.lower())
-        self.event_to_location[self.focus.text()] = \
-            (floor_type.lower(), room, event)
+        if self.focus:
+            floor, room, event = self.event_to_location[self.focus.text()]
+            self.event_dm.update_event_floor(event.name, floor, room,
+                floor_type.lower())
+            self.event_to_location[self.focus.text()] = \
+                (floor_type.lower(), room, event)
 
     def update_event_room(self, room_type):
         floor, room, event = self.event_to_location[self.focus.text()]
