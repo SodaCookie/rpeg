@@ -1,5 +1,5 @@
 from itertools import chain
-from random import choice
+from random import choice, randint
 import xml.etree.ElementTree as tree
 import re
 
@@ -25,7 +25,8 @@ class Location(object):
 		return "main"
 
 	def get_dialogue(self, name):
-		return self.event.dialogues.get(name)
+		dialogue = self.event.dialogues.get(name)
+		return dialogue
 
 	def get_event_name(self):
 		return self.event.name

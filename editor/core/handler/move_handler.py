@@ -13,7 +13,7 @@ import assets.actions
 from editor.core.handler.handler import Handler
 from editor.core.prompt.class_prompt import ClassPrompt
 from editor.core.prompt.list_prompt import ListPrompt
-from editor.meta.typecheck import typecheck
+from editor.meta.typecheck import typecheck, get_type
 from editor.meta.valuecheck import valuecheck, value_from_type, assign_value
 from editor.meta.types import *
 from editor.core.prompt import class_prompt
@@ -238,7 +238,7 @@ class MoveHandler(Handler):
             if item.parent():
                 parent_data = item.parent().data(0, QtCore.Qt.UserRole)
 
-            item_type = value_from_type(item_data)
+            item_type = value_from_type(item_data) # Bugged
             parent_type = value_from_type(parent_data)
 
             # Add context menu actions
@@ -360,11 +360,12 @@ class MoveHandler(Handler):
                         Component, partial(self._add_crit_component, item))
                     prompt.show()
             else:
+                print(item_data)
                 # Adding to component list
                 match = re.match(r"(\w+) : <(.+)>", item.text(0))
                 itype = ListType(UnknownType())
                 if match:
-                    itype = value_from_type(item_data)
+                    itype = get_type(match.group(2))
                 etype = itype.elemtype
 
                 if isinstance(etype, IntType):

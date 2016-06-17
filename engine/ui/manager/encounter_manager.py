@@ -1,4 +1,5 @@
 from functools import partial
+from itertools import zip_longest
 
 import pygame
 
@@ -21,8 +22,9 @@ class EncounterManager(Manager):
 
     def set_encounter(self, encounter):
         width = pygame.display.get_surface().get_width()
-        pairs = list(zip(encounter, self.monster_elements))
-        monsters_len = len(pairs)
+        pairs = list(zip_longest(encounter, self.monster_elements,
+            fillvalue=None))
+        monsters_len = len(encounter)
         for i, pair in enumerate(pairs):
             monster, elem = pair
             elem.set_monster(monster)

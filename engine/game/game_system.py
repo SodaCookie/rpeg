@@ -1,4 +1,5 @@
 """Implements the Game System"""
+from random import randint
 
 import pygame
 
@@ -55,7 +56,13 @@ class GameSystem(System):
             game.loot = None
         elif message.mtype == "dialogue":
             dialogue = message.args[0]
-            game.current_dialogue = dialogue
+            cur = game.current_location.get_dialogue(dialogue)
+            while cur.fail:
+                if randint(0, 99) > cur.chance:
+                    cur = game.current_location.get_dialogue(cur.fail)
+                else:
+                    break
+            game.current_dialogue = cur.name
         elif message.mtype == "action":
             dialogue = message.args[0]
             for action in dialogue.get_actions():
@@ -80,4 +87,9 @@ class GameSystem(System):
         elif message.mtype == "level-player":
             move = message.args[0]
             game.current_player.level_up(move)
+        elif message.mtype == "apply-effect":
+            effect = message.args[0]
+            for player in game.party.players:
+                player.add_effect(effect)
+
 

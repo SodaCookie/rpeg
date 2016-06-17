@@ -33,10 +33,13 @@ class BattleSystem(System):
             shards, items = self.generate_loot(game)
             # Remove the encounter
             self.game.message("battle", Message("end"))
-            self.game.message("game", Message("loot", items, shards))
-            self.game.message("ui", Message("layout", "loot"))
             self.game.message("sound", Message("bg",
                 "data/sound/background/Puzzle-Game.wav"))
+            if not game.current_dialogue:
+                self.game.message("ui", Message("layout", "loot"))
+                self.game.message("game", Message("loot", items, shards))
+            else:
+                self.game.message("ui", Message("layout", "scenario"))
 
     def generate_loot(self, game):
         # Create loot

@@ -25,7 +25,9 @@ class DoT(Effect):
 
     def on_tick(self):
         if self.owner and self.dtype:
-            self.owner.deal_damage(self.owner, self.value, self.dtype)
+            damage = self.owner.deal_damage(self.owner, self.value, self.dtype)
+            # system.message("animation", Message("battle-message", self.owner,
+            #     str(damage), (25, 0, 51)))
         elif self.owner:
             self.owner.apply_heal(self.owner, self.value)
         else:

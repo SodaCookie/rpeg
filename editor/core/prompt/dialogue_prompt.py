@@ -70,6 +70,7 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
         create_button.clicked.connect(self.on_create_clicked)
         cancel_button.clicked.connect(self.on_cancel_clicked)
         name_widget.textEdited.connect(self.update_dialogue_name)
+        fail_widget.textEdited.connect(self.update_dialogue_fail)
         dtext_widget.textEdited.connect(self.update_dialogue_dtext)
         body_widget.textChanged.connect(self.update_dialogue_body)
         choice_button.clicked.connect(self.new_choice)
@@ -150,6 +151,10 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
     def update_dialogue_name(self, name):
         # Simply set the name
         self.dialogue.name = name
+
+    def update_dialogue_fail(self, fail):
+        # Simply set the name
+        self.dialogue.fail = fail
 
     def update_dialogue_dtext(self, dtext):
         self.dialogue.dtext = dtext

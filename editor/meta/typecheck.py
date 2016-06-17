@@ -18,11 +18,11 @@ _attribute_regex = re.compile(r"^\s*\bAttribute\b", re.MULTILINE)
 _lambda_regex = re.compile(r"^\s*\blambda\b\s*\((.*)\)", re.MULTILINE)
 _parameter_regex = re.compile(r"\b\w+\b")
 
-def _get_type(type_string):
+def get_type(type_string):
     """Parses the type part of the string and returns the type"""
     if _list_regex.match(type_string):
         elemtype = _list_regex.match(type_string).group(1)
-        return ListType(_get_type(elemtype))
+        return ListType(get_type(elemtype))
     elif _lambda_regex.match(type_string):
         parameter_string = _lambda_regex.match(type_string).group(1)
         return LambdaType(*_parameter_regex.findall(parameter_string))
@@ -51,7 +51,7 @@ def typecheck(cls):
     parsed_parameters = {}
     if docstring:
         for parameter, type_string in re.findall(_type_regex, docstring):
-            parsed_parameters[parameter] = _get_type(type_string)
+            parsed_parameters[parameter] = get_type(type_string)
 
     parameters = {}
     for parameter in signature.parameters.values():
