@@ -360,7 +360,6 @@ class MoveHandler(Handler):
                         Component, partial(self._add_crit_component, item))
                     prompt.show()
             else:
-                print(item_data)
                 # Adding to component list
                 match = re.match(r"(\w+) : <(.+)>", item.text(0))
                 itype = ListType(UnknownType())
@@ -410,15 +409,15 @@ class MoveHandler(Handler):
                     prompt.show()
                 elif isinstance(etype, AttributeType):
                     prompt = ClassPrompt(self.parent, assets.attributes,
-                        Attribute, partial(self._add_standard_component, item))
+                        Attribute, partial(self.add_to_list, item_data))
                     prompt.show()
                 elif isinstance(etype, EffectType):
                     prompt = ClassPrompt(self.parent, assets.effects,
-                        Effect, partial(self._add_standard_component, item))
+                        Effect, partial(self.add_to_list, item_data))
                     prompt.show()
                 elif isinstance(etype, ModifierType):
                     prompt = ClassPrompt(self.parent, assets.moves.modifiers,
-                        Modifier, partial(self._add_standard_component, item))
+                        Modifier, partial(self.add_to_list, item_data))
                     prompt.show()
                 elif isinstance(etype, UnknownType):
                     code, ok = QtWidgets.QInputDialog.getText(
@@ -434,6 +433,10 @@ class MoveHandler(Handler):
                                 traceback.format_exc())
                         item_data.append(value)
                         self._load_parameter(item, etype, value)
+
+    def add_to_list(self, li, item):
+        """General purpose function to add an object to a list"""
+        li.append(item)
 
     def _add_standard_component(self, item, component):
         """Helper function to add objects to lists and what not"""
