@@ -7,7 +7,7 @@ import inspect
 _modules = glob.glob(dirname(__file__)+"/*.py")
 _relmodule = dirname(relpath(__file__)).replace("\\", ".") + "."
 
-_imports = [import_module(_relmodule + basename(f)[:-3])
+_imports = [import_module((_relmodule + basename(f)[:-3]).replace("/", "."))
     for f in _modules if isfile(f) and basename(f) != "__init__.py"]
 # Bring to global scope
 imported_names = []

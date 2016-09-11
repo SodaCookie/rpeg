@@ -2,3 +2,4 @@ __pycache__/
 *.todo
 script
 print_script
+.DS_Store

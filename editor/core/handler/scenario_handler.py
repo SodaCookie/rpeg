@@ -53,6 +53,7 @@ class ScenarioHandler(Handler):
         # Add slot to list signal
         list_widget.currentItemChanged.connect(self.set_focus)
         list_widget.currentItemChanged.connect(self.set_dialogue_enable)
+        list_widget.itemDoubleClicked.connect(self.modify_event_name)
         line_edit.textEdited.connect(self.update_event_name)
         dialogue_widget.itemDoubleClicked.connect(self.open_update_dialogue)
         event_button.clicked.connect(self.new_event)
@@ -104,10 +105,10 @@ class ScenarioHandler(Handler):
         floor, room, event = self.event_to_location[self.focus.text()]
         # Delete previous entry
         del self.event_to_location[event.name]
-        # Set text on list widget
-        self.focus.setText(name)
         # Set actual name
         self.event_dm.update_event_name(self.focus.text(), floor, room, name)
+        # Set text on list widget
+        self.focus.setText(name)
         # Add back to events map
         self.event_to_location[name] = (floor, room, event)
 
@@ -125,6 +126,13 @@ class ScenarioHandler(Handler):
             room_type.lower())
         self.event_to_location[self.focus.text()] = \
             (floor, room_type.lower(), event)
+
+    def modify_event_name(self, item):
+        event_name, ok = QtWidgets.QInputDialog.getText(
+            self.parent, 'Modify Event Name...', 'Enter event name:')
+
+        if ok:
+            self.update_event_name(event_name)
 
     def new_event(self):
         event_name, ok = QtWidgets.QInputDialog.getText(
