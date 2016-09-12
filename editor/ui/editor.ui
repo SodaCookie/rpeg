@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>805</width>
+    <width>873</width>
     <height>653</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="monster_tab">
        <property name="maximumSize">
@@ -423,92 +423,6 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <item>
-             <widget class="QLabel" name="label_6">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Floor Type</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="eventFloorType">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
-            <item>
-             <widget class="QLabel" name="label_7">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Room Type</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="eventRoomType">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <item>
-               <property name="text">
-                <string>Event</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Entrance</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Exit</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Monster</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
            <widget class="QListWidget" name="dialogueList"/>
           </item>
           <item>
@@ -523,16 +437,15 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QListWidget" name="eventList">
-            <property name="batchSize">
-             <number>100</number>
+           <widget class="QTreeWidget" name="eventList">
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
             </property>
-            <property name="selectionRectVisible">
-             <bool>false</bool>
-            </property>
-            <property name="currentRow">
-             <number>-1</number>
-            </property>
+            <column>
+             <property name="text">
+              <string>Events</string>
+             </property>
+            </column>
            </widget>
           </item>
           <item>
@@ -1312,8 +1225,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>805</width>
-     <height>21</height>
+     <width>873</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

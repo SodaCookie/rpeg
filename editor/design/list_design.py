@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Eric\Documents\GitHub\RPG-Game\editor\scripts/../ui\list.ui'
+# Form implementation generated from reading ui file '/Users/ericzhang/Documents/GitHub/rpeg/editor/scripts/../ui/list.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
 
