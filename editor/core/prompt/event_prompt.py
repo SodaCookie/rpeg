@@ -19,20 +19,20 @@ class EventPrompt(QtWidgets.QDialog, design.Ui_NewEvent):
         }
 
         # Floors
-        for floor in self.floor_dm.floors():
-            self.floor.addItem(floor.title())
+        for floor_ in self.floor_dm.floors():
+            self.floor.addItem(floor_.title(), floor_)
 
         # Room
-        self.room.addItem("Entrance")
-        self.room.addItem("Event")
-        self.room.addItem("Monster")
-        self.room.addItem("Exit")
+        self.room.addItem("Entrance", "entrance")
+        self.room.addItem("Event", "event")
+        self.room.addItem("Monster", "monster")
+        self.room.addItem("Exit", "exit")
 
         # Connection to signals
         self.name.textEdited.connect(self.callback_name_textEdited)
-        self.room.currentIndexChanged[str].connect(
+        self.room.currentIndexChanged[int].connect(
             self.callback_room_currentIndexChanged)
-        self.floor.currentIndexChanged[str].connect(
+        self.floor.currentIndexChanged[int].connect(
             self.callback_floor_currentIndexChanged)
 
         # Set values
@@ -46,11 +46,11 @@ class EventPrompt(QtWidgets.QDialog, design.Ui_NewEvent):
     def callback_name_textEdited(self, text):
         self.settings["name"] = text
 
-    def callback_room_currentIndexChanged(self, text):
-        self.settings["room"] = text.lower()
+    def callback_room_currentIndexChanged(self, index):
+        self.settings["room"] = self.room.itemData(index)
 
-    def callback_floor_currentIndexChanged(self, text):
-        self.settings["floor"] = text.lower()
+    def callback_floor_currentIndexChanged(self, index):
+        self.settings["floor"] = self.floor.itemData(index)
 
     def accept(self):
         """Verifies if the values are ready to be submitted"""

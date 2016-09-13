@@ -66,7 +66,7 @@ class ScenarioHandler(Handler):
         events_widget.customContextMenuRequested.connect(
             self.callback_event_context)
         line_edit.textEdited.connect(self.update_event_name)
-        dialogue_widget.itemDoubleClicked.connect(self.open_update_dialogue)
+        dialogue_widget.itemDoubleClicked.connect(self.create_dialogue_prompt)
         event_button.clicked.connect(self.create_event_prompt)
         dialogue_button.clicked.connect(self.open_new_dialogue)
 
@@ -118,11 +118,13 @@ class ScenarioHandler(Handler):
 
     def callback_floor_dispatch(self, action):
         """Callback whenever a scenario is asked to be moved to a new floor"""
-        print(action.text())
+        floor, room, event = self._get_item_data(self.focus)
+        self.move_event(event, (floor, room), (action.text().lower(), room))
 
     def callback_room_dispatch(self, action):
         """Callback whenever a scenario is asked to be moved to a new room"""
-        print(action.text())
+        floor, room, event = self._get_item_data(self.focus)
+        self.move_event(event, (floor, room), (floor, action.text().lower()))
 
     #================== EVENT CODE ==================#
     def delete_event(self, item):
@@ -131,6 +133,32 @@ class ScenarioHandler(Handler):
         self.event_dm.delete_event(event.name, floor, room)
         index = item.parent().indexOfChild(item)
         item.parent().takeChild(index)
+
+    def move_event(self, event, prev, dest):
+        """Moves the event and calls the DataManager"""
+        # Unpack prev and dest
+        prev_floor, prev_room = prev
+        dest_floor, dest_room = dest
+
+        # Pop event_item
+        event_item = self.focus.parent().takeChild(
+            self.focus.parent().indexOfChild(self.focus))
+
+        # Find parent_item
+        parent_item = self._get_room_of_floor(dest_floor, dest_room)
+        assert parent_item, "Parent item not found"
+
+        events_widget = self.parent.findChild(QtWidgets.QTreeWidget, "events")
+
+        # Add the item
+        parent_item.addChild(event_item)
+        events_widget.setCurrentItem(event_item)
+
+        # Update event and item
+        self.event_dm.update_event_floor(event.name, prev_floor, prev_room,
+            dest_floor)
+        self.event_dm.update_event_room(event.name, prev_floor, prev_room,
+            dest_room)
 
     def update_event_name(self, name):
         floor, room, event = self._get_item_data(self.focus)
@@ -188,9 +216,10 @@ class ScenarioHandler(Handler):
                 events_widget.setCurrentItem(event_item)
 
                 # Update event and item
-                self.event_dm.update_event_name(event.name, floor, room, settings["name"])
-                self.event_dm.update_event_floor(event.name, floor, room, settings["floor"])
-                self.event_dm.update_event_room(event.name, floor, room, settings["room"])
+                self.move_event(event, (floor, room),
+                               (settings["floor", "room"]))
+                self.event_dm.update_event_name(event.name, floor, room,
+                                                settings["name"])
                 event_item.setText(settings["name"])
 
     #================== DIALOGUE CODE ==================#
@@ -217,8 +246,7 @@ class ScenarioHandler(Handler):
         line_edit.setText(event.name)
 
         # Load dialogues
-        dialogues = self.parent.findChild(
-            QtWidgets.QTreeWidget, "dialogues")
+        dialogues = self.parent.findChild(QtWidgets.QTreeWidget, "dialogues")
 
         # Populate tree
         dialogues.clear()
@@ -249,7 +277,7 @@ class ScenarioHandler(Handler):
         self.event_dm.add_dialogue(event.name, floor, room, dialogue)
         list_widget.currentItem().setText(dialogue.name)
 
-    def open_update_dialogue(self, item):
+    def create_dialogue_prompt(self, item):
         """Creates a new dialogue for the editor."""
         # Create a new empty dialogue
         floor, room, event = self._get_item_data(self.focus)
