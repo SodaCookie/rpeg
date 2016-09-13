@@ -423,7 +423,19 @@
            </layout>
           </item>
           <item>
-           <widget class="QListWidget" name="dialogueList"/>
+           <widget class="QTreeWidget" name="dialogues">
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
+            </property>
+            <property name="expandsOnDoubleClick">
+             <bool>true</bool>
+            </property>
+            <column>
+             <property name="text">
+              <string>Dialogues</string>
+             </property>
+            </column>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="newDialogue">
@@ -437,7 +449,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QTreeWidget" name="eventList">
+           <widget class="QTreeWidget" name="events">
             <property name="contextMenuPolicy">
              <enum>Qt::CustomContextMenu</enum>
             </property>

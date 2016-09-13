@@ -38,7 +38,13 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QComboBox" name="room"/>
+    <widget class="QComboBox" name="room">
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
@@ -51,7 +57,13 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="floor"/>
+    <widget class="QComboBox" name="floor">
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">

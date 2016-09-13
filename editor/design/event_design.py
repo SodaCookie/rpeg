@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/ericzhang/Documents/GitHub/rpeg/editor/scripts/../ui/untitled.ui'
+# Form implementation generated from reading ui file '/Users/ericzhang/Documents/GitHub/rpeg/editor/scripts/../ui/event.ui'
 #
 # Created by: PyQt5 UI code generator 5.6
 #
@@ -27,6 +27,8 @@ class Ui_NewEvent(object):
         self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
         self.room = QtWidgets.QComboBox(NewEvent)
         self.room.setObjectName("room")
+        self.room.addItem("")
+        self.room.setItemText(0, "")
         self.gridLayout.addWidget(self.room, 1, 1, 1, 1)
         self.label_3 = QtWidgets.QLabel(NewEvent)
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
@@ -34,6 +36,8 @@ class Ui_NewEvent(object):
         self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
         self.floor = QtWidgets.QComboBox(NewEvent)
         self.floor.setObjectName("floor")
+        self.floor.addItem("")
+        self.floor.setItemText(0, "")
         self.gridLayout.addWidget(self.floor, 2, 1, 1, 1)
         self.buttonBox = QtWidgets.QDialogButtonBox(NewEvent)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
