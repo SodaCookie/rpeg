@@ -35,7 +35,11 @@ class Dungeon(object):
     self.mon_distribution = "normal"
 
     for key in kwargs.keys():
-      setattr(self, key, kwargs[key])
+      if key in ('min_width', 'max_width', 'min_branch', 'max_branch', 'min_shops', 'max_shops',
+                 'min_alters', 'max_alters', 'min_item', 'max_item', 'min_monster', 'max_monster',
+                 'branch_distribution', 'shop_distribution', 'alter_distribution', 'item_distribution',
+                 'mon_distribution'):
+        setattr(self, key, kwargs[key])
 
     self.start = location.Location("entrance", self.level)
     self.stop = location.Location("exit", self.level)
