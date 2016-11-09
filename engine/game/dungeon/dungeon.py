@@ -35,24 +35,11 @@ class Dungeon(object):
     self.mon_distribution = "normal"
 
     for key in kwargs.keys():
-      if key == "depth": self.depth = kwargs[key]
-      elif key == "min_width": self.min_width = kwargs[key]
-      elif key == "max_width": self.max_width = kwargs[key]
-      elif key == "min_branch": self.min_branch = kwargs[key]
-      elif key == "max_branch": self.max_branch = kwargs[key]
-      elif key == "min_shops": self.min_shops = kwargs[key]
-      elif key == "max_shops": self.max_shops = kwargs[key]
-      elif key == "min_alters": self.min_alters = kwargs[key]
-      elif key == "max_alters": self.max_alters = kwargs[key]
-      elif key == "min_item": self.min_item = kwargs[key]
-      elif key == "max_item": self.max_item = kwargs[key]
-      elif key == "min_monster": self.min_monster = kwargs[key]
-      elif key == "max_monster": self.max_monster = kwargs[key]
-      elif key == "branch_distribution": self.branch_distribution = kwargs[key]
-      elif key == "shop_distribution": self.shop_distribution = kwargs[key]
-      elif key == "alter_distribution": self.alter_distribution = kwargs[key]
-      elif key == "item_distribution": self.item_distribution = kwargs[key]
-      elif key == "mon_distribution": self.mon_distribution = kwargs[key]
+      if key in ('min_width', 'max_width', 'min_branch', 'max_branch', 'min_shops', 'max_shops',
+                 'min_alters', 'max_alters', 'min_item', 'max_item', 'min_monster', 'max_monster',
+                 'branch_distribution', 'shop_distribution', 'alter_distribution', 'item_distribution',
+                 'mon_distribution'):
+        setattr(self, key, kwargs[key])
 
     self.start = location.Location("entrance", self.level)
     self.stop = location.Location("exit", self.level)
