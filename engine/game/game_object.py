@@ -5,8 +5,6 @@ class GameObject(object):
     """Game object used to hold all the data required for
     rendering and holding the important info for the game"""
 
-    DUNGEON_TYPES = ["catacomb"]
-
     def __init__(self):
         super().__init__()
         self.difficulty = "normal"

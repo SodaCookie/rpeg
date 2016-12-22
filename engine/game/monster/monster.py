@@ -11,35 +11,6 @@ from engine.serialization.serialization import deserialize
 
 MOVES = deserialize("data/moves.p")
 
-def parse_monsters(filename):
-    """Takes a filename and returns a dict of dicts containing all monster
-    definitions with keys of monster names"""
-    root = tree.parse(filename).getroot()
-    monsters = {}
-    for monster in root:
-        name = monster.find('name').text
-        monsters[name] = {}
-        monsters[name]['location'] = monster.find('location').text
-        monsters[name]['stats'] = {}
-        for stat in monster.find('stats'):
-            monsters[name]['stats'][stat.tag] = int(stat.text)
-        monsters[name]['abilities'] = []
-        for ability in monster.find('abilities'):
-            monsters[name]['abilities'].append(ability.text)
-        monsters[name]['attributes'] = []
-        for attribute in monster.find('attributes'):
-            monsters[name]['attributes'].append(attribute.text)
-        monsters[name]['graphic'] = {} # we need to do some work here
-        for graphic in monster.find('graphics'):
-            monsters[name]['graphic'][graphic.attrib["name"]] = graphic.text
-        # Get unique
-        if monster.find('unique').text.title() == 'True':
-            monsters[name]['unique'] = True
-        else:
-            monsters[name]['unique'] = False
-        monsters[name]['rating'] = int(monster.find('rating').text)
-    return monsters
-
 class Monster(character.Character):
     """The enemy characters encountered in battle. The Monster object
     is responsible for holding a Monster's stats as well as generating
@@ -82,5 +53,5 @@ class Monster(character.Character):
 # For testing
 if __name__ == "__main__":
     for i in range(10):
-            m = Monster()
-            print(m.abilities)
+        m = Monster()
+        print(m.abilities)

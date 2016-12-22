@@ -7,7 +7,7 @@ from engine.system import System, Message
 import engine.ui.manager as manager
 
 class HoverSystem(System):
-    """System responsible for handling game related events"""
+    """System responsible for handling hover related events"""
 
     def __init__(self, game):
         super().__init__(game, "hover")

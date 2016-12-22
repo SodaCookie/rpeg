@@ -23,12 +23,12 @@ class Zone(object):
         self.rect = rect
 
     def update(self, game):
-        """Takes the game object and figures out the state for the zone"""
+        """Updates the state of the zone using mouse input from pygame."""
         # if previously clicked and button is no longer clicked we call
         # on click
-        if self.rect.collidepoint(game.mouse_x, game.mouse_y):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
             state = Zone.HOVERED
-            if game.mouse_button[0]:
+            if pygame.mouse.get_pressed()[0]:
                 state = Zone.CLICKED
         else:
             state = Zone.NEUTRAL
