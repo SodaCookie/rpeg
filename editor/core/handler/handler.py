@@ -39,7 +39,7 @@ class Handler(object):
         """Generates an on_delete function that executes a given function when
         delete is pressed."""
         def on_delete(event):
-            if event.key() == QtCore.Qt.Key_Delete:
+            if event.key() in (QtCore.Qt.Key_Delete, QtCore.Qt.Key_Backspace):
                 if widget_list.selectedItems():
                     reponse = QtWidgets.QMessageBox.question(self.parent,
                         "Delete", "Do you want to delete this %s?" % obj_type)

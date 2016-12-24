@@ -453,6 +453,9 @@
             <property name="contextMenuPolicy">
              <enum>Qt::CustomContextMenu</enum>
             </property>
+            <property name="expandsOnDoubleClick">
+             <bool>false</bool>
+            </property>
             <column>
              <property name="text">
               <string>Events</string>

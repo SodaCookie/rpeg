@@ -246,6 +246,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_13.setObjectName("verticalLayout_13")
         self.events = QtWidgets.QTreeWidget(self.scenario_tab)
         self.events.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.events.setExpandsOnDoubleClick(False)
         self.events.setObjectName("events")
         self.verticalLayout_13.addWidget(self.events)
         self.newEvent = QtWidgets.QPushButton(self.scenario_tab)

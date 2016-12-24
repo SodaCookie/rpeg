@@ -22,15 +22,6 @@ class ScenarioHandler(Handler):
         self.floor_dm = FloorDataManager()
         self.event_dm = EventDataManager()
 
-        events_widget = self.parent.findChild(QtWidgets.QTreeWidget,
-            "events")
-        line_edit = self.parent.findChild(QtWidgets.QLineEdit, "eventName")
-        event_button = self.parent.findChild(QtWidgets.QPushButton, "newEvent")
-        dialogue_button = self.parent.findChild(
-            QtWidgets.QPushButton, "newDialogue")
-        dialogue_widget = self.parent.findChild(
-            QtWidgets.QTreeWidget, "dialogues")
-
         # Load scenarios to event tree
         events = self.event_dm.events()
         style = QtWidgets.QCommonStyle()
@@ -46,36 +37,36 @@ class ScenarioHandler(Handler):
                 room_item.setIcon(0, room_icon)
                 floor_item.addChild(room_item)
                 for event in events[floor_type][room_type]:
+                    # Populate with events
                     event_item = QtWidgets.QTreeWidgetItem([event.name])
                     event_item.setData(0, QtCore.Qt.UserRole, event)
                     room_item.addChild(event_item)
-            events_widget.addTopLevelItem(floor_item)
+            self.parent.events.addTopLevelItem(floor_item)
 
-        layout = self.parent.findChild(QtWidgets.QVBoxLayout, "dialogueLayout")
-        self.set_enable_layout(layout, False)
+        # Disable dialogue layout
+        self.set_enable_layout(self.parent.dialogueLayout, False)
 
         # Add key press event
-        events_widget.keyPressEvent = self.delete_press_generator(
-            "event", events_widget, self.delete_event)
-        dialogue_widget.keyPressEvent = self.delete_press_generator(
-            "dialogue", dialogue_widget, self.delete_dialogue)
+        self.parent.dialogues.keyPressEvent = self.delete_press_generator(
+            "dialogue", self.parent.dialogues, self.delete_dialogue)
 
         # Add slot to list signal
-        events_widget.currentItemChanged.connect(self.callback_select_event)
-        events_widget.currentItemChanged.connect(self.set_dialogue_enable)
-        events_widget.customContextMenuRequested.connect(
+        self.parent.events.currentItemChanged.connect(
+            self.callback_select_event)
+        self.parent.events.currentItemChanged.connect(self.set_dialogue_enable)
+        self.parent.events.customContextMenuRequested.connect(
             self.callback_event_context)
-        line_edit.textEdited.connect(self.update_event_name)
-        dialogue_widget.itemDoubleClicked.connect(self.create_dialogue_prompt)
-        event_button.clicked.connect(self.create_event_prompt)
-        dialogue_button.clicked.connect(self.open_new_dialogue)
+        self.parent.eventName.textEdited.connect(self.update_event_name)
+        self.parent.newEvent.clicked.connect(self.create_event_prompt)
+        self.parent.dialogues.itemDoubleClicked.connect(
+            self.create_dialogue_prompt)
+        self.parent.newDialogue.clicked.connect(
+            self.callback_newDialogue_clicked)
 
     #================== CONTEXT CODE ==================#
     def callback_event_context(self, point):
         """Creates a context menu for when an event gets clicked on."""
-        events_widget = self.parent.findChild(QtWidgets.QTreeWidget,
-            "events")
-        item = events_widget.itemAt(point)
+        item = self.parent.events.itemAt(point)
         if item:
             floor, room, event = self._get_item_data(item)
 
@@ -105,7 +96,7 @@ class ScenarioHandler(Handler):
                 move_floor_menu.triggered.connect(self.callback_floor_dispatch)
 
             menu.triggered.connect(self.callback_event_dispatch)
-            menu.exec_(events_widget.mapToGlobal(point))
+            menu.exec_(self.parent.events.mapToGlobal(point))
 
     def callback_event_dispatch(self, action):
         """Callback whenever an event action is executed"""
@@ -148,11 +139,9 @@ class ScenarioHandler(Handler):
         parent_item = self._get_room_of_floor(dest_floor, dest_room)
         assert parent_item, "Parent item not found"
 
-        events_widget = self.parent.findChild(QtWidgets.QTreeWidget, "events")
-
         # Add the item
         parent_item.addChild(event_item)
-        events_widget.setCurrentItem(event_item)
+        self.parent.events.setCurrentItem(event_item)
 
         # Update event and item
         self.event_dm.update_event_floor(event.name, prev_floor, prev_room,
@@ -173,12 +162,10 @@ class ScenarioHandler(Handler):
         event_prompt = EventPrompt(self.parent, floor, room, event)
 
         if event_prompt.exec_():
-            events_widget = self.parent.findChild(QtWidgets.QTreeWidget,
-                "events")
             settings = event_prompt.settings
             # Create new event
             if not mod:
-                if not events_widget.findItems(settings["name"],
+                if not self.parent.events.findItems(settings["name"],
                         QtCore.Qt.MatchExactly):
                     # Create new event
                     new_event = self.event_dm.new_event(settings["name"],
@@ -195,7 +182,7 @@ class ScenarioHandler(Handler):
                     assert parent_item, "Parent item not found"
 
                     parent_item.addChild(event_item)
-                    events_widget.setCurrentItem(event_item)
+                    self.parent.events.setCurrentItem(event_item)
                 else:
                     QtWidgets.QMessageBox.warning(
                         self.parent, "Error",
@@ -213,7 +200,7 @@ class ScenarioHandler(Handler):
 
                 # Add the item
                 parent_item.addChild(event_item)
-                events_widget.setCurrentItem(event_item)
+                self.parent.events.setCurrentItem(event_item)
 
                 # Update event and item
                 self.move_event(event, (floor, room),
@@ -223,17 +210,16 @@ class ScenarioHandler(Handler):
                 event_item.setText(settings["name"])
 
     #================== DIALOGUE CODE ==================#
+    @staticmethod
     def delete_dialogue(self, widget_list):
         floor, room, event = self._get_item_data(self.focus)
         self.event_dm.delete_dialogue(event.name, floor, room,
-            widget_list.item(widget_list.currentRow()).text())
-        widget_list.takeItem(widget_list.currentRow())
+            widget_list.currentItem().text(0))
+        self.load_dialogue_tree(event)
 
     def set_dialogue_enable(self, next, prev):
         if next != None:
-            layout = self.parent.findChild(
-                QtWidgets.QVBoxLayout, "dialogueLayout")
-            self.set_enable_layout(layout, True)
+            self.set_enable_layout(self.parent.dialogueLayout, True)
 
     def callback_select_event(self, item):
         self.focus = item
@@ -242,50 +228,59 @@ class ScenarioHandler(Handler):
             return # Do nothing
 
         # Set Line Edit
-        line_edit = self.parent.findChild(QtWidgets.QLineEdit, "eventName")
-        line_edit.setText(event.name)
-
-        # Load dialogues
-        dialogues = self.parent.findChild(QtWidgets.QTreeWidget, "dialogues")
+        self.parent.eventName.setText(event.name)
 
         # Populate tree
-        dialogues.clear()
-        self._load_dialogue(event, "main", None, set())
-
-    def open_new_dialogue(self):
-        """Creates a new dialogue for the editor."""
-        # Create a new empty dialogue
-        floor, room, event = self._get_item_data(self.focus)
-        dialogue = Dialogue("", "", "", event)
-
-        dialogue_window = DialoguePrompt(self.parent, dialogue)
-        dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
-        dialogue_window.show()
+        self.load_dialogue_tree(event)
 
     def create_dialogue(self, dialogue):
-        list_widget = self.parent.findChild(
-            QtWidgets.QListWidget, "dialogueList")
         floor, room, event = self._get_item_data(self.focus)
         event.dialogues[dialogue.name] = dialogue
-        list_widget.addItem(dialogue.name)
+        cur_item = QtWidgets.QTreeWidgetItem([dialogue.name])
+        self.load_dialogue_tree(event)
 
     def update_dialogue(self, dialogue):
-        list_widget = self.parent.findChild(
-            QtWidgets.QListWidget, "dialogueList")
         floor, room, event = self._get_item_data(self.focus)
         self.event_dm.delete_dialogue(event.name, floor, room, dialogue.name)
         self.event_dm.add_dialogue(event.name, floor, room, dialogue)
-        list_widget.currentItem().setText(dialogue.name)
+        self.load_dialogue_tree(event)
+
+    def callback_newDialogue_clicked(self):
+        self.create_dialogue_prompt(None)
 
     def create_dialogue_prompt(self, item):
-        """Creates a new dialogue for the editor."""
+        """Creates a new dialogue for the editor. If item is equal to None
+        than it is assumed that an unbound dialogue is being created."""
         # Create a new empty dialogue
         floor, room, event = self._get_item_data(self.focus)
-        dialogue = event.dialogues[item.text(0)]
+        if item:
+            dialogue = event.dialogues.get(item.text(0))
+            new = False
+            if not dialogue:
+                dialogue = Dialogue(item.text(0), "", "", event)
+                new = True
+        else:
+            new = True
+            dialogue = Dialogue("", "", "", event)
 
-        dialogue_window = DialoguePrompt(self.parent, dialogue)
+        dialogue_window = DialoguePrompt(self.parent, dialogue, new)
         dialogue_window.setWindowModality(QtCore.Qt.WindowModal)
         dialogue_window.show()
+
+    def load_dialogue_tree(self, event):
+        """Refreshes the dialogue tree for the event."""
+        self.parent.dialogues.clear()
+        visited = set()
+        self._load_dialogue(event, "main", None, visited)
+
+        # Unassigned dialogues (Lost children)
+        lost_dialogues = set(event.dialogues.keys()) - visited
+        for dialogue in lost_dialogues:
+            item = QtWidgets.QTreeWidgetItem([dialogue])
+            item.setForeground(0, QtGui.QBrush(QtGui.QColor("red")))
+            item.setExpanded(True)
+            self.parent.dialogues.addTopLevelItem(item)
+        self.parent.dialogues.expandAll()
 
     #================== HELPER FUNCTIONS ==================#
     def _load_dialogue(self, event, key, parent, visited):
@@ -294,37 +289,36 @@ class ScenarioHandler(Handler):
         visited.add(key)
         cur_dialog = event.dialogues.get(key)
         cur_item = QtWidgets.QTreeWidgetItem([key])
-        if not cur_dialog: # Base-case
+        if not cur_dialog: # Base-case dialogue not yet made
             cur_item.setForeground(0, QtGui.QBrush(QtGui.QColor("light grey")))
         else:
             # Push a full item to dialogue and find children
-            if cur_dialog.choices:
-                for child in cur_dialog.choices:
-                    if child not in visited:
-                        self._load_dialogue(event, child, cur_item, visited)
-                    else:
-                        # Create a new link
-                        link_item = QtWidgets.QTreeWidgetItem([child])
-                        link_item.setFlags()
-                        link_item.setForeground(0, QtGui.QBrush(
-                            QtGui.QColor("light blue")))
-                        cur_item.addChild(link_item)
+            options = list(cur_dialog.choices)
+            if cur_dialog.fail:
+                options.append(cur_dialog.fail)
+            for child in options:
+                if child not in visited:
+                    self._load_dialogue(event, child, cur_item, visited)
+                else:
+                    # Create a new link
+                    link_item = QtWidgets.QTreeWidgetItem([child])
+                    link_item.setForeground(0, QtGui.QBrush(
+                        QtGui.QColor("blue")))
+                    cur_item.addChild(link_item)
         # Add to item or to the top level
         if parent:
+            if event.dialogues[parent.text(0)].fail == key:
+                cur_item.setForeground(0, QtGui.QBrush(QtGui.QColor("orange")))
             parent.addChild(cur_item)
-            parent.setExpanded(True)
         else:
             self.parent.dialogues.addTopLevelItem(cur_item)
-            cur_item.setExpanded(True)
 
     def _get_room_of_floor(self, floor, room):
         """Helper function that finds the floor/room item."""
         item = None
-        events_widget = self.parent.findChild(QtWidgets.QTreeWidget,
-            "events")
         # Search for floor and room
-        for i in range(events_widget.topLevelItemCount()):
-            floor_item = events_widget.topLevelItem(i)
+        for i in range(self.parent.events.topLevelItemCount()):
+            floor_item = self.parent.events.topLevelItem(i)
             if floor_item.text(0).lower() == floor:
                 for j in range(floor_item.childCount()):
                     room_item = floor_item.child(j)

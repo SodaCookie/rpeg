@@ -15,73 +15,59 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
 
     return_dialogue = QtCore.pyqtSignal(Dialogue, name="returnDialogue")
 
-    def __init__(self, parent, dialogue):
+    def __init__(self, parent, dialogue, new):
         super().__init__(parent)
         self.setupUi(self)
         self.dialogue = copy(dialogue)
+        self.new = new
         self.init_window()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
     def init_window(self):
-        # Get all info elements
-        name_widget = self.findChild(QtWidgets.QLineEdit, "dialogueName")
-        dtext_widget = self.findChild(QtWidgets.QLineEdit, "dialogueDText")
-        body_widget = self.findChild(QtWidgets.QTextEdit, "dialogueBody")
-        chance_widget = self.findChild(QtWidgets.QSpinBox, "dialogueChance")
-        fail_widget = self.findChild(QtWidgets.QLineEdit, "dialogueFail")
-        choices_widget = self.findChild(QtWidgets.QListWidget, "choiceList")
-        actions_widget = self.findChild(QtWidgets.QListWidget, "actionList")
-        conditions_widget = self.findChild(
-            QtWidgets.QListWidget, "conditionList")
-        choice_button = self.findChild(QtWidgets.QPushButton, "newChoice")
-        action_button = self.findChild(QtWidgets.QPushButton, "newAction")
-        condition_button = self.findChild(
-            QtWidgets.QPushButton, "newCondition")
-        create_button = self.findChild(QtWidgets.QPushButton, "createButton")
-        cancel_button = self.findChild(QtWidgets.QPushButton, "cancelButton")
-
         # Load info
-        name_widget.setText(self.dialogue.name)
-        dtext_widget.setText(self.dialogue.dtext)
-        body_widget.setText(self.dialogue.body)
-        chance_widget.setValue(self.dialogue.chance)
+        self.dialogueName.setText(self.dialogue.name)
+        self.dialogueDText.setText(self.dialogue.dtext)
+        self.dialogueBody.setText(self.dialogue.body)
+        self.dialogueChance.setValue(self.dialogue.chance)
         if self.dialogue.fail:
-            fail_widget.setText(self.dialogue.fail)
+            self.dialogueFail.setText(self.dialogue.fail)
         if self.dialogue.chance == 100:
-            fail_widget.setEnabled(False)
+            self.dialogueFail.setEnabled(False)
         for dialogue in self.dialogue.choices:
-            choices_widget.addItem(dialogue)
+            self.choiceList.addItem(dialogue)
 
         # Load Actions and Conditions
         for action in self.dialogue.actions:
             # Get class name
-            actions_widget.addItem(type(action).__name__)
+            self.actionList.addItem(type(action).__name__)
 
         for condition in self.dialogue.conditions:
             # Get class name
-            conditions_widget.addItem(type(condition).__name__)
+            self.conditionList.addItem(type(condition).__name__)
 
         # Setting key press events
-        actions_widget.keyPressEvent = self.action_key_press
-        conditions_widget.keyPressEvent = self.condition_key_press
-        choices_widget.keyPressEvent = self.choice_key_press
+        self.actionList.keyPressEvent = self.action_key_press
+        self.conditionList.keyPressEvent = self.condition_key_press
+        self.choiceList.keyPressEvent = self.choice_key_press
 
         # Connect signals
-        create_button.clicked.connect(self.on_create_clicked)
-        cancel_button.clicked.connect(self.on_cancel_clicked)
-        name_widget.textEdited.connect(self.update_dialogue_name)
-        fail_widget.textEdited.connect(self.update_dialogue_fail)
-        dtext_widget.textEdited.connect(self.update_dialogue_dtext)
-        body_widget.textChanged.connect(self.update_dialogue_body)
-        choice_button.clicked.connect(self.new_choice)
-        chance_widget.valueChanged.connect(self.update_dialogue_chance)
-        action_button.clicked.connect(self.new_action)
-        condition_button.clicked.connect(self.new_condition)
+        self.createButton.clicked.connect(self.on_create_clicked)
+        self.cancelButton.clicked.connect(self.on_cancel_clicked)
+        self.dialogueName.textEdited.connect(self.update_dialogue_name)
+        self.dialogueFail.textEdited.connect(self.update_dialogue_fail)
+        self.dialogueDText.textEdited.connect(self.update_dialogue_dtext)
+        self.dialogueBody.textChanged.connect(self.update_dialogue_body)
+        self.dialogueChance.valueChanged.connect(self.update_dialogue_chance)
+        self.newChoice.clicked.connect(self.new_choice)
+        self.newAction.clicked.connect(self.new_action)
+        self.newCondition.clicked.connect(self.new_condition)
+
+        # Connect custom signal
         parent_handler = self.parentWidget().scenario_handler
-        if self.dialogue.name:
-            self.return_dialogue.connect(parent_handler.update_dialogue)
-        else:
+        if self.new:
             self.return_dialogue.connect(parent_handler.create_dialogue)
+        else:
+            self.return_dialogue.connect(parent_handler.update_dialogue)
 
     def new_action(self):
         prompt = ClassPrompt(
@@ -94,7 +80,7 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
         prompt.show()
 
     def action_key_press(self, event):
-        if event.key() == QtCore.Qt.Key_Delete:
+        if event.key() in (QtCore.Qt.Key_Delete, QtCore.Qt.Key_Backspace):
             actions_widget = self.findChild(
                 QtWidgets.QListWidget, "actionList")
             if actions_widget.selectedItems():
@@ -105,7 +91,7 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
                     actions_widget.takeItem(actions_widget.currentRow())
 
     def condition_key_press(self, event):
-        if event.key() == QtCore.Qt.Key_Delete:
+        if event.key() in (QtCore.Qt.Key_Delete, QtCore.Qt.Key_Backspace):
             conditions_widget = self.findChild(
                 QtWidgets.QListWidget, "conditionList")
             if conditions_widget.selectedItems():
@@ -117,7 +103,7 @@ class DialoguePrompt(QtWidgets.QMainWindow, design.Ui_dialogueWindow):
                     conditions_widget.takeItem(conditions_widget.currentRow())
 
     def choice_key_press(self, event):
-        if event.key() == QtCore.Qt.Key_Delete:
+        if event.key() in (QtCore.Qt.Key_Delete, QtCore.Qt.Key_Backspace):
             choices_widget = self.findChild(
                 QtWidgets.QListWidget, "choiceList")
             if choices_widget.selectedItems():
