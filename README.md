@@ -7,7 +7,7 @@ Also features a programmatic interface to allow developers to extend the game th
 
 # In Development
 Main engine is developed.
-Editor interfarce is currently in development.
+Editor interface is currently in development.
 
 # Examples
 The GUI editor being used to create an event in the game
