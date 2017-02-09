@@ -235,7 +235,7 @@ class Ui_MainWindow(object):
         self.dialogueLayout.addLayout(self.horizontalLayout_10)
         self.dialogues = QtWidgets.QTreeWidget(self.scenario_tab)
         self.dialogues.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.dialogues.setExpandsOnDoubleClick(True)
+        self.dialogues.setExpandsOnDoubleClick(False)
         self.dialogues.setObjectName("dialogues")
         self.dialogueLayout.addWidget(self.dialogues)
         self.newDialogue = QtWidgets.QPushButton(self.scenario_tab)
