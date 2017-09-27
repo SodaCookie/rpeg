@@ -242,7 +242,7 @@ class ScenarioHandler(Handler):
     def update_dialogue(self, dialogue):
         floor, room, event = self._get_item_data(self.focus)
         self.event_dm.delete_dialogue(event.name, floor, room,
-            self.parent.dialogues.current   Item().text(0))
+            self.parent.dialogues.current(Item().text(0)))
         self.event_dm.add_dialogue(event.name, floor, room, dialogue)
         self.load_dialogue_tree(event)
 
